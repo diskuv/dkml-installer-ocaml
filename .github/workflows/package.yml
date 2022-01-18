@@ -7,23 +7,166 @@ on:
 
 jobs:
   package:
+    env:
+      INSTALLERNAME: ocaml
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
     strategy:
-      fail-fast: true
+      fail-fast: false # TODO: Put this back to true when done testing
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-        # Opam is needed to complete the install steps, but Opam is
-        # supplied by this installer. So chicken-and-egg problem.
-        # All we need is a working Opam, even an old one.
-        #
-        # We use https://github.com/diskuv/dkml-installer-ocaml/releases
-        # to get an old one; you specify its version number here.
-        #
-        # Historical note: The first 0.0.0 release was manually uploaded
-        # using the Opam from the original Diskuv OCaml GitLab preview
-        bootstrap-opam-version: [ "0.0.0" ]
+        # bootstrap-opam-version
+        #   We need an old working Opam; see BOOTSTRAPPING.md.
+        #   We use https://github.com/diskuv/dkml-installer-ocaml/releases
+        #   to get an old one; you specify its version number here.
+        #   Special value of 'os' means use the OS's package manager
+        #   (yum/apt/brew).
+        # opam-root
+        #   We need a stable location for OPAMROOT even if the version of Opam
+        #   changes (there are two versions: bootstrap and the compiled one).
+        include:
+          - os: windows-latest
+            bootstrap-opam-version: "0.0.0"
+            dkml-target-abi: windows_x86
+            opam-root: D:/.opam
+          - os: ubuntu-latest
+            bootstrap-opam-version: "os"
+            dkml-target-abi: linux_x86
+            opam-root: /home/runner/.opam
+          - os: macos-latest
+            bootstrap-opam-version: "os"
+            dkml-target-abi: darwin_x86_64
+            opam-root: /Users/runner/.opam
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      # Install utilities
+      #   tree: Nice for pretty-printing the final package tree
+      #   wget: Needed for the Windows Opam download-command
+      - name: Install Windows tools
+        env:
+          TREE_VER: 1.8.0-1
+          WGET_VER: 1.21.2-1
+          # libpcre2: Needed for wget
+          LIBPCRE2_VER: 8-10.35-1
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: bash
+        run: |
+          untarxz() {
+            prefix=$1; shift
+            ver=$1; shift
+            curl -L -o $prefix$ver-x86_64.pkg.tar.xz http://repo.msys2.org/msys/x86_64/$prefix$ver-x86_64.pkg.tar.xz
+            tar xfCJ $prefix$ver-x86_64.pkg.tar.xz /
+            rm -f $prefix$ver-x86_64.pkg.tar.xz
+          }
+          untarzst() {
+            prefix=$1; shift
+            ver=$1; shift
+            curl -L -o $prefix$ver-x86_64.pkg.tar.zst http://repo.msys2.org/msys/x86_64/$prefix$ver-x86_64.pkg.tar.zst
+            tar xfC $prefix$ver-x86_64.pkg.tar.zst / --use-compress-program='zstd -d'
+            rm -f $prefix$ver-x86_64.pkg.tar.zst
+          }
+          untarxz tree- "$TREE_VER"
+          untarzst wget- "$WGET_VER"
+          untarzst libpcre2_ "$LIBPCRE2_VER"
+      - name: Install Ubuntu tools
+        if: ${{ startsWith(matrix.os, 'ubuntu-') }}
+        run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends tree
+      - name: Install macOS tools
+        if: ${{ startsWith(matrix.os, 'macos-') }}
+        run: brew install tree
+
+      # Bootstrap Opam (only necessary for INSTALLER_NAME=ocaml)
+
+      #   Bootstrap from package manager
+      - name: Bootstrap Opam from Ubuntu package manager
+        if: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.bootstrap-opam-version == 'os' }}
+        run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends opam
+      - name: Bootstrap Opam from macOS 'brew' package manager
+        if: ${{ startsWith(matrix.os, 'macos-') && matrix.bootstrap-opam-version == 'os' }}
+        run: brew install gpatch && brew install opam
+
+      #   Bootstrap from historical release
+      - name: Cache Opam bootstrap
+        if: ${{ matrix.bootstrap-opam-version != 'os' }}
+        uses: actions/cache@v2
+        env:
+          CACHE_NUMBER: 1
+        with:
+          path: bootstrap
+          key:
+            ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{ matrix.bootstrap-opam-version }}
+      - name: Bootstrap Opam from historical release
+        if: ${{ matrix.bootstrap-opam-version != 'os' }}
+        shell: bash
+        env:
+          ABI: ${{ matrix.dkml-target-abi }}
+          VER: ${{ matrix.bootstrap-opam-version }}
+        run: |
+          install -d bootstrap
+          cd bootstrap
+          if [ ! -e ocaml-$ABI-$VER.tar.gz ]; then
+            curl -L -o ocaml-$ABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$ABI-$VER.tar.gz
+            mv ocaml-$ABI-$VER.tmp.tar.gz ocaml-$ABI-$VER.tar.gz
+          fi
+          if [ ! -e bin/opam ] && [ ! -e bin/opam.exe ]; then
+            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=1
+          fi
+
+      # Build the installer
+
+      - name: Cache Opam root
+        uses: actions/cache@v2
+        env:
+          CACHE_NUMBER: 1
+        with:
+          path: |
+            ${{ matrix.opam-root }}/download-cache
+            ${{ matrix.opam-root }}/repo
+            ${{ matrix.opam-root }}/config
+            ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
+          key:
+            ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{ matrix.bootstrap-opam-version }}
+
+      - name: Initialize Opam root for Windows
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        # Bizarre sequence is because Opam's default curl does not work on Windows,
+        # and `opam init` does not provide a way to change it (TODO: need a PR!).
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          set "-x"
+          if [ ! -e "$OPAMROOT/config" ]; then
+            rm -rf "$OPAMROOT" # Clear any partial previous attempt
+            opam init --disable-sandboxing --no-setup --kind local --bare "$(cygpath -am windows/empty-opam-repository)"
+            opam option --yes --global download-command=wget
+            opam repository list --all
+            opam repository remove default --yes --all --dont-select
+            opam repository add default https://opam.ocaml.org --yes --dont-select
+          fi
+
+      - name: Initialize Opam root for non-Windows
+        if: ${{ !startsWith(matrix.os, 'windows-') }}
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        run: '[ -e "$OPAMROOT/config" ] || PATH="$PWD/bootstrap/bin:$PATH" opam init --bare --disable-sandboxing --no-setup'
+      - name: Create installer Opam switch
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --empty'
+      - name: Build installer
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME ./dkml-installer-$INSTALLERNAME.opam
+
+      # Examine the Opam package
+      - name: Examine the installer
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree "$S"; else find "$S"; fi; fi

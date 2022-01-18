@@ -1,0 +1,15 @@
+opam-version: "2.0"
+version: "0.1.0"
+synopsis: "DKML installer generator for OCaml"
+description:
+  "The DKML Installer for OCaml generates installers for OCaml"
+maintainer: ["opensource+diskuv-ocaml@support.diskuv.com"]
+authors: ["Diskuv, Inc. <opensource+diskuv-ocaml@support.diskuv.com>"]
+license: "Apache-2.0"
+homepage: "https://github.com/diskuv/dkml-installer-ocaml"
+bug-reports: "https://github.com/diskuv/dkml-install-api/issues"
+depends: [
+]
+build: [
+]
+dev-repo: "git+https://github.com/diskuv/dkml-installer-ocaml.git"
