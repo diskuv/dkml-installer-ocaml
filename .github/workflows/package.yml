@@ -1,0 +1,29 @@
+name: Package OCaml Releases
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  package:
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        # Opam is needed to complete the install steps, but Opam is
+        # supplied by this installer. So chicken-and-egg problem.
+        # All we need is a working Opam, even an old one.
+        #
+        # We use https://github.com/diskuv/dkml-installer-ocaml/releases
+        # to get an old one; you specify its version number here.
+        #
+        # Historical note: The first 0.0.0 release was manually uploaded
+        # using the Opam from the original Diskuv OCaml GitLab preview
+        bootstrap-opam-version: [ "0.0.0" ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
