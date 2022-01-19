@@ -29,11 +29,21 @@ jobs:
         # opam-root
         #   We need a stable location for OPAMROOT even if the version of Opam
         #   changes (there are two versions: bootstrap and the compiled one).
+        # vsstudio-dir
+        #   Only needed if `os: windows-*`. The forward slashes must be double-
+        #   slashed because it is passed to Opam setenv as an OCaml string.
+        # vsstudio-vcvarsver
+        #   Only needed if `os: windows-*`. The VERSION in
+        #   `vsdevcmd.bat -vcvars_ver=VERSION`. Example: 14.26. See the output
+        #   of the "Audit Visual Studio on Windows" step to see the supported
+        #   versions (either xx.yy or xx.yy.zz should work).
         include:
           - os: windows-latest
             bootstrap-opam-version: "0.0.0"
             dkml-target-abi: windows_x86
             opam-root: D:/.opam
+            vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
+            vsstudio-vcvarsver: "14.25"
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
@@ -48,13 +58,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Audit Visual Studio on Windows
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: pwsh
+        env:
+          VS_DIR: ${{ matrix.vsstudio-dir }}
+        run: |
+          & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -all -products *
+          dir $env:VS_DIR\VC\Tools\MSVC
+
       # Install utilities
       #   tree: Nice for pretty-printing the final package tree
       #   wget: Needed for the Windows Opam download-command
+      #   make: Needed for OCaml ./configure + make
       - name: Install Windows tools
         env:
           TREE_VER: 1.8.0-1
           WGET_VER: 1.21.2-1
+          MAKE_VER: 4.3-3
           # libpcre2: Needed for wget
           LIBPCRE2_VER: 8-10.35-1
         if: ${{ startsWith(matrix.os, 'windows-') }}
@@ -77,6 +98,7 @@ jobs:
           untarxz tree- "$TREE_VER"
           untarzst wget- "$WGET_VER"
           untarzst libpcre2_ "$LIBPCRE2_VER"
+          untarzst make- "$MAKE_VER"
       - name: Install Ubuntu tools
         if: ${{ startsWith(matrix.os, 'ubuntu-') }}
         run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends tree
@@ -178,6 +200,26 @@ jobs:
           #opam pin add --yes --no-action dkml-component-compiler    git://github.com/diskuv/dkml-component-compiler.git#main
           #opam pin add --yes --no-action dkml-component-ocamlsystem git://github.com/diskuv/dkml-component-ocamlsystem.git#main
           #opam pin add --yes --no-action dkml-component-dksdk       git://gitlab.com/diskuv/dkml-component-dksdk.git#main
+
+      - name: Use Visual Studio in DKML Opam packages
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+          VS_DIR: ${{ matrix.vsstudio-dir }}
+          VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
+        # nit: Perhaps more of these VS_ values should come from `matrix`.
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          opam option setenv= # reset
+          opam option setenv+='DKML_COMPILE_SPEC = "1"'
+          opam option setenv+='DKML_COMPILE_TYPE = "VS"'
+          opam option setenv+="DKML_COMPILE_VS_DIR = \"$VS_DIR\""
+          opam option setenv+="DKML_COMPILE_VS_VCVARSVER = \"$VS_VCVARSVER\""
+          opam option setenv+='DKML_COMPILE_VS_WINSDKVER = "10.0.18362.0"'
+          opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
+          opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
+          opam option setenv # print
 
       - name: Build installer
         shell: bash
