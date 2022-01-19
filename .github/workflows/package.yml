@@ -9,9 +9,16 @@ jobs:
   package:
     env:
       INSTALLERNAME: ocaml
+
+      # When ON, instead of building the standard components from the central
+      # Opam repository, use the github/gitlab development repositories
+      # directly.
+      DEV_STANDARD_COMPONENTS: ON
+
+      # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
     strategy:
-      fail-fast: false # TODO: Put this back to true when done testing
+      fail-fast: false
       matrix:
         # bootstrap-opam-version
         #   We need an old working Opam; see BOOTSTRAPPING.md.
@@ -36,6 +43,7 @@ jobs:
             dkml-target-abi: darwin_x86_64
             opam-root: /Users/runner/.opam
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.dkml-target-abi }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -158,11 +166,24 @@ jobs:
         env:
           OPAMROOT: ${{ matrix.opam-root }}
         run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --empty'
+
+      - name: Pin standard components to main branches instead of Opam repository
+        if: ${{ env.DEV_STANDARD_COMPONENTS == 'ON' }}
+        shell: bash
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          opam pin add --yes --no-action dkml-component-ocamlrun    git://github.com/diskuv/dkml-component-ocamlrun.git#main
+          #opam pin add --yes --no-action dkml-component-compiler    git://github.com/diskuv/dkml-component-compiler.git#main
+          #opam pin add --yes --no-action dkml-component-ocamlsystem git://github.com/diskuv/dkml-component-ocamlsystem.git#main
+          #opam pin add --yes --no-action dkml-component-dksdk       git://gitlab.com/diskuv/dkml-component-dksdk.git#main
+
       - name: Build installer
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME ./dkml-installer-$INSTALLERNAME.opam
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME ./dkml-installer-$INSTALLERNAME.opam --verbose
 
       # Examine the Opam package
       - name: Examine the installer
