@@ -18,7 +18,7 @@ jobs:
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         # bootstrap-opam-version
         #   We need an old working Opam; see BOOTSTRAPPING.md.
@@ -38,7 +38,8 @@ jobs:
         #   of the "Audit Visual Studio on Windows" step to see the supported
         #   versions (either xx.yy or xx.yy.zz should work).
         include:
-          - os: windows-latest
+          - os: windows-2019
+            # windows-latest will be windows-2022, which has untested VS2022
             bootstrap-opam-version: "0.0.0"
             dkml-target-abi: windows_x86
             opam-root: D:/.opam
@@ -148,7 +149,8 @@ jobs:
       - name: Cache Opam root
         uses: actions/cache@v2
         env:
-          CACHE_NUMBER: 1
+          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
+          CACHE_NUMBER: 2
         with:
           path: |
             ${{ matrix.opam-root }}/download-cache
