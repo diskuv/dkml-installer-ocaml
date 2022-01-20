@@ -211,6 +211,7 @@ jobs:
           OPAMROOT: ${{ matrix.opam-root }}
           VS_DIR: ${{ matrix.vsstudio-dir }}
           VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
+          TARGET_ABI: ${{ matrix.dkml-target-abi }}
         # nit: Perhaps more of these VS_ values should come from `matrix`.
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
@@ -222,6 +223,7 @@ jobs:
           opam option setenv+='DKML_COMPILE_VS_WINSDKVER = "10.0.18362.0"'
           opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
           opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
+          opam option setenv+="DKML_HOST_ABI = \"$TARGET_ABI\""
           opam option setenv # print
 
       - name: Build installer
