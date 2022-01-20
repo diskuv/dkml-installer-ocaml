@@ -1,4 +1,4 @@
-# DKML Installer for OCaml 0.4.0-prerel1
+# DKML Installer for OCaml 0.4.0-prerel2
 
 The DKML Installer for OCaml generates and distributes installers for OCaml.
 
@@ -44,5 +44,5 @@ component that you would like to get distributed.
 
 | What                           | Branch/Tag | Status                                                                                                                                                                                             |
 | ------------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel1   | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel1 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel1/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel1")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel1) |
+| gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel2   | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel2 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel2/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel2")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel2) |
 
