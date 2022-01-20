@@ -39,3 +39,11 @@ Any new dkml-components used by this installer will need an access token
 to automatically trigger builds, which you'll save as a repository secret
 in your component. Create an issue to get access if you have a new
 component that you would like to get distributed.
+
+## Status
+
+| What                           | Branch | Status                                                                                                                                                                                             |
+| ------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| gitlab.com/diskuv/diskuv-ocaml | main   | [![gitlab.com/diskuv/diskuv-ocaml main status](https://gitlab.com/diskuv/diskuv-ocaml/badges/main/pipeline.svg "legacy diskuv-ocaml main")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/main) |
+| gitlab.com/diskuv/diskuv-ocaml | next   | [![gitlab.com/diskuv/diskuv-ocaml next status](https://gitlab.com/diskuv/diskuv-ocaml/badges/next/pipeline.svg "legacy diskuv-ocaml next")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/next) |
+
