@@ -33,3 +33,9 @@ dune build
 ## Contributing
 
 See [the Contributors section of dkml-install-api](http://github.com/diskuv/dkml-install-api/contributors/README.md).
+
+Any new dkml-components used by this installer will need an access token
+(`repo public_repo`)
+to automatically trigger builds, which you'll save as a repository secret
+in your component. Create an issue to get access if you have a new
+component that you would like to get distributed.
