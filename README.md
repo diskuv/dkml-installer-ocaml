@@ -9,8 +9,8 @@ The DKML Installer for OCaml generates and distributes installers for OCaml.
 We use the [dkml-install-api](https://diskuv.github.io/dkml-install-api/index.html)
 to generate installers from the following Opam packages:
 
-* [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlrun)
-* [dkml-component-compiler](http://github.com/diskuv/dkml-component-compiler)
+* [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlcompiler)
+* [dkml-component-ocamlcompiler](http://github.com/diskuv/dkml-component-ocamlcompiler)
 * [dkml-component-ocamlsystem](http://github.com/diskuv/dkml-component-ocamlsystem)
 * [dkml-component-dksdk](http://gitlab.com/diskuv/dkml-component-dksdk)
 
