@@ -199,10 +199,10 @@ jobs:
           OPAMROOT: ${{ matrix.opam-root }}
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
-          opam pin add --yes --no-action dkml-component-ocamlrun    git://github.com/diskuv/dkml-component-ocamlrun.git#main
-          #opam pin add --yes --no-action dkml-component-compiler    git://github.com/diskuv/dkml-component-compiler.git#main
-          #opam pin add --yes --no-action dkml-component-ocamlsystem git://github.com/diskuv/dkml-component-ocamlsystem.git#main
-          #opam pin add --yes --no-action dkml-component-dksdk       git://gitlab.com/diskuv/dkml-component-dksdk.git#main
+          opam pin add --yes --no-action dkml-component-ocamlrun    'git://github.com/diskuv/dkml-component-ocamlrun.git#main'
+          #opam pin add --yes --no-action dkml-component-compiler    'git://github.com/diskuv/dkml-component-compiler.git#main'
+          #opam pin add --yes --no-action dkml-component-ocamlsystem 'git://github.com/diskuv/dkml-component-ocamlsystem.git#main'
+          #opam pin add --yes --no-action dkml-component-dksdk       'git://gitlab.com/diskuv/dkml-component-dksdk.git#main'
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
