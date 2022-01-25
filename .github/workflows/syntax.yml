@@ -11,5 +11,6 @@ jobs:
       uses: gaurav-nelson/github-action-markdown-link-check@v1
       with:
         config-file: '.github/workflows/syntax/mlc_config.json'
+        use-verbose-mode: 'yes'
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@master
