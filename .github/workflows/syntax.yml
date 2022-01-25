@@ -1,0 +1,13 @@
+name: Syntax Check
+
+on: push
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Check Markdown links
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master

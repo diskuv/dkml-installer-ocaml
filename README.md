@@ -32,7 +32,7 @@ dune build
 
 ## Contributing
 
-See [the Contributors section of dkml-install-api](http://github.com/diskuv/dkml-install-api/contributors/README.md).
+See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkml-install-api/blob/main/contributors/README.md).
 
 Any new dkml-components used by this installer will need an access token
 (`repo public_repo`)
@@ -42,7 +42,8 @@ component that you would like to get distributed.
 
 ## Status
 
-| What                           | Branch/Tag | Status                                                                                                                                                                                             |
-| ------------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel2   | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel2 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel2/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel2")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel2) |
-
+| What                           | Branch/Tag     | Status                                                                                                                                                                                                                                     |
+| ------------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Installer packages             |                | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml)                                          |
+| Installer syntax check         |                | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)                                                      |
+| gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel2 | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel2 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel2/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel2")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel2) |
