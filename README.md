@@ -11,8 +11,6 @@ to generate installers from the following Opam packages:
 
 * [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlcompiler)
 * [dkml-component-ocamlcompiler](http://github.com/diskuv/dkml-component-ocamlcompiler)
-* [dkml-component-ocamlsystem](http://github.com/diskuv/dkml-component-ocamlsystem)
-* [dkml-component-dksdk](http://gitlab.com/diskuv/dkml-component-dksdk)
 
 ## Building from Source
 
