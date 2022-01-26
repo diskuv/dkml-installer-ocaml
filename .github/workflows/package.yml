@@ -3,12 +3,20 @@ name: Package OCaml Releases
 on:
   workflow_dispatch:
     inputs:
-      component-ocamlrun:
+      dkml-component-ocamlrun:
         description: "Git branch, tag or commit for ocamlrun component"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
-      component-ocamlcompiler:
+      dkml-component-ocamlcompiler:
         description: "Git branch, tag or commit for ocamlcompiler component"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-install:
+        description: "Git branch, tag or commit for dkml-install package"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-install-runner:
+        description: "Git branch, tag or commit for dkml-install-runner package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
   push:
@@ -23,7 +31,7 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      COMPONENT_OCAMLRUN: "${{ github.event.inputs.component-ocamlrun }}"
+      DKML_COMPONENT_OCAMLRUN: "${{ github.event.inputs.component-ocamlrun }}"
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -202,17 +210,29 @@ jobs:
           OPAMROOT: ${{ matrix.opam-root }}
         run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --empty'
 
-      - name: Pin ocamlrun component to source instead of Opam repository
-        if: ${{ env.COMPONENT_OCAMLRUN != '@repository@' }}
+      - name: Pin dkml-component-ocamlrun to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${COMPONENT_OCAMLRUN:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLRUN:-main}"
 
-      - name: Pin ocamlcompiler component to source instead of Opam repository
-        if: ${{ env.COMPONENT_OCAMLCOMPILER != '@repository@' }}
+      - name: Pin dkml-component-ocamlcompiler to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_OCAMLCOMPILER != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${COMPONENT_OCAMLCOMPILER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLCOMPILER:-main}"
+
+      - name: Pin dkml-install to source instead of Opam repository
+        if: ${{ env.DKML_INSTALL != '@repository@' }}
+        shell: bash
+        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install.git#${DKML_INSTALL:-main}"
+
+      - name: Pin dkml-install-runner to source instead of Opam repository
+        if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
+        shell: bash
+        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-runner.git#${DKML_INSTALL_RUNNER:-main}"
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
