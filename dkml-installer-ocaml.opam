@@ -10,7 +10,7 @@ homepage: "https://github.com/diskuv/dkml-installer-ocaml"
 bug-reports: "https://github.com/diskuv/dkml-install-api/issues"
 depends: [
   "dkml-base-compiler" {= "4.12.1-1"}
-  "dkml-component-ocamlcompiler" { = "4.12.1" }
+  "dkml-component-ocamlcompiler" { = "4.12.1-1" }
   "dkml-install-runner" { >= "0.1.0" }
 ]
 build: [
