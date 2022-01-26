@@ -226,13 +226,13 @@ jobs:
         if: ${{ env.DKML_INSTALL != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install.git#${DKML_INSTALL:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL:-main}"
 
       - name: Pin dkml-install-runner to source instead of Opam repository
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-runner.git#${DKML_INSTALL_RUNNER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL_RUNNER:-main}"
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
