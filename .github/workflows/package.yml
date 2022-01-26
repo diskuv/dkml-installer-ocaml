@@ -258,17 +258,17 @@ jobs:
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_BASE_COMPILER:-main}"
 
-      - name: (Temporary) Pin ocaml to source instead of Opam repository
+      - name: (Temporary) Pin ocaml.4.12.1 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML:-main}"
 
-      - name: (Temporary) Pin ocaml-config to source instead of Opam repository
+      - name: (Temporary) Pin ocaml-config.2 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
