@@ -186,7 +186,8 @@ jobs:
         uses: actions/cache@v2
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
-          CACHE_NUMBER: 2
+          # or if you otherwise need a fresh Opam root
+          CACHE_NUMBER: 3
         with:
           path: |
             ${{ matrix.opam-root }}/download-cache
