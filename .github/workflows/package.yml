@@ -7,6 +7,10 @@ on:
         description: "Git branch, tag or commit for ocamlrun component"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
+      component-ocamlcompiler:
+        description: "Git branch, tag or commit for ocamlcompiler component"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
   push:
     branches:
       - 'main'
@@ -203,6 +207,12 @@ jobs:
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${COMPONENT_OCAMLRUN:-main}"
+
+      - name: Pin ocamlcompiler component to source instead of Opam repository
+        if: ${{ env.COMPONENT_OCAMLCOMPILER != '@repository@' }}
+        shell: bash
+        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${COMPONENT_OCAMLCOMPILER:-main}"
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
