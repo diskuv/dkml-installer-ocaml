@@ -222,11 +222,12 @@ jobs:
         env:
           OPAMROOT: ${{ matrix.opam-root }}
         run: '[ -e "$OPAMROOT/config" ] || PATH="$PWD/bootstrap/bin:$PATH" opam init --bare --disable-sandboxing --no-setup'
+
       - name: Create installer Opam switch
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --empty'
+        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default --empty'
 
       - name: Pin dkml-component-ocamlrun to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}
