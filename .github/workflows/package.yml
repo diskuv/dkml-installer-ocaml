@@ -23,6 +23,10 @@ on:
         description: "Git branch, tag or commit for dkml-base-compiler package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
+      dkml-option-32bit:
+        description: "Git branch, tag or commit for dkml-option-32bit package"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml:
         description: "Git branch, tag or commit for ocaml package temporarily in the dkml-component-ocamlcompiler repository"
         required: false
@@ -50,6 +54,7 @@ jobs:
       DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
       TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
+      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL
       CACHE_KEY_GITHUB_INPUTS: >-
@@ -60,6 +65,7 @@ jobs:
         DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
+        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-option-32bit }}
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -281,6 +287,12 @@ jobs:
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
+
+      - name: Pin dkml-option-32bit to source instead of Opam repository
+        if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
+        shell: bash
+        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
