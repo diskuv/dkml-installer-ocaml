@@ -44,12 +44,22 @@ jobs:
       # central Opam repository, use the github/gitlab development repositories
       # directly.
       DKML_COMPONENT_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
-      DKML_COMPONENT_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlrun }}"
+      DKML_COMPONENT_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
       DKML_INSTALL:                 "${{ github.event.inputs.dkml-install }}"
       DKML_INSTALL_RUNNER:          "${{ github.event.inputs.dkml-install-runner }}"
       DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
       TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
+
+      # `>-` will flatten the multiple lines into a single line with no trailing EOL
+      CACHE_KEY_GITHUB_INPUTS: >-
+        DKML_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
+        DKML_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
+        DKML_INSTALL=${{ github.event.inputs.dkml-install }}
+        DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
+        DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
+        TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
+        TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -196,7 +206,7 @@ jobs:
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
           key:
             ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{
-              matrix.bootstrap-opam-version }}-${{ toJSON(github.event.inputs) }}
+              matrix.bootstrap-opam-version }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
       - name: Initialize Opam root for Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
