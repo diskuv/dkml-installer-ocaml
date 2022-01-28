@@ -384,6 +384,7 @@ jobs:
       - name: Build installer for Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: cmd
+        timeout-minutes: 60
         # OCaml will compile fine but any other packages (ocamlbuild, etc.) which
         # need a native compiler will fail without the MSVC compiler in the
         # PATH. There isn't a `with-dkml.exe` alternative available at
@@ -422,6 +423,7 @@ jobs:
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         shell: bash
+        timeout-minutes: 60
         env:
           OPAMROOT: ${{ matrix.opam-root }}
           DKMLOPTIONS: ${{ matrix.dkml-options }}
