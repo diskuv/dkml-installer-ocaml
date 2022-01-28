@@ -314,17 +314,13 @@ jobs:
 
       - name: Setup Opam repositories
         shell: bash
-        # The default Opam repository cache (https://opam.ocaml.org/cache) which is set in
-        # https://opam.ocaml.org/repo has been flaky sometimes on GitHub Actions (2022-01-28).
-        # Downloading GitHub git repository from GitHub Actions should always be reliable,
-        # or else GitHub is down and our GitHub Actions wouldn't be able to run anyway.
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           set "-x"
           if [ ! -e "$OPAMROOT/.ci.repo-init" ]; then
             opam repository remove default --yes --all --dont-select || true
             opam repository remove diskuv --yes --all --dont-select || true
-            opam repository add default "git+https://github.com/ocaml/opam-repository.git" --yes --dont-select
+            opam repository add default https://opam.ocaml.org --yes --dont-select
             opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
             touch "$OPAMROOT/.ci.repo-init"
           fi
