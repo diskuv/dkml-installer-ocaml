@@ -54,7 +54,7 @@ on:
 jobs:
   package:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         # bootstrap-opam-version
         #   We need an old working Opam; see BOOTSTRAPPING.md.
