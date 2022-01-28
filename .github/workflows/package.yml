@@ -290,16 +290,27 @@ jobs:
       - name: Cache Opam downloads
         uses: actions/cache@v2
         env:
-          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
-          # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 3
+          CACHE_NUMBER: 4
+        # This cache is _not_ operating system specific. Windows machines
+        # on GitHub Actions sometimes have problems downloading from Opam
+        # package sources so _any_ operating system which can download the
+        # sources are fine with us.
         with:
           path: |
             ${{ matrix.opam-root }}/download-cache
-            ${{ matrix.opam-root }}/repo
-            ${{ matrix.opam-root }}/.ci.download-init
           key:
-            ${{ runner.os }}-opamdownload-${{ env.CACHE_NUMBER }}
+            opamdownload-${{ env.CACHE_NUMBER }}
+
+      - name: Cache Opam repositories
+        uses: actions/cache@v2
+        env:
+          CACHE_NUMBER: 4
+        with:
+          path: |
+            ${{ matrix.opam-root }}/repo
+            ${{ matrix.opam-root }}/.ci.repo-init
+          key:
+            ${{ runner.os }}-opamrepo-${{ env.CACHE_NUMBER }}
 
       - name: Setup Opam repositories
         shell: bash
@@ -310,12 +321,12 @@ jobs:
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           set "-x"
-          if [ ! -e "$OPAMROOT/.ci.download-init" ]; then
+          if [ ! -e "$OPAMROOT/.ci.repo-init" ]; then
             opam repository remove default --yes --all --dont-select || true
             opam repository remove diskuv --yes --all --dont-select || true
             opam repository add default "git+https://github.com/ocaml/opam-repository.git" --yes --dont-select
             opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
-            touch "$OPAMROOT/.ci.download-init"
+            touch "$OPAMROOT/.ci.repo-init"
           fi
 
       - name: Create installer Opam switch
