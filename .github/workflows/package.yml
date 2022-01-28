@@ -142,7 +142,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 2
+      OPAM_ROOT_CACHE_NUMBER: 3
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
