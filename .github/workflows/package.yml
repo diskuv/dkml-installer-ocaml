@@ -104,7 +104,7 @@ jobs:
       # Although the user expressed desire to populate the cache, only
       # Opam 2.1 (?) and greater has the --download-only option. The OS
       # provided opam may not have the option.
-      CAN_POPULATE_CACHE:     ${{ matrix.bootstrap-opam-version != 'os' }}
+      CAN_DOWNLOAD_ONLY:      ${{ matrix.bootstrap-opam-version != 'os' }}
 
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
@@ -424,7 +424,7 @@ jobs:
 
           set PATH=%CD%\bootstrap\bin;%PATH%
           if "%SHOULD_POPULATE_CACHE%" == "true" (
-            if "%CAN_POPULATE_CACHE%" == "true" (set MOREARGS=--download-only --jobs 1)
+            if "%CAN_DOWNLOAD_ONLY%" == "true" (set MOREARGS=--download-only --jobs 1)
           )
           opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose %MOREARGS%
 
@@ -434,7 +434,7 @@ jobs:
         timeout-minutes: 60
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
-          if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_POPULATE_CACHE" = true ]; then
+          if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_DOWNLOAD_ONLY" = true ]; then
             opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose --download-only --jobs 1
           else
             opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
