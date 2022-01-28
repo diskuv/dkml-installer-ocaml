@@ -371,14 +371,15 @@ jobs:
           MSYSTEM_CHOST: x86_64-w64-mingw32
           MSYSTEM_PREFIX: /mingw64
         run: |
-          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
-          if %ERRORLEVEL% neq 0 (
-            echo.
-            echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
-            echo.with exit code %ERRORLEVEL%.
-            echo.
-            exit /b %ERRORLEVEL%
-          )
+          REM -- Disable adding the MSVC compiler --
+          REM call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
+          REM if %ERRORLEVEL% neq 0 (
+            REM echo.
+            REM echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
+            REM echo.with exit code %ERRORLEVEL%.
+            REM echo.
+            REM exit /b %ERRORLEVEL%
+          REM )
           set PATH=%CD%\bootstrap\bin;%PATH%
           opam install --yes --switch installer-%INSTALLERNAME% ./dkml-installer-%INSTALLERNAME%.opam --verbose
 
