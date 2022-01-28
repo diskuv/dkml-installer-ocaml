@@ -178,6 +178,13 @@ jobs:
         if: ${{ startsWith(matrix.os, 'macos-') }}
         run: brew install tree
 
+      # Requirements
+      #   - gcc-/g++-multilib for 32bit option (depext from Opam should auto-install in dkml-option-32bit, but we
+      #     need to be resilient to Opam version changes)
+      - name: Install 32-bit Ubuntu requirements
+        if: ${{ startsWith(matrix.os, 'ubuntu-') && contains(matrix.dkml-options, 'dkml-option-32bit') }}
+        run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends gcc-multilib g++-multilib
+
       # Bootstrap Opam (only necessary for INSTALLER_NAME=ocaml)
 
       #   Bootstrap from package manager
