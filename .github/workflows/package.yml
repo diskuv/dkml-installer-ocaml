@@ -2,6 +2,7 @@ name: Package OCaml Releases
 
 env:
   DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "v0.4.0-prerel3"
+  PIN_OCAMLFIND: "1.9.1"
 
 on:
   workflow_dispatch:
@@ -309,6 +310,12 @@ jobs:
         shell: bash
         env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
+
+      # ocamlfind has a patch in diskuv-opam-repository
+      - name: Pin ocamlfind to ${{ env.PIN_OCAMLFIND }}
+        shell: bash
+        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action -k version ocamlfind ${{ env.PIN_OCAMLFIND }}
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
