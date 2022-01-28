@@ -1,5 +1,8 @@
 name: Package OCaml Releases
 
+env:
+  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "v0.3.3"
+
 on:
   workflow_dispatch:
     inputs:
@@ -35,6 +38,10 @@ on:
         description: "Git branch, tag or commit for ocaml-config package temporarily in the dkml-component-ocamlcompiler repository"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
+      diskuv-opam-repository:
+        description: "Git branch, tag or commit for ocaml-config package temporarily in the diskuv-opam-repository repository"
+        required: false
+        default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG is used as default for empty strings
   push:
     branches:
       - 'main'
@@ -55,6 +62,7 @@ jobs:
       TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
       DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
+      DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL
       CACHE_KEY_GITHUB_INPUTS: >-
@@ -66,6 +74,7 @@ jobs:
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
         DKML_OPTION_32BIT=${{ github.event.inputs.dkml-option-32bit }}
+        DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -203,7 +212,7 @@ jobs:
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 3
+          CACHE_NUMBER: 4
         with:
           path: |
             ${{ matrix.opam-root }}/download-cache
@@ -212,7 +221,7 @@ jobs:
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
           key:
             ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{
-              matrix.bootstrap-opam-version }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
+              matrix.bootstrap-opam-version }}-${{ env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
       - name: Initialize Opam root for Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
@@ -231,6 +240,7 @@ jobs:
             opam repository list --all
             opam repository remove default --yes --all --dont-select
             opam repository add default https://opam.ocaml.org --yes --dont-select
+            opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
           fi
 
       - name: Initialize Opam root for non-Windows
@@ -238,13 +248,19 @@ jobs:
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: '[ -e "$OPAMROOT/config" ] || PATH="$PWD/bootstrap/bin:$PATH" opam init --bare --disable-sandboxing --no-setup'
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          set "-x"
+          if [ ! -e "$OPAMROOT/config" ]; then
+            opam init --bare --disable-sandboxing --no-setup
+            opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
+          fi
 
       - name: Create installer Opam switch
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default --empty'
+        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default,diskuv --empty'
 
       - name: Pin dkml-component-ocamlrun to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}
