@@ -255,7 +255,7 @@ jobs:
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 1
+          CACHE_NUMBER: 2
         with:
           path: |
             ${{ matrix.opam-root }}/config
