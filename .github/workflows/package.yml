@@ -297,11 +297,16 @@ jobs:
         # on GitHub Actions sometimes have problems downloading from Opam
         # package sources so _any_ operating system which can download the
         # sources are fine with us.
+        # But we can't use a fully qualified `with: path:` or we will get
+        # cache misses.
         with:
           path: |
-            ${{ matrix.opam-root }}/download-cache
+            download-cache
           key:
             opamdownload-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
+      - name: Transfer cached downloads to Opam
+        shell: bash
+        run: if [ -e download-cache ]; then rsync -a download-cache "$OPAMROOT"; rm -rf download-cache; fi
 
       - name: Cache Opam repositories
         uses: actions/cache@v2
@@ -446,3 +451,10 @@ jobs:
       - name: Examine the installer
         shell: bash
         run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -F -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
+
+      - name: Transfer Opam downloads to cache location
+        shell: bash
+        run: if [ -e "OPAMROOT"/download-cache ]; then rm -rf download-cache; mv "$OPAMROOT"/download-cache .; fi
+
+      - name: Git Status
+        run: git status
