@@ -140,6 +140,10 @@ jobs:
       M_DKMLOPTIONS: ${{ matrix.dkml-options }}
       M_DKMLTARGETABI: ${{ matrix.dkml-target-abi }}
 
+      # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
+      # or if you otherwise need a fresh Opam root
+      OPAM_ROOT_CACHE_NUMBER: 2
+
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
     runs-on: ${{ matrix.os }}
@@ -252,17 +256,13 @@ jobs:
 
       - name: Cache Opam root
         uses: actions/cache@v2
-        env:
-          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
-          # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 2
         with:
           path: |
             ${{ matrix.opam-root }}/config
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
             ${{ matrix.opam-root }}/.ci.root-init
           key:
-            ${{ runner.os }}-opamroot-${{ env.CACHE_NUMBER }}-${{
+            ${{ runner.os }}-opamroot-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{
               matrix.bootstrap-opam-version }}-${{ env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
       - name: Initialize Opam root
@@ -299,7 +299,7 @@ jobs:
           path: |
             ${{ matrix.opam-root }}/download-cache
           key:
-            opamdownload-${{ env.CACHE_NUMBER }}
+            opamdownload-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
 
       - name: Cache Opam repositories
         uses: actions/cache@v2
@@ -310,7 +310,7 @@ jobs:
             ${{ matrix.opam-root }}/repo
             ${{ matrix.opam-root }}/.ci.repo-init
           key:
-            ${{ runner.os }}-opamrepo-${{ env.CACHE_NUMBER }}
+            ${{ runner.os }}-opamrepo-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
 
       - name: Setup Opam repositories
         shell: bash
