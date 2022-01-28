@@ -240,18 +240,6 @@ jobs:
 
       # Build the installer
 
-      - name: Cache Opam downloads
-        uses: actions/cache@v2
-        env:
-          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
-          # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 1
-        with:
-          path: |
-            ${{ matrix.opam-root }}/download-cache
-          key:
-            ${{ runner.os }}-opamdownload-${{ env.CACHE_NUMBER }}
-
       - name: Cache Opam root
         uses: actions/cache@v2
         env:
@@ -263,37 +251,61 @@ jobs:
             ${{ matrix.opam-root }}/repo
             ${{ matrix.opam-root }}/config
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
+            ${{ matrix.opam-root }}/.ci.root-init
           key:
             ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{
               matrix.bootstrap-opam-version }}-${{ env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
-      - name: Initialize Opam root for Windows
-        if: ${{ startsWith(matrix.os, 'windows-') }}
+      - name: Initialize Opam root
+        env:
+          ISWINDOWS: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
-        # Bizarre sequence is because Opam's default curl does not work on Windows,
-        # and `opam init` does not provide a way to change it (TODO: need a PR!).
+        # Complicated Opam sequence is because:
+        # 1. Opam's default curl does not work on Windows,
+        #    and `opam init` does not provide a way to change it (TODO: need
+        #    a PR!).
+        # 2. We have to separate the Opam download cache from the other Opam
+        #    caches
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           set "-x"
-          if [ ! -e "$OPAMROOT/config" ]; then
+          if [ ! -e "$OPAMROOT/.ci.root-init" ]; then
             rm -rf "$OPAMROOT" # Clear any partial previous attempt
-            opam init --disable-sandboxing --no-setup --kind local --bare "$(cygpath -am windows/empty-opam-repository)"
-            opam option --yes --global download-command=wget
-            opam repository list --all
-            opam repository remove default --yes --all --dont-select
-            opam repository add default "git+https://github.com/ocaml/opam-repository.git" --yes --dont-select
-            opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
+            opam init --disable-sandboxing --no-setup --kind local --bare "$(cygpath -am empty-opam-repository)"
+            if [ "$ISWINDOWS" = true ]; then
+              opam option --yes --global download-command=wget
+            fi
+            touch "$OPAMROOT/.ci.root-init"
           fi
 
-      - name: Initialize Opam root for non-Windows
-        if: ${{ !startsWith(matrix.os, 'windows-') }}
+      - name: Cache Opam downloads
+        uses: actions/cache@v2
+        env:
+          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
+          # or if you otherwise need a fresh Opam root
+          CACHE_NUMBER: 2
+        with:
+          path: |
+            ${{ matrix.opam-root }}/download-cache
+            ${{ matrix.opam-root }}/.ci.download-init
+          key:
+            ${{ runner.os }}-opamdownload-${{ env.CACHE_NUMBER }}
+
+      - name: Setup Opam repositories
         shell: bash
+        # The default Opam repository cache (https://opam.ocaml.org/cache) which is set in
+        # https://opam.ocaml.org/repo has been flaky sometimes on GitHub Actions (2022-01-28).
+        # Downloading GitHub git repository from GitHub Actions should always be reliable,
+        # or else GitHub is down and our GitHub Actions wouldn't be able to run anyway.
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           set "-x"
-          if [ ! -e "$OPAMROOT/config" ]; then
-            opam init --bare --disable-sandboxing --no-setup
+          if [ ! -e "$OPAMROOT/.ci.download-init" ]; then
+            opam repository remove default --yes --all --dont-select || true
+            opam repository remove diskuv --yes --all --dont-select || true
+            opam repository add default "git+https://github.com/ocaml/opam-repository.git" --yes --dont-select
             opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
+            touch "$OPAMROOT/.ci.download-init"
           fi
 
       - name: Create installer Opam switch
