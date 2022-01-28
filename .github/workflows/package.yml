@@ -167,6 +167,13 @@ jobs:
           MAKE_VER: 4.3-3
           # libpcre2: Needed for wget
           LIBPCRE2_VER: 8-10.35-1
+          # rsync: On Windows the `cp` fallback can fail; loosely related to
+          #        https://github.com/ocaml/opam/issues/4080
+          RSYNC_VER: 3.2.3-2
+          # libzstd: Needed for rsync
+          LIBZSTD_VER: 1.5.1-1
+          # libxxhash: Needed for rsync
+          LIBXXHASH_VER: 0.8.1-1
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
         run: |
@@ -188,6 +195,9 @@ jobs:
           untarzst wget- "$WGET_VER"
           untarzst libpcre2_ "$LIBPCRE2_VER"
           untarzst make- "$MAKE_VER"
+          untarzst rsync- "$RSYNC_VER"
+          untarzst libzstd- "$LIBZSTD_VER"
+          untarzst libxxhash- "$LIBXXHASH_VER"
       - name: Install Ubuntu tools
         if: ${{ startsWith(matrix.os, 'ubuntu-') }}
         run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends tree
@@ -245,15 +255,14 @@ jobs:
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 6
+          CACHE_NUMBER: 1
         with:
           path: |
-            ${{ matrix.opam-root }}/repo
             ${{ matrix.opam-root }}/config
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
             ${{ matrix.opam-root }}/.ci.root-init
           key:
-            ${{ runner.os }}-bootstrap-${{ env.CACHE_NUMBER }}-${{
+            ${{ runner.os }}-opamroot-${{ env.CACHE_NUMBER }}-${{
               matrix.bootstrap-opam-version }}-${{ env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
       - name: Initialize Opam root
@@ -283,10 +292,11 @@ jobs:
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 2
+          CACHE_NUMBER: 3
         with:
           path: |
             ${{ matrix.opam-root }}/download-cache
+            ${{ matrix.opam-root }}/repo
             ${{ matrix.opam-root }}/.ci.download-init
           key:
             ${{ runner.os }}-opamdownload-${{ env.CACHE_NUMBER }}
