@@ -1,7 +1,7 @@
 name: Package OCaml Releases
 
 env:
-  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "v0.3.3"
+  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "v0.4.0-prerel3"
 
 on:
   workflow_dispatch:
