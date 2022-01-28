@@ -372,8 +372,14 @@ jobs:
           MSYSTEM_PREFIX: /mingw64
         run: |
           call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
-          set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
-          echo %PATH%
+          if %ERRORLEVEL% neq 0 (
+            echo.
+            echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
+            echo.with exit code %ERRORLEVEL%.
+            echo.
+            exit /b %ERRORLEVEL%
+          )
+          set PATH=%CD%\bootstrap\bin;%PATH%
           opam install --yes --switch installer-%INSTALLERNAME% ./dkml-installer-%INSTALLERNAME%.opam --verbose
 
       - name: Build installer for non-Windows
