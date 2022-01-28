@@ -362,6 +362,7 @@ jobs:
           VS_DIR: ${{ matrix.vsstudio-dir }}
           VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
           VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
+          VSCMD_SKIP_SENDTELEMETRY: "1"
         run: |
           call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
           set PATH=%CD%\bootstrap\bin;%PATH%
