@@ -363,9 +363,17 @@ jobs:
           VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
           VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
           VSCMD_SKIP_SENDTELEMETRY: "1"
+          # Use env vars to communicate to crossplatform-functions.sh and
+          # anybody else with a Unix detection probe
+          # that a Unix environment is available (MSYS2 from Git Bash)
+          MSYSTEM: MINGW64
+          MSYSTEM_CARCH: x86_64
+          MSYSTEM_CHOST: x86_64-w64-mingw32
+          MSYSTEM_PREFIX: /mingw64
         run: |
           call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
-          set PATH=%CD%\bootstrap\bin;%PATH%
+          set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
+          echo %PATH%
           opam install --yes --switch installer-%INSTALLERNAME% ./dkml-installer-%INSTALLERNAME%.opam --verbose
 
       - name: Build installer for non-Windows
