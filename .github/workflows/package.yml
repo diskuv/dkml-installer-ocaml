@@ -109,6 +109,7 @@ jobs:
             # windows-latest will be windows-2022, which has untested VS2022
             bootstrap-opam-version: "0.0.0"
             dkml-target-abi: windows_x86
+            dkml-options: dkml-option-32bit
             opam-root: D:/.opam
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
             vsstudio-vcvarsver: "14.25"
@@ -116,6 +117,7 @@ jobs:
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
+            dkml-options: dkml-option-32bit
             opam-root: /home/runner/.opam
           - os: macos-latest
             bootstrap-opam-version: "os"
@@ -363,6 +365,7 @@ jobs:
           VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
           VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
           VSCMD_SKIP_SENDTELEMETRY: "1"
+          DKMLOPTIONS: ${{ matrix.dkml-options }}
           # Use env vars to communicate to crossplatform-functions.sh and
           # anybody else with a Unix detection probe
           # that a Unix environment is available (MSYS2 from Git Bash)
@@ -381,14 +384,15 @@ jobs:
             REM exit /b %ERRORLEVEL%
           REM )
           set PATH=%CD%\bootstrap\bin;%PATH%
-          opam install --yes --switch installer-%INSTALLERNAME% ./dkml-installer-%INSTALLERNAME%.opam --verbose
+          opam install --yes --switch installer-%INSTALLERNAME% %DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME ./dkml-installer-$INSTALLERNAME.opam --verbose
+          DKMLOPTIONS: ${{ matrix.dkml-options }}
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
 
       # Examine the Opam package
       - name: Examine the installer
