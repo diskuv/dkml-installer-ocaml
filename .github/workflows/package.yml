@@ -53,43 +53,6 @@ on:
 
 jobs:
   package:
-    env:
-      INSTALLERNAME: ocaml
-
-      SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
-      # Although the user expressed desire to populate the cache, only
-      # Opam 2.1 (?) and greater has the --download-only option. The OS
-      # provided opam may not have the option.
-      CAN_POPULATE_CACHE:     ${{ matrix.bootstrap-opam-version != 'os' }}
-
-      # When non-empty, instead of building the standard components from the
-      # central Opam repository, use the github/gitlab development repositories
-      # directly.
-      DKML_COMPONENT_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
-      DKML_COMPONENT_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
-      DKML_INSTALL:                 "${{ github.event.inputs.dkml-install }}"
-      DKML_INSTALL_RUNNER:          "${{ github.event.inputs.dkml-install-runner }}"
-      DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
-      TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
-      TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
-      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
-      DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
-
-      # `>-` will flatten the multiple lines into a single line with no trailing EOL.
-      # By design `populate-cache` is not part of the cache key
-      CACHE_KEY_GITHUB_INPUTS: >-
-        DKML_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
-        DKML_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
-        DKML_INSTALL=${{ github.event.inputs.dkml-install }}
-        DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
-        DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
-        TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
-        TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
-        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-option-32bit }}
-        DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
-
-      # Remove warnings
-      HOMEBREW_NO_INSTALL_CLEANUP: 1
     strategy:
       fail-fast: true
       matrix:
@@ -134,6 +97,51 @@ jobs:
             bootstrap-opam-version: "os"
             dkml-target-abi: darwin_x86_64
             opam-root: /Users/runner/.opam
+    env:
+      INSTALLERNAME: ocaml
+
+      SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
+      # Although the user expressed desire to populate the cache, only
+      # Opam 2.1 (?) and greater has the --download-only option. The OS
+      # provided opam may not have the option.
+      CAN_POPULATE_CACHE:     ${{ matrix.bootstrap-opam-version != 'os' }}
+
+      # When non-empty, instead of building the standard components from the
+      # central Opam repository, use the github/gitlab development repositories
+      # directly.
+      DKML_COMPONENT_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
+      DKML_COMPONENT_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
+      DKML_INSTALL:                 "${{ github.event.inputs.dkml-install }}"
+      DKML_INSTALL_RUNNER:          "${{ github.event.inputs.dkml-install-runner }}"
+      DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
+      TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
+      TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
+      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
+      DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
+
+      # `>-` will flatten the multiple lines into a single line with no trailing EOL.
+      # By design `populate-cache` is not part of the cache key
+      CACHE_KEY_GITHUB_INPUTS: >-
+        DKML_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
+        DKML_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
+        DKML_INSTALL=${{ github.event.inputs.dkml-install }}
+        DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
+        DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
+        TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
+        TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
+        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-option-32bit }}
+        DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
+
+      OPAMROOT: ${{ matrix.opam-root }}
+      VS_DIR: ${{ matrix.vsstudio-dir }}
+      VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
+      VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
+      # Use an M_ prefix so don't interfere with any internal DKML use
+      M_DKMLOPTIONS: ${{ matrix.dkml-options }}
+      M_DKMLTARGETABI: ${{ matrix.dkml-target-abi }}
+
+      # Remove warnings
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.dkml-target-abi }}
     steps:
@@ -143,8 +151,6 @@ jobs:
       - name: Audit Visual Studio on Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: pwsh
-        env:
-          VS_DIR: ${{ matrix.vsstudio-dir }}
         run: |
           & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -all -products *
           dir "$env:VS_DIR\VC\Tools\MSVC"
@@ -220,17 +226,16 @@ jobs:
         if: ${{ matrix.bootstrap-opam-version != 'os' }}
         shell: bash
         env:
-          ABI: ${{ matrix.dkml-target-abi }}
           VER: ${{ matrix.bootstrap-opam-version }}
         run: |
           install -d bootstrap
           cd bootstrap
-          if [ ! -e ocaml-$ABI-$VER.tar.gz ]; then
-            curl -L -o ocaml-$ABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$ABI-$VER.tar.gz
-            mv ocaml-$ABI-$VER.tmp.tar.gz ocaml-$ABI-$VER.tar.gz
+          if [ ! -e ocaml-$M_DKMLTARGETABI-$VER.tar.gz ]; then
+            curl -L -o ocaml-$M_DKMLTARGETABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$M_DKMLTARGETABI-$VER.tar.gz
+            mv ocaml-$M_DKMLTARGETABI-$VER.tmp.tar.gz ocaml-$M_DKMLTARGETABI-$VER.tar.gz
           fi
           if [ ! -e bin/opam ] && [ ! -e bin/opam.exe ]; then
-            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=1
+            tar xfz ocaml-$M_DKMLTARGETABI-$VER.tar.gz --strip-components=1
           fi
 
       # Build the installer
@@ -265,8 +270,6 @@ jobs:
       - name: Initialize Opam root for Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
         # Bizarre sequence is because Opam's default curl does not work on Windows,
         # and `opam init` does not provide a way to change it (TODO: need a PR!).
         run: |
@@ -278,15 +281,13 @@ jobs:
             opam option --yes --global download-command=wget
             opam repository list --all
             opam repository remove default --yes --all --dont-select
-            opam repository add default https://opam.ocaml.org --yes --dont-select
+            opam repository add default "git+https://github.com/ocaml/opam-repository.git" --yes --dont-select
             opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
           fi
 
       - name: Initialize Opam root for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         shell: bash
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           set "-x"
@@ -297,62 +298,51 @@ jobs:
 
       - name: Create installer Opam switch
         shell: bash
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
         run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default,diskuv --empty'
 
       - name: Pin dkml-component-ocamlrun to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLRUN:-main}"
 
       - name: Pin dkml-component-ocamlcompiler to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OCAMLCOMPILER != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLCOMPILER:-main}"
 
       - name: Pin dkml-install to source instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL:-main}"
 
       - name: Pin dkml-install-runner to source instead of Opam repository
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL_RUNNER:-main}"
 
       - name: Pin dkml-base-compiler to source instead of Opam repository
         if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_BASE_COMPILER:-main}"
 
       - name: (Temporary) Pin ocaml.4.12.1 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML:-main}"
 
       - name: (Temporary) Pin ocaml-config.2 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
 
       - name: Pin dkml-option-32bit to source instead of Opam repository
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
 
       # ocamlfind and ocamlbuild have patches necessary for Windows in diskuv-opam-repository
       - name: Pin ocamlfind ${{ env.PIN_OCAMLFIND }}, ocamlbuild ${{ env.PIN_OCAMLBUILD }}
         shell: bash
-        env: { "OPAMROOT": "${{ matrix.opam-root }}" }
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           opam pin add --yes --no-action -k version ocamlfind ${{ env.PIN_OCAMLFIND }}
@@ -361,12 +351,6 @@ jobs:
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
-          VS_DIR: ${{ matrix.vsstudio-dir }}
-          VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
-          VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
-          TARGET_ABI: ${{ matrix.dkml-target-abi }}
         # nit: Perhaps more of these VS_ values should come from `matrix`.
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
@@ -378,7 +362,7 @@ jobs:
           opam option setenv+="DKML_COMPILE_VS_WINSDKVER = \"$VS_WINSDKVER\""
           opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
           opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
-          opam option setenv+="DKML_HOST_ABI = \"$TARGET_ABI\""
+          opam option setenv+="DKML_HOST_ABI = \"$M_DKMLTARGETABI\""
           opam option setenv # print
 
       - name: Build installer for Windows
@@ -390,12 +374,7 @@ jobs:
         # PATH. There isn't a `with-dkml.exe` alternative available at
         # this stage of the GitHub workflow.
         env:
-          OPAMROOT: ${{ matrix.opam-root }}
-          VS_DIR: ${{ matrix.vsstudio-dir }}
-          VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
-          VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
           VSCMD_SKIP_SENDTELEMETRY: "1"
-          DKMLOPTIONS: ${{ matrix.dkml-options }}
           # Use env vars to communicate to crossplatform-functions.sh and
           # anybody else with a Unix detection probe
           # that a Unix environment is available (MSYS2 from Git Bash)
@@ -418,26 +397,21 @@ jobs:
           if "%SHOULD_POPULATE_CACHE%" == "true" (
             if "%CAN_POPULATE_CACHE%" == "true" (set MOREARGS=--download-only --jobs 1)
           )
-          opam install --yes --switch installer-%INSTALLERNAME% %DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose %MOREARGS%
+          opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose %MOREARGS%
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         shell: bash
         timeout-minutes: 60
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
-          DKMLOPTIONS: ${{ matrix.dkml-options }}
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_POPULATE_CACHE" = true ]; then
-            opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose --download-only --jobs 1
+            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose --download-only --jobs 1
           else
-            opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
+            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
           fi
 
       # Examine the Opam package
       - name: Examine the installer
         shell: bash
-        env:
-          OPAMROOT: ${{ matrix.opam-root }}
         run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -F -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
