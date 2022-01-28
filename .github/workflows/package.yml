@@ -412,4 +412,4 @@ jobs:
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree "$S"; else find "$S"; fi; fi
+        run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
