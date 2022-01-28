@@ -454,7 +454,7 @@ jobs:
 
       - name: Transfer Opam downloads to cache location
         shell: bash
-        run: if [ -e "OPAMROOT"/download-cache ]; then rm -rf download-cache; mv "$OPAMROOT"/download-cache .; fi
+        run: if [ -e "$OPAMROOT"/download-cache ]; then rm -rf download-cache; mv "$OPAMROOT"/download-cache .; fi
 
       - name: Git Status
         run: git status
