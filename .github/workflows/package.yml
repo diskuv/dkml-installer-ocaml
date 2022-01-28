@@ -392,7 +392,13 @@ jobs:
         env:
           OPAMROOT: ${{ matrix.opam-root }}
           DKMLOPTIONS: ${{ matrix.dkml-options }}
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          if ! opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose; then
+            printf "FATAL: ----------------- failed opam ----------------------\n"
+            tail -n100000 ~/.opam/log/dkml-base-compiler-*.out || true
+            exit 1
+          fi
 
       # Examine the Opam package
       - name: Examine the installer
