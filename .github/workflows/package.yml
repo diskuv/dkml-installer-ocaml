@@ -224,15 +224,26 @@ jobs:
 
       # Build the installer
 
+      - name: Cache Opam downloads
+        uses: actions/cache@v2
+        env:
+          # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
+          # or if you otherwise need a fresh Opam root
+          CACHE_NUMBER: 1
+        with:
+          path: |
+            ${{ matrix.opam-root }}/download-cache
+          key:
+            ${{ runner.os }}-opamdownload-${{ env.CACHE_NUMBER }}
+
       - name: Cache Opam root
         uses: actions/cache@v2
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 4
+          CACHE_NUMBER: 5
         with:
           path: |
-            ${{ matrix.opam-root }}/download-cache
             ${{ matrix.opam-root }}/repo
             ${{ matrix.opam-root }}/config
             ${{ matrix.opam-root }}/installer-${{ env.INSTALLERNAME }}
@@ -406,4 +417,4 @@ jobs:
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
-        run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
+        run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -F -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
