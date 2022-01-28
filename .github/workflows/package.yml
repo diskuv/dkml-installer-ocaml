@@ -99,6 +99,11 @@ jobs:
         #   `vsdevcmd.bat -vcvars_ver=VERSION`. Example: 14.26. See the output
         #   of the "Audit Visual Studio on Windows" step to see the supported
         #   versions (either xx.yy or xx.yy.zz should work).
+        # vsstudio-winsdkver
+        #   Only needed if `os: windows-*`. The VERSION in
+        #   `vsdevcmd.bat -winsdk=VERSION`. Example: 10.0.18362.0. See the
+        #   output of the "Audit Visual Studio on Windows" step to see the
+        #   supported versions.
         include:
           - os: windows-2019
             # windows-latest will be windows-2022, which has untested VS2022
@@ -107,6 +112,7 @@ jobs:
             opam-root: D:/.opam
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
             vsstudio-vcvarsver: "14.25"
+            vsstudio-winsdkver: "10.0.18362.0"
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
@@ -128,7 +134,8 @@ jobs:
           VS_DIR: ${{ matrix.vsstudio-dir }}
         run: |
           & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -all -products *
-          dir $env:VS_DIR\VC\Tools\MSVC
+          dir "$env:VS_DIR\VC\Tools\MSVC"
+          dir "C:\Program Files (x86)\Windows Kits\10\include"
 
       # Install utilities
       #   tree: Nice for pretty-printing the final package tree
@@ -327,6 +334,7 @@ jobs:
           OPAMROOT: ${{ matrix.opam-root }}
           VS_DIR: ${{ matrix.vsstudio-dir }}
           VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
+          VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
           TARGET_ABI: ${{ matrix.dkml-target-abi }}
         # nit: Perhaps more of these VS_ values should come from `matrix`.
         run: |
@@ -336,13 +344,31 @@ jobs:
           opam option setenv+='DKML_COMPILE_TYPE = "VS"'
           opam option setenv+="DKML_COMPILE_VS_DIR = \"$VS_DIR\""
           opam option setenv+="DKML_COMPILE_VS_VCVARSVER = \"$VS_VCVARSVER\""
-          opam option setenv+='DKML_COMPILE_VS_WINSDKVER = "10.0.18362.0"'
+          opam option setenv+="DKML_COMPILE_VS_WINSDKVER = \"$VS_WINSDKVER\""
           opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
           opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
           opam option setenv+="DKML_HOST_ABI = \"$TARGET_ABI\""
           opam option setenv # print
 
-      - name: Build installer
+      - name: Build installer for Windows
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: cmd
+        # OCaml will compile fine but any other packages (ocamlbuild, etc.) which
+        # need a native compiler will fail without the MSVC compiler in the
+        # PATH. There isn't a `with-dkml.exe` alternative available at
+        # this stage of the GitHub workflow.
+        env:
+          OPAMROOT: ${{ matrix.opam-root }}
+          VS_DIR: ${{ matrix.vsstudio-dir }}
+          VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
+          VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
+        run: |
+          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
+          set PATH=%CD%\bootstrap\bin;%PATH%
+          opam install --yes --switch installer-%INSTALLERNAME% ./dkml-installer-%INSTALLERNAME%.opam --verbose
+
+      - name: Build installer for non-Windows
+        if: ${{ !startsWith(matrix.os, 'windows-') }}
         shell: bash
         env:
           OPAMROOT: ${{ matrix.opam-root }}
