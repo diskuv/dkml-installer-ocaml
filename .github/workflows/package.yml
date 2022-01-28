@@ -7,6 +7,10 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      populate-cache:
+        description: "Enable if downloads should occur but not builds. Falls back to a full build if not supported by Opam"
+        required: false
+        type: boolean
       dkml-component-ocamlrun:
         description: "Git branch, tag or commit for ocamlrun component"
         required: false
@@ -52,6 +56,12 @@ jobs:
     env:
       INSTALLERNAME: ocaml
 
+      SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
+      # Although the user expressed desire to populate the cache, only
+      # Opam 2.1 (?) and greater has the --download-only option. The OS
+      # provided opam may not have the option.
+      CAN_POPULATE_CACHE:     ${{ matrix.bootstrap-opam-version != 'os' }}
+
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
@@ -65,7 +75,8 @@ jobs:
       DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
       DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
 
-      # `>-` will flatten the multiple lines into a single line with no trailing EOL
+      # `>-` will flatten the multiple lines into a single line with no trailing EOL.
+      # By design `populate-cache` is not part of the cache key
       CACHE_KEY_GITHUB_INPUTS: >-
         DKML_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
         DKML_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
@@ -241,7 +252,7 @@ jobs:
         env:
           # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
           # or if you otherwise need a fresh Opam root
-          CACHE_NUMBER: 5
+          CACHE_NUMBER: 6
         with:
           path: |
             ${{ matrix.opam-root }}/repo
@@ -401,8 +412,12 @@ jobs:
             REM echo.
             REM exit /b %ERRORLEVEL%
           REM )
+
           set PATH=%CD%\bootstrap\bin;%PATH%
-          opam install --yes --switch installer-%INSTALLERNAME% %DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose
+          if "%SHOULD_POPULATE_CACHE%" == "true" (
+            if "%CAN_POPULATE_CACHE%" == "true" (set MOREARGS=--download-only --jobs 1)
+          )
+          opam install --yes --switch installer-%INSTALLERNAME% %DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose %MOREARGS%
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
@@ -410,7 +425,13 @@ jobs:
         env:
           OPAMROOT: ${{ matrix.opam-root }}
           DKMLOPTIONS: ${{ matrix.dkml-options }}
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
+        run: |
+          PATH="$PWD/bootstrap/bin:$PATH"
+          if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_POPULATE_CACHE" = true ]; then
+            opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose --download-only --jobs 1
+          else
+            opam install --yes --switch installer-$INSTALLERNAME $DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
+          fi
 
       # Examine the Opam package
       - name: Examine the installer
