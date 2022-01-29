@@ -79,9 +79,14 @@ jobs:
         #   output of the "Audit Visual Studio on Windows" step to see the
         #   supported versions.
         include:
+          #   windows-latest will be windows-2022, which has untested VS2022
           - os: windows-2019
-            # windows-latest will be windows-2022, which has untested VS2022
             bootstrap-opam-version: "0.0.0"
+            # The 32-bit Opam binary has some problems with
+            # `Unix.create_process` giving:
+            #   "create_process" failed on sleep: Bad file descriptor
+            # So use 64-bit Opam binary
+            opam-abi: windows_x86_64
             dkml-target-abi: windows_x86
             dkml-options: dkml-option-32bit
             opam-root: D:/.opam
@@ -142,7 +147,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 4
+      OPAM_ROOT_CACHE_NUMBER: 5
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -241,15 +246,19 @@ jobs:
         shell: bash
         env:
           VER: ${{ matrix.bootstrap-opam-version }}
+          ABI: ${{ matrix.opam-abi }}
         run: |
+          set -x
           install -d bootstrap
           cd bootstrap
-          if [ ! -e ocaml-$M_DKMLTARGETABI-$VER.tar.gz ]; then
-            curl -L -o ocaml-$M_DKMLTARGETABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$M_DKMLTARGETABI-$VER.tar.gz
-            mv ocaml-$M_DKMLTARGETABI-$VER.tmp.tar.gz ocaml-$M_DKMLTARGETABI-$VER.tar.gz
+          ABI=${ABI:-$M_DKMLTARGETABI} # default to the target abi
+          if [ ! -e ocaml-$ABI-$VER.tar.gz ]; then
+            curl -L -o ocaml-$ABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$ABI-$VER.tar.gz
+            mv ocaml-$ABI-$VER.tmp.tar.gz ocaml-$ABI-$VER.tar.gz
+            rm -f bin/opam bin/opam.exe
           fi
           if [ ! -e bin/opam ] && [ ! -e bin/opam.exe ]; then
-            tar xfz ocaml-$M_DKMLTARGETABI-$VER.tar.gz --strip-components=1
+            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=1
           fi
 
       # Build the installer

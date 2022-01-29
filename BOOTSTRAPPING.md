@@ -18,6 +18,12 @@ We solve the chicken-and-egg problem in two different ways:
 
 The first **0.0.0** pre-release was manually uploaded using the Opam from the original Diskuv OCaml GitLab preview.
 
-Specifically the contents came from the **32-bit** Opam binary distribution of https://gitlab.com/api/v4/projects/diskuv%2Fdiskuv-ocaml/packages/generic/opam-reproducible/v0.3.3/opam-windows_x86.zip (which may no longer be available). The .zip was re-packaged into the CLI Archive Installer format:
+Specifically the contents came from (which may no longer be available):
+* the **32-bit** Opam binary distribution of https://gitlab.com/api/v4/projects/diskuv%2Fdiskuv-ocaml/packages/generic/opam-reproducible/v0.3.3/opam-windows_x86.zip
+* the **64-bit** Opam binary distribution of https://gitlab.com/api/v4/projects/diskuv%2Fdiskuv-ocaml/packages/generic/opam-reproducible/v0.3.3/opam-windows_x86_64.zip
 
-* `opam-windows_x86.zip:bin/opam.exe` -> `ocaml-windows_x86-0.0.0.tar.gz:ocaml-windows_x86-0.0.0/static-files/bin/opam.exe`
+The .zip files were re-packaged into the CLI Archive Installer format:
+
+* `opam-windows_x86.zip:bin/opam.exe`    -> `ocaml-windows_x86-0.0.0.tar.gz:ocaml-windows_x86-0.0.0/static-files/bin/opam.exe`
+* `opam-windows_x86_64.zip:bin/opam.exe` -> `ocaml-windows_x86_64-0.0.0.tar.gz:ocaml-windows_x86_64-0.0.0/static-files/bin/opam.exe`
+
