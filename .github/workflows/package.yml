@@ -402,6 +402,7 @@ jobs:
         shell: cmd
         timeout-minutes: 60
         env:
+          VSCMD_SKIP_SENDTELEMETRY: 1
           # Use env vars to communicate to crossplatform-functions.sh and
           # anybody else with a Unix detection probe
           # that a Unix environment is available (MSYS2 from Git Bash)
@@ -410,6 +411,20 @@ jobs:
           MSYSTEM_CHOST: x86_64-w64-mingw32
           MSYSTEM_PREFIX: /mingw64
         run: |
+          REM OCaml (dkml-base-compiler) will compile fine but any other
+          REM packages (ocamlbuild, etc.) which
+          REM need a native compiler will fail without the MSVC compiler in the
+          REM PATH. There isn't a `with-dkml.exe` alternative available at
+          REM this stage of the GitHub workflow.
+          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
+          if %ERRORLEVEL% neq 0 (
+            echo.
+            echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
+            echo.with exit code %ERRORLEVEL%.
+            echo.
+            exit /b %ERRORLEVEL%
+          )
+
           REM We must place MSYS2 (Git Bash) in front of path so that MSYS2
           REM tar.exe is used instead of Windows tar.exe.
           set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
