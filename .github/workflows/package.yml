@@ -440,9 +440,12 @@ jobs:
 
           set PATH=%CD%\bootstrap\bin;%PATH%
           if "%SHOULD_POPULATE_CACHE%" == "true" (
-            if "%CAN_DOWNLOAD_ONLY%" == "true" (set MOREARGS=--download-only --jobs 1)
+            if "%CAN_DOWNLOAD_ONLY%" == "true" (
+              set MOREARGS=--download-only --jobs 1 -v -v -v
+              set ENVARGS=OPAMDOWNLOADJOBS=1
+            )
           )
-          opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam --verbose %MOREARGS%
+          env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
@@ -451,9 +454,9 @@ jobs:
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_DOWNLOAD_ONLY" = true ]; then
-            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose --download-only --jobs 1
+            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --download-only --jobs 1
           else
-            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --verbose
+            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam
           fi
 
       # Examine the Opam package
