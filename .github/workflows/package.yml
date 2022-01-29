@@ -258,7 +258,7 @@ jobs:
             rm -f bin/opam bin/opam.exe
           fi
           if [ ! -e bin/opam ] && [ ! -e bin/opam.exe ]; then
-            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=1
+            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=2
           fi
 
       # Build the installer
