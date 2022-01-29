@@ -142,7 +142,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 3
+      OPAM_ROOT_CACHE_NUMBER: 4
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -292,7 +292,7 @@ jobs:
       - name: Cache Opam downloads
         uses: actions/cache@v2
         env:
-          CACHE_NUMBER: 6
+          CACHE_NUMBER: 1
         # This cache is _not_ operating system specific. Windows machines
         # on GitHub Actions sometimes have problems downloading from Opam
         # package sources so _any_ operating system which can download the
@@ -311,7 +311,7 @@ jobs:
       - name: Cache Opam repositories
         uses: actions/cache@v2
         env:
-          CACHE_NUMBER: 4
+          CACHE_NUMBER: 1
         with:
           path: |
             ${{ matrix.opam-root }}/repo
