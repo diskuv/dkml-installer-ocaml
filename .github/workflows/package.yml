@@ -217,9 +217,14 @@ jobs:
       # Requirements
       #   - gcc-/g++-multilib for 32bit option (depext from Opam should auto-install in dkml-option-32bit, but we
       #     need to be resilient to Opam version changes)
+      #   - link.exe from MSYS2 shadows link.exe from MSVC
       - name: Install 32-bit Ubuntu requirements
         if: ${{ startsWith(matrix.os, 'ubuntu-') && contains(matrix.dkml-options, 'dkml-option-32bit') }}
         run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends gcc-multilib g++-multilib
+      - name: Uninstall MSYS2 conflicting executables
+        if: ${{ startsWith(matrix.os, 'windows-') }}
+        shell: bash
+        run: rm -vf /usr/bin/link.exe
 
       # Bootstrap Opam (only necessary for INSTALLER_NAME=ocaml)
 
