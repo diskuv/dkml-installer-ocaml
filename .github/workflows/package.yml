@@ -147,7 +147,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 5
+      OPAM_ROOT_CACHE_NUMBER: 6
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -298,32 +298,14 @@ jobs:
             touch "$OPAMROOT/.ci.root-init"
           fi
 
-      - name: Cache Opam downloads
-        uses: actions/cache@v2
-        env:
-          CACHE_NUMBER: 1
-        # This cache is _not_ operating system specific. Windows machines
-        # on GitHub Actions sometimes have problems downloading from Opam
-        # package sources so _any_ operating system which can download the
-        # sources are fine with us.
-        # But we can't use a fully qualified `with: path:` or we will get
-        # cache misses.
-        with:
-          path: |
-            download-cache
-          key:
-            opamdownload-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
-      - name: Transfer cached downloads to Opam
-        shell: bash
-        run: if [ -e download-cache ]; then rsync -a download-cache "$OPAMROOT"; rm -rf download-cache; fi
-
-      - name: Cache Opam repositories
+      - name: Cache Opam downloads and repositories
         uses: actions/cache@v2
         env:
           CACHE_NUMBER: 1
         with:
           path: |
             ${{ matrix.opam-root }}/repo
+            ${{ matrix.opam-root }}/download-cache
             ${{ matrix.opam-root }}/.ci.repo-init
           key:
             ${{ runner.os }}-opamrepo-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
@@ -414,12 +396,7 @@ jobs:
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: cmd
         timeout-minutes: 60
-        # OCaml will compile fine but any other packages (ocamlbuild, etc.) which
-        # need a native compiler will fail without the MSVC compiler in the
-        # PATH. There isn't a `with-dkml.exe` alternative available at
-        # this stage of the GitHub workflow.
         env:
-          VSCMD_SKIP_SENDTELEMETRY: "1"
           # Use env vars to communicate to crossplatform-functions.sh and
           # anybody else with a Unix detection probe
           # that a Unix environment is available (MSYS2 from Git Bash)
@@ -428,27 +405,16 @@ jobs:
           MSYSTEM_CHOST: x86_64-w64-mingw32
           MSYSTEM_PREFIX: /mingw64
         run: |
-          REM -- Disable adding the MSVC compiler --
-          REM call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
-          REM if %ERRORLEVEL% neq 0 (
-            REM echo.
-            REM echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
-            REM echo.with exit code %ERRORLEVEL%.
-            REM echo.
-            REM exit /b %ERRORLEVEL%
-          REM )
-
           REM We must place MSYS2 (Git Bash) in front of path so that MSYS2
           REM tar.exe is used instead of Windows tar.exe.
-
           set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
+
           if "%SHOULD_POPULATE_CACHE%" == "true" (
             if "%CAN_DOWNLOAD_ONLY%" == "true" (
-              set MOREARGS=--download-only --jobs 1 -v -v -v
+              set MOREARGS=--download-only
               set ENVARGS=OPAMDOWNLOADJOBS=1
             )
           )
-          where.exe tar
           env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
 
       - name: Build installer for non-Windows
@@ -458,7 +424,7 @@ jobs:
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_DOWNLOAD_ONLY" = true ]; then
-            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --download-only --jobs 1
+            env OPAMDOWNLOADJOBS=1 opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --download-only
           else
             opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam
           fi
@@ -467,10 +433,3 @@ jobs:
       - name: Examine the installer
         shell: bash
         run: S=$(PATH="$PWD/bootstrap/bin:$PATH" opam var share) ; if [ -e "$S" ]; then if [ -x /usr/bin/tree ]; then tree -F -I src "$S"; else find "$S" -name src -prune -o -type f -print; fi; fi
-
-      - name: Transfer Opam downloads to cache location
-        shell: bash
-        run: if [ -e "$OPAMROOT"/download-cache ]; then rm -rf download-cache; mv "$OPAMROOT"/download-cache .; fi
-
-      - name: Git Status
-        run: git status
