@@ -438,13 +438,17 @@ jobs:
             REM exit /b %ERRORLEVEL%
           REM )
 
-          set PATH=%CD%\bootstrap\bin;%PATH%
+          REM We must place MSYS2 (Git Bash) in front of path so that MSYS2
+          REM tar.exe is used instead of Windows tar.exe.
+
+          set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
           if "%SHOULD_POPULATE_CACHE%" == "true" (
             if "%CAN_DOWNLOAD_ONLY%" == "true" (
               set MOREARGS=--download-only --jobs 1 -v -v -v
               set ENVARGS=OPAMDOWNLOADJOBS=1
             )
           )
+          where.exe tar
           env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
 
       - name: Build installer for non-Windows
