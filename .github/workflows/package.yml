@@ -202,28 +202,7 @@ jobs:
           LIBXXHASH_VER: 0.8.1-1
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
-        run: |
-          untarxz() {
-            prefix=$1; shift
-            ver=$1; shift
-            curl -L -o $prefix$ver-x86_64.pkg.tar.xz http://repo.msys2.org/msys/x86_64/$prefix$ver-x86_64.pkg.tar.xz
-            tar xfCJ $prefix$ver-x86_64.pkg.tar.xz /
-            rm -f $prefix$ver-x86_64.pkg.tar.xz
-          }
-          untarzst() {
-            prefix=$1; shift
-            ver=$1; shift
-            curl -L -o $prefix$ver-x86_64.pkg.tar.zst http://repo.msys2.org/msys/x86_64/$prefix$ver-x86_64.pkg.tar.zst
-            tar xfC $prefix$ver-x86_64.pkg.tar.zst / --use-compress-program='zstd -d'
-            rm -f $prefix$ver-x86_64.pkg.tar.zst
-          }
-          untarxz tree- "$TREE_VER"
-          untarzst wget- "$WGET_VER"
-          untarzst libpcre2_ "$LIBPCRE2_VER"
-          untarzst make- "$MAKE_VER"
-          untarzst rsync- "$RSYNC_VER"
-          untarzst libzstd- "$LIBZSTD_VER"
-          untarzst libxxhash- "$LIBXXHASH_VER"
+        run: .github/workflows/scripts/win32_install_tools.sh
       - name: Install Ubuntu tools
         if: ${{ startsWith(matrix.os, 'ubuntu-') }}
         run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends tree
@@ -269,19 +248,7 @@ jobs:
         env:
           VER: ${{ matrix.bootstrap-opam-version }}
           ABI: ${{ matrix.opam-abi }}
-        run: |
-          set -x
-          install -d bootstrap
-          cd bootstrap
-          ABI=${ABI:-$M_DKMLTARGETABI} # default to the target abi
-          if [ ! -e ocaml-$ABI-$VER.tar.gz ]; then
-            curl -L -o ocaml-$ABI-$VER.tmp.tar.gz https://github.com/diskuv/dkml-installer-ocaml/releases/download/v$VER/ocaml-$ABI-$VER.tar.gz
-            mv ocaml-$ABI-$VER.tmp.tar.gz ocaml-$ABI-$VER.tar.gz
-            rm -f bin/opam bin/opam.exe
-          fi
-          if [ ! -e bin/opam ] && [ ! -e bin/opam.exe ]; then
-            tar xfz ocaml-$ABI-$VER.tar.gz --strip-components=2
-          fi
+        run: .github/workflows/scripts/all_bootstrap_opam_from_historical_release.sh
 
       # Build the installer
 
@@ -307,20 +274,7 @@ jobs:
         #    a PR!).
         # 2. We have to separate the Opam download cache from the other Opam
         #    caches
-        run: |
-          PATH="$PWD/bootstrap/bin:$PATH"
-          set "-x"
-          if [ ! -e "$OPAMROOT/.ci.root-init" ]; then
-            rm -rf "$OPAMROOT" # Clear any partial previous attempt
-            if [ "$ISWINDOWS" = true ]; then
-              opam init --disable-sandboxing --no-setup --kind local --bare "$(cygpath -am empty-opam-repository)"
-              opam option --yes --global download-command=wget
-            else
-              opam init --disable-sandboxing --no-setup --kind local --bare "$PWD/empty-opam-repository"
-            fi
-            touch "$OPAMROOT/.ci.root-init"
-          fi
-          opam var --global || true
+        run: .github/workflows/scripts/all_initialize_opam_root.sh
 
       - name: Cache Opam downloads and repositories
         uses: actions/cache@v2
@@ -336,16 +290,7 @@ jobs:
 
       - name: Setup Opam repositories
         shell: bash
-        run: |
-          PATH="$PWD/bootstrap/bin:$PATH"
-          set "-x"
-          if [ ! -e "$OPAMROOT/.ci.repo-init" ]; then
-            opam repository remove default --yes --all --dont-select || true
-            opam repository remove diskuv --yes --all --dont-select || true
-            opam repository add default https://opam.ocaml.org --yes --dont-select
-            opam repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
-            touch "$OPAMROOT/.ci.repo-init"
-          fi
+        run: .github/workflows/scripts/all_setup_opam_repositories.sh
 
       - name: Create installer Opam switch
         shell: bash
@@ -434,35 +379,7 @@ jobs:
           MSYSTEM_CARCH: x86_64
           MSYSTEM_CHOST: x86_64-w64-mingw32
           MSYSTEM_PREFIX: /mingw64
-        run: |
-          REM OCaml (dkml-base-compiler) will compile fine but any other
-          REM packages (ocamlbuild, etc.) which
-          REM need a native compiler will fail without the MSVC compiler in the
-          REM PATH. There isn't a `with-dkml.exe` alternative available at
-          REM this stage of the GitHub workflow.
-          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -host_arch=%VS_HOST_ARCH% -arch=%VS_ARCH% -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
-          if %ERRORLEVEL% neq 0 (
-            echo.
-            echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
-            echo.with exit code %ERRORLEVEL%.
-            echo.
-            exit /b %ERRORLEVEL%
-          )
-
-          REM We must place MSYS2 (Git Bash) in front of path so that MSYS2
-          REM tar.exe is used instead of Windows tar.exe.
-          set PATH=%CD%\bootstrap\bin;C:\Program Files\Git\usr\bin;%PATH%
-
-          if "%SHOULD_POPULATE_CACHE%" == "true" (
-            if "%CAN_DOWNLOAD_ONLY%" == "true" (
-              set MOREARGS=--download-only
-              set ENVARGS=OPAMDOWNLOADJOBS=1
-            )
-          )
-          if "%M_DKMLTARGETABI:~-4%" == "_x86" (
-            set M_DKMLOPTION_32BIT=dkml-option-32bit
-          )
-          env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% %M_DKMLOPTION_32BIT% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS% --verbose --debug-level 2
+        run: .github/workflows/scripts/win32_build_installer.cmd
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
