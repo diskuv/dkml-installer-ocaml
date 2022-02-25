@@ -74,11 +74,19 @@ jobs:
         #   `vsdevcmd.bat -winsdk=VERSION`. Example: 10.0.18362.0. See the
         #   output of the "Audit Visual Studio on Windows" step to see the
         #   supported versions.
+        # vsstudio-arch
+        #   Only needed if `os: windows-*`. The ARCH in
+        #   `vsdevcmd.bat -arch=ARCH`. Example: x86.
+        #   Confer: https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#use-the-developer-tools-in-an-existing-command-window
+        # vsstudio-hostarch
+        #   Only needed if `os: windows-*`. The ARCH in
+        #   `vsdevcmd.bat -host_arch=ARCH`. Example: x64.
+        #   Confer: https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#use-the-developer-tools-in-an-existing-command-window
         # dkml-options:
         #   Space separated list of `dkml-option-*` packages.
         #
         #   Use 32-bit installers when possible for maximum portability of
-        #   OCaml bytecode. macos is onlt the major platform without 32-bit.
+        #   OCaml bytecode. macos is only the major platform without 32-bit.
         #   You don't need to include `dkml-option-32bit` because it is auto
         #   chosen when the target ABI ends with x86.
         include:
@@ -95,6 +103,8 @@ jobs:
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
             vsstudio-vcvarsver: "14.25"
             vsstudio-winsdkver: "10.0.18362.0"
+            vsstudio-arch: x86
+            vsstudio-hostarch: x86
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
@@ -144,6 +154,8 @@ jobs:
 
       OPAMROOT: ${{ matrix.opam-root }}
       VS_DIR: ${{ matrix.vsstudio-dir }}
+      VS_ARCH: ${{ matrix.vsstudio-arch }}
+      VS_HOST_ARCH: ${{ matrix.vsstudio-hostarch }}
       VS_VCVARSVER: ${{ matrix.vsstudio-vcvarsver }}
       VS_WINSDKVER: ${{ matrix.vsstudio-winsdkver }}
       # Use an M_ prefix so don't interfere with any internal DKML use
@@ -428,7 +440,7 @@ jobs:
           REM need a native compiler will fail without the MSVC compiler in the
           REM PATH. There isn't a `with-dkml.exe` alternative available at
           REM this stage of the GitHub workflow.
-          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
+          call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -host_arch=%VS_HOST_ARCH% -arch=%VS_ARCH% -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
           if %ERRORLEVEL% neq 0 (
             echo.
             echo.The "%VS_DIR%\Common7\Tools\VsDevCmd.bat" command failed
