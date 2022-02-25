@@ -16,7 +16,7 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-ocamlcompiler:
-        description: "Git branch, tag or commit for ocamlcompiler component"
+        description: "Git branch, tag or commit for dkml-component-ocamlcompiler, conf-dkml-cross-toolchain and dkml-option-32bit"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-install:
@@ -29,10 +29,6 @@ on:
         default: "" # Change this to "@repository@" once published to Opam
       dkml-base-compiler:
         description: "Git branch, tag or commit for dkml-base-compiler package"
-        required: false
-        default: "" # Change this to "@repository@" once published to Opam
-      dkml-option-32bit:
-        description: "Git branch, tag or commit for dkml-option-32bit package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml:
@@ -78,6 +74,13 @@ jobs:
         #   `vsdevcmd.bat -winsdk=VERSION`. Example: 10.0.18362.0. See the
         #   output of the "Audit Visual Studio on Windows" step to see the
         #   supported versions.
+        # dkml-options:
+        #   Space separated list of `dkml-option-*` packages.
+        #
+        #   Use 32-bit installers when possible for maximum portability of
+        #   OCaml bytecode. macos is onlt the major platform without 32-bit.
+        #   You don't need to include `dkml-option-32bit` because it is auto
+        #   chosen when the target ABI ends with x86.
         include:
           #   windows-latest will be windows-2022, which has untested VS2022
           - os: windows-2019
@@ -88,7 +91,6 @@ jobs:
             # So use 64-bit Opam binary
             opam-abi: windows_x86_64
             dkml-target-abi: windows_x86
-            dkml-options: dkml-option-32bit
             opam-root: D:/.opam
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
             vsstudio-vcvarsver: "14.25"
@@ -96,7 +98,6 @@ jobs:
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
-            dkml-options: dkml-option-32bit
             opam-root: /home/runner/.opam
           - os: macos-latest
             bootstrap-opam-version: "os"
@@ -121,8 +122,11 @@ jobs:
       DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
       TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
-      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-option-32bit }}"
       DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
+      # These are not independent of dkml-component-ocamlcompiler; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      CONF_DKML_CROSS_TOOLCHAIN:    "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
       # By design `populate-cache` is not part of the cache key
@@ -132,9 +136,10 @@ jobs:
         DKML_INSTALL=${{ github.event.inputs.dkml-install }}
         DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
         DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
+        CONF_DKML_CROSS_TOOLCHAIN=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
-        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-option-32bit }}
+        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
 
       OPAMROOT: ${{ matrix.opam-root }}
@@ -219,7 +224,7 @@ jobs:
       #     need to be resilient to Opam version changes)
       #   - link.exe from MSYS2 shadows link.exe from MSVC
       - name: Install 32-bit Ubuntu requirements
-        if: ${{ startsWith(matrix.os, 'ubuntu-') && contains(matrix.dkml-options, 'dkml-option-32bit') }}
+        if: ${{ startsWith(matrix.os, 'ubuntu-') && endsWith(matrix.dkml-target-abi, 'x86') }}
         run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends gcc-multilib g++-multilib
       - name: Uninstall MSYS2 conflicting executables
         if: ${{ startsWith(matrix.os, 'windows-') }}
@@ -357,6 +362,11 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_BASE_COMPILER:-main}"
 
+      - name: Pin conf-dkml-cross-toolchain to source instead of Opam repository
+        if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
+
       - name: (Temporary) Pin ocaml.4.12.1 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
         shell: bash
@@ -435,7 +445,10 @@ jobs:
               set ENVARGS=OPAMDOWNLOADJOBS=1
             )
           )
-          env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
+          if "%M_DKMLTARGETABI:~-4%" == "_x86" (
+            set M_DKMLOPTION_32BIT=dkml-option-32bit
+          )
+          env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% %M_DKMLOPTION_32BIT% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
 
       - name: Build installer for non-Windows
         if: ${{ !startsWith(matrix.os, 'windows-') }}
@@ -443,10 +456,14 @@ jobs:
         timeout-minutes: 60
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
+          case "$M_DKMLTARGETABI" in
+            *_x86) M_DKMLOPTION_32BIT=dkml-option-32bit ;;
+            *)     M_DKMLOPTION_32BIT= ;;
+          esac
           if [ "$SHOULD_POPULATE_CACHE" = true ] && [ "$CAN_DOWNLOAD_ONLY" = true ]; then
-            env OPAMDOWNLOADJOBS=1 opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam --download-only
+            env OPAMDOWNLOADJOBS=1 opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS $M_DKMLOPTION_32BIT ./dkml-installer-$INSTALLERNAME.opam --download-only
           else
-            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS ./dkml-installer-$INSTALLERNAME.opam
+            opam install --yes --switch installer-$INSTALLERNAME $M_DKMLOPTIONS $M_DKMLOPTION_32BIT ./dkml-installer-$INSTALLERNAME.opam
           fi
 
       # Examine the Opam package
