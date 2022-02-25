@@ -164,7 +164,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 6
+      OPAM_ROOT_CACHE_NUMBER: 7
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -294,7 +294,7 @@ jobs:
 
       - name: Create installer Opam switch
         shell: bash
-        run: '[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default,diskuv --empty'
+        run: .github/workflows/scripts/all_create_installer_opam_switch.sh
 
       - name: Pin dkml-component-ocamlrun to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}

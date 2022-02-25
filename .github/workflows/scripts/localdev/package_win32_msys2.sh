@@ -21,8 +21,8 @@ set -euf
 #
 # Then you can run the following in Git Bash:
 #
-#   . .github/workflows/scripts/localdev/windows_vars.source.sh
-#   env - .github/workflows/scripts/localdev/package_win32_msys2.sh
+#   . '.github/workflows/scripts/localdev/windows_vars.source.sh'
+#   .github/workflows/scripts/localdev/package_win32_msys2.sh
 #
 # There are some destructive operations:
 #   1. Extra binaries are installed in Git Bash _only if you are root_
@@ -81,7 +81,7 @@ ISWINDOWS=true "$HERE/../all_initialize_opam_root.sh"
 "$HERE/../all_setup_opam_repositories.sh"
 
 # --> Create installer Opam switch
-[ -d "$OPAMROOT/installer-$INSTALLERNAME/.opam-switch" ] || PATH="$PWD/bootstrap/bin:$PATH" opam switch create installer-$INSTALLERNAME --repos default,diskuv --empty
+"$HERE/../all_create_installer_opam_switch.sh"
 
 # --> Pin dkml-component-ocamlrun/etc. to source instead of Opam repository
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLRUN:-main}"
