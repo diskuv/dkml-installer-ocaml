@@ -308,6 +308,7 @@ jobs:
             fi
             touch "$OPAMROOT/.ci.root-init"
           fi
+          opam var --global || true
 
       - name: Cache Opam downloads and repositories
         uses: actions/cache@v2
