@@ -282,7 +282,8 @@ jobs:
             ${{ matrix.opam-root }}/.ci.root-init
           key:
             ${{ runner.os }}-opamroot-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{
-              matrix.bootstrap-opam-version }}-${{ env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
+              matrix.bootstrap-opam-version }}-${{ matrix.opam-abi }}-${{
+              env.DEFAULT_DISKUV_OPAM_REPOSITORY_TAG }}-${{ env.CACHE_KEY_GITHUB_INPUTS }}
 
       - name: Initialize Opam root
         env:
