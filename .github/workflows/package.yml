@@ -89,7 +89,7 @@ jobs:
             # `Unix.create_process` giving:
             #   "create_process" failed on sleep: Bad file descriptor
             # So use 64-bit Opam binary
-            opam-abi: windows_x86_64
+            opam-abi: windows_x86 #_64
             dkml-target-abi: windows_x86
             opam-root: D:/.opam
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
