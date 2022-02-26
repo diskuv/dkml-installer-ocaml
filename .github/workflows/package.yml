@@ -1,7 +1,7 @@
 name: Package OCaml Releases
 
 env:
-  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "df8dd009ac5d7c7cfd6d0e1137eb109035102f03" # "v0.4.0-prerel13" when released
+  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "d3be2e9f29324fd193d589a53c125544453c9dda" # "v0.4.0-prerel13" when released
   PIN_OCAMLFIND: "1.9.1"
   PIN_OCAMLBUILD: "0.14.0"
 on:
