@@ -1,7 +1,7 @@
 name: Package OCaml Releases
 
 env:
-  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "v0.4.0-prerel3"
+  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "df8dd009ac5d7c7cfd6d0e1137eb109035102f03" # "v0.4.0-prerel13" when released
   PIN_OCAMLFIND: "1.9.1"
   PIN_OCAMLBUILD: "0.14.0"
 on:
@@ -74,13 +74,20 @@ jobs:
         #   `vsdevcmd.bat -winsdk=VERSION`. Example: 10.0.18362.0. See the
         #   output of the "Audit Visual Studio on Windows" step to see the
         #   supported versions.
-        # vsstudio-arch
-        #   Only needed if `os: windows-*`. The ARCH in
-        #   `vsdevcmd.bat -arch=ARCH`. Example: x86.
-        #   Confer: https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#use-the-developer-tools-in-an-existing-command-window
         # vsstudio-hostarch
         #   Only needed if `os: windows-*`. The ARCH in
         #   `vsdevcmd.bat -host_arch=ARCH`. Example: x64.
+        #   If you have a 64-bit Intel machine you should not use x86 because
+        #   _WIN64 will be defined (see https://docs.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170)
+        #   which is based on the host machine architecture (unless you explicitly
+        #   cross-compile with different ARCHs; that is, -host_arch=x64 -arch=x75).
+        #   Confer: https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#use-the-developer-tools-in-an-existing-command-window
+        #   If you see ppx problems with missing _BitScanForward64 then
+        #   https://github.com/janestreet/base/blob/8993e35ba2e83e5020b2deb548253ef1e4a699d4/src/int_math_stubs.c#L25-L32
+        #   has been compiled with the wrong host architecture.
+        # vsstudio-arch
+        #   Only needed if `os: windows-*`. The ARCH in
+        #   `vsdevcmd.bat -arch=ARCH`. Example: x86.
         #   Confer: https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#use-the-developer-tools-in-an-existing-command-window
         # dkml-options:
         #   Space separated list of `dkml-option-*` packages.
@@ -103,8 +110,8 @@ jobs:
             vsstudio-dir: C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise
             vsstudio-vcvarsver: "14.25"
             vsstudio-winsdkver: "10.0.18362.0"
-            vsstudio-arch: x86
             vsstudio-hostarch: x86
+            vsstudio-arch: x86
           - os: ubuntu-latest
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
@@ -164,7 +171,7 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 7
+      OPAM_ROOT_CACHE_NUMBER: 8
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1

@@ -11,6 +11,8 @@ if %ERRORLEVEL% neq 0 (
   echo.
   exit /b %ERRORLEVEL%
 )
+REM VsDevCmd.bat turns off echo; put it back on
+echo ON
 
 REM We must place MSYS2 (Git Bash) in front of path so that MSYS2
 REM tar.exe is used instead of Windows tar.exe.
@@ -24,5 +26,9 @@ if "%SHOULD_POPULATE_CACHE%" == "true" (
 )
 if "%M_DKMLTARGETABI:~-4%" == "_x86" (
   set M_DKMLOPTION_32BIT=dkml-option-32bit
+)
+if "%__INTERNAL__WIN32_BASH_HOOK%" == "true" (
+  REM # for debugging
+  env %ENVARGS% bash
 )
 env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% %M_DKMLOPTION_32BIT% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS% --verbose --debug-level 2
