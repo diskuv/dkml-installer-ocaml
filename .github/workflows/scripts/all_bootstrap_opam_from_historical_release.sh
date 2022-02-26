@@ -1,4 +1,5 @@
 #!/bin/sh
+set -euf
 set -x
 install -d bootstrap
 cd bootstrap

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -euf
+set -x
 PATH="$PWD/bootstrap/bin:$PATH"
-set "-x"
 if [ ! -e "$OPAMROOT/.ci.root-init" ]; then
   rm -rf "$OPAMROOT" # Clear any partial previous attempt
   if [ "$ISWINDOWS" = true ]; then

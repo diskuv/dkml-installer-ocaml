@@ -1,6 +1,7 @@
 #!/bin/sh
+set -euf
+set -x
 PATH="$PWD/bootstrap/bin:$PATH"
-set "-x"
 if [ ! -e "$OPAMROOT/.ci.repo-init" ]; then
   opam repository remove default --yes --all --dont-select || true
   opam repository remove diskuv --yes --all --dont-select || true
