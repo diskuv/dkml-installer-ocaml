@@ -193,11 +193,13 @@ jobs:
       #   tree: Nice for pretty-printing the final package tree
       #   wget: Needed for the Windows Opam download-command
       #   make: Needed for OCaml ./configure + make
+      #   pkg-config: conf-pkg-config is used by many OCaml packages
       - name: Install Windows tools
         env:
           TREE_VER: 1.8.0-1
           WGET_VER: 1.21.2-1
           MAKE_VER: 4.3-3
+          PKGCONFIG_VER: 0.29.2-3-any
           # libpcre2: Needed for wget
           LIBPCRE2_VER: 8-10.35-1
           # rsync: On Windows the `cp` fallback can fail; loosely related to
@@ -206,7 +208,7 @@ jobs:
           # libzstd: Needed for rsync
           LIBZSTD_VER: 1.5.1-1
           # libxxhash: Needed for rsync
-          LIBXXHASH_VER: 0.8.1-1
+          LIBXXHASH_VER: 0.8.1-1          
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
         run: .github/workflows/scripts/win32_install_tools.sh
