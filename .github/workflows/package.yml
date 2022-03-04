@@ -11,12 +11,9 @@ on:
         description: "Enable if downloads should occur but not builds. Falls back to a full build if not supported by Opam"
         required: false
         type: boolean
-      dkml-component-ocamlrun:
-        description: "Git branch, tag or commit for ocamlrun component"
-        required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: false
       dkml-component-ocamlcompiler:
-        description: "Git branch, tag or commit for dkml-component-ocamlcompiler, conf-dkml-cross-toolchain and dkml-option-32bit"
+        description: "Git branch, tag or commit for dkml-component-ocamlcompiler, dkml-component-ocamlrun, dkml-base-compiler, conf-dkml-cross-toolchain and dkml-option-32bit"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-install:
@@ -27,8 +24,12 @@ on:
         description: "Git branch, tag or commit for dkml-install-runner package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
-      dkml-base-compiler:
-        description: "Git branch, tag or commit for dkml-base-compiler package"
+      dkml-component-staging-curl:
+        description: "Git branch, tag or commit for dkml-component-staging-curl package"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-enduser-unixutils:
+        description: "Git branch, tag or commit for dkml-component-offline-unixutils, dkml-component-network-unixutils and dkml-component-staging-unixutils packages"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml:
@@ -40,7 +41,8 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       diskuv-opam-repository:
-        description: "Git branch, tag or commit for ocaml-config package temporarily in the diskuv-opam-repository repository"
+        # Used by all_setup_opam_repositories.sh
+        description: "Git branch, tag or commit for the diskuv-opam-repository repository"
         required: false
         default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG is used as default for empty strings
   push:
@@ -132,32 +134,36 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      DKML_COMPONENT_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
-      DKML_COMPONENT_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
-      DKML_INSTALL:                 "${{ github.event.inputs.dkml-install }}"
-      DKML_INSTALL_RUNNER:          "${{ github.event.inputs.dkml-install-runner }}"
-      DKML_BASE_COMPILER:           "${{ github.event.inputs.dkml-base-compiler }}"
-      TEMP_OCAML:                   "${{ github.event.inputs.temp-ocaml }}"
-      TEMP_OCAML_CONFIG:            "${{ github.event.inputs.temp-ocaml-config }}"
-      DISKUV_OPAM_REPOSITORY:       "${{ github.event.inputs.diskuv-opam-repository }}"
+      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install }}"
+      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-runner }}"
+      TEMP_OCAML:                       "${{ github.event.inputs.temp-ocaml }}"
+      TEMP_OCAML_CONFIG:                "${{ github.event.inputs.temp-ocaml-config }}"
+      DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
+      DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-staging-curl }}"
+      # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
+      DKML_COMPONENT_NETWORK_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
+      DKML_COMPONENT_OFFLINE_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       # These are not independent of dkml-component-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
-      CONF_DKML_CROSS_TOOLCHAIN:    "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
-      DKML_OPTION_32BIT:            "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
+      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_COMPONENT_STAGING_OCAMLRUN:  "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
       # By design `populate-cache` is not part of the cache key
       CACHE_KEY_GITHUB_INPUTS: >-
-        DKML_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
-        DKML_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
         DKML_INSTALL=${{ github.event.inputs.dkml-install }}
         DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
-        DKML_BASE_COMPILER=${{ github.event.inputs.dkml-base-compiler }}
-        CONF_DKML_CROSS_TOOLCHAIN=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
-        DKML_OPTION_32BIT=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
+        DKML_COMPONENT_STAGING_CURL=${{ github.event.inputs.dkml-component-staging-curl }}
+        ALL_UNIXUTILS=${{ github.event.inputs.dkml-component-enduser-unixutils }}
+        ALL_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
 
       OPAMROOT: ${{ matrix.opam-root }}
       VS_DIR: ${{ matrix.vsstudio-dir }}
@@ -305,15 +311,15 @@ jobs:
         shell: bash
         run: .github/workflows/scripts/all_create_installer_opam_switch.sh
 
-      - name: Pin dkml-component-ocamlrun to source instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_OCAMLRUN != '@repository@' }}
+      - name: Pin dkml-component-staging-ocamlrun to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLRUN:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_STAGING_OCAMLRUN:-main}"
 
-      - name: Pin dkml-component-ocamlcompiler to source instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_OCAMLCOMPILER != '@repository@' }}
+      - name: Pin dkml-component-network-ocamlcompiler to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLCOMPILER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_NETWORK_OCAMLCOMPILER:-main}"
 
       - name: Pin dkml-install to source instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
@@ -349,6 +355,26 @@ jobs:
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
+
+      - name: Pin dkml-component-staging-curl to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl "git://github.com/diskuv/dkml-component-staging-curl.git#${DKML_COMPONENT_STAGING_CURL:-main}"
+
+      - name: Pin dkml-component-staging-unixutils to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_STAGING_UNIXUTILS:-main}"
+
+      - name: Pin dkml-component-network-unixutils to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_NETWORK_UNIXUTILS:-main}"
+
+      - name: Pin dkml-component-offline-unixutils to source instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_OFFLINE_UNIXUTILS:-main}"
 
       # ocamlfind and ocamlbuild have patches necessary for Windows in diskuv-opam-repository
       - name: Pin ocamlfind ${{ env.PIN_OCAMLFIND }}, ocamlbuild ${{ env.PIN_OCAMLBUILD }}
