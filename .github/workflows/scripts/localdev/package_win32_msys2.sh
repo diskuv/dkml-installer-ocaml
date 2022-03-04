@@ -95,27 +95,22 @@ PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "g
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
 
 # --> Pin ocamlfind
-(
-    # shellcheck disable=SC2030
-    PATH="$PWD/bootstrap/bin:$PATH"
-    opam pin add --yes --no-action -k version ocamlfind "$PIN_OCAMLFIND"
-    opam pin add --yes --no-action -k version ocamlbuild "$PIN_OCAMLBUILD"
-)
+PATH="$PWD/bootstrap/bin:$PATH"
+opam pin add --yes --no-action -k version ocamlfind "$PIN_OCAMLFIND"
+opam pin add --yes --no-action -k version ocamlbuild "$PIN_OCAMLBUILD"
 
 # --> Use Visual Studio in DKML Opam packages
-(
-    PATH="$PWD/bootstrap/bin:$PATH"
-    opam option setenv= # reset
-    opam option setenv+='DKML_COMPILE_SPEC = "1"'
-    opam option setenv+='DKML_COMPILE_TYPE = "VS"'
-    opam option setenv+="DKML_COMPILE_VS_DIR = \"$VS_DIR\""
-    opam option setenv+="DKML_COMPILE_VS_VCVARSVER = \"$VS_VCVARSVER\""
-    opam option setenv+="DKML_COMPILE_VS_WINSDKVER = \"$VS_WINSDKVER\""
-    opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
-    opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
-    opam option setenv+="DKML_HOST_ABI = \"$M_DKMLTARGETABI\""
-    opam option setenv # print
-)
+PATH="$PWD/bootstrap/bin:$PATH"
+opam option setenv= # reset
+opam option setenv+='DKML_COMPILE_SPEC = "1"'
+opam option setenv+='DKML_COMPILE_TYPE = "VS"'
+opam option setenv+="DKML_COMPILE_VS_DIR = \"$VS_DIR\""
+opam option setenv+="DKML_COMPILE_VS_VCVARSVER = \"$VS_VCVARSVER\""
+opam option setenv+="DKML_COMPILE_VS_WINSDKVER = \"$VS_WINSDKVER\""
+opam option setenv+='DKML_COMPILE_VS_MSVSPREFERENCE = "VS16.6"'
+opam option setenv+='DKML_COMPILE_VS_CMAKEGENERATOR = "Visual Studio 16 2019"'
+opam option setenv+="DKML_HOST_ABI = \"$M_DKMLTARGETABI\""
+opam option setenv # print
 
 # --> Build installer for Windows
 win32_build_installer_cmd=$(cygpath -aw "$HERE"/../win32_build_installer.cmd)
