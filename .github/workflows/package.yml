@@ -1,7 +1,7 @@
 name: Package OCaml Releases
 
 env:
-  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "d3be2e9f29324fd193d589a53c125544453c9dda" # "v0.4.0-prerel13" when released
+  DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "479d3f42fe6b6078356a8ba50b8bc51184bb1499" # "v0.4.0-prerel13" when released
   PIN_OCAMLFIND: "1.9.1"
   PIN_OCAMLBUILD: "0.14.0"
 on:
@@ -54,6 +54,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # installer_name
+        #   The suffix INSTALLER_NAME in dkml-installer-INSTALLER_NAME.ocaml
         # bootstrap-opam-version
         #   We need an old working Opam; see BOOTSTRAPPING.md.
         #   We use https://github.com/diskuv/dkml-installer-ocaml/releases
@@ -101,6 +103,7 @@ jobs:
         include:
           #   windows-latest will be windows-2022, which has untested VS2022
           - os: windows-2019
+            installer_name: network-ocaml
             bootstrap-opam-version: "0.0.0"
             # The 32-bit Opam binary has some problems with
             # `Unix.create_process` giving:
@@ -115,15 +118,19 @@ jobs:
             vsstudio-hostarch: x86
             vsstudio-arch: x86
           - os: ubuntu-latest
+            installer_name: network-ocaml
             bootstrap-opam-version: "os"
             dkml-target-abi: linux_x86
             opam-root: /home/runner/.opam
           - os: macos-latest
+            installer_name: network-ocaml
             bootstrap-opam-version: "os"
             dkml-target-abi: darwin_x86_64
             opam-root: /Users/runner/.opam
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.installer_name }}-${{ matrix.dkml-target-abi }}
     env:
-      INSTALLERNAME: ocaml
+      INSTALLERNAME: ${{ matrix.installer_name }}
 
       SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
       # Although the user expressed desire to populate the cache, only
@@ -177,12 +184,10 @@ jobs:
 
       # Increase if you get `make inconsistent assumptions over interface Stdlib__format` errors
       # or if you otherwise need a fresh Opam root
-      OPAM_ROOT_CACHE_NUMBER: 8
+      OPAM_ROOT_CACHE_NUMBER: 9
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.dkml-target-abi }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -231,7 +236,9 @@ jobs:
       #   - link.exe from MSYS2 shadows link.exe from MSVC
       - name: Install 32-bit Ubuntu requirements
         if: ${{ startsWith(matrix.os, 'ubuntu-') && endsWith(matrix.dkml-target-abi, 'x86') }}
-        run: sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends gcc-multilib g++-multilib
+        run: |
+          sudo env DEBIAN_FRONTEND="noninteractive" apt-get update -y
+          sudo env DEBIAN_FRONTEND="noninteractive" apt-get -q install -y --no-install-recommends gcc-multilib g++-multilib
       - name: Uninstall MSYS2 conflicting executables
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: bash
