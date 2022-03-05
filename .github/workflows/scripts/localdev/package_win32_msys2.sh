@@ -88,11 +88,11 @@ PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-oc
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_OCAMLCOMPILER:-main}"
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL:-main}"
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL_RUNNER:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_BASE_COMPILER:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
+PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-compiler.git#${DKML_BASE_COMPILER:-main}"
+PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-compiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
+PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML:-main}"
+PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML_CONFIG:-main}"
+PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-compiler.git#${DKML_OPTION_32BIT:-main}"
 
 # --> Pin ocamlfind
 PATH="$PWD/bootstrap/bin:$PATH"

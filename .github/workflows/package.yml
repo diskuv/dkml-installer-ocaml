@@ -12,16 +12,20 @@ on:
         required: false
         type: boolean
         default: false
-      dkml-component-ocamlcompiler:
-        description: "Git branch, tag or commit for dkml-component-ocamlcompiler, dkml-component-ocamlrun, dkml-base-compiler, conf-dkml-cross-toolchain and dkml-option-32bit"
-        required: false
-        default: "" # Change this to "@repository@" once published to Opam
       dkml-install:
         description: "Git branch, tag or commit for dkml-install package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-install-runner:
         description: "Git branch, tag or commit for dkml-install-runner package"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-compiler:
+        description: "Git branch, tag or commit for dkml-base-compiler, conf-dkml-cross-toolchain and dkml-option-32bit"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-ocamlcompiler:
+        description: "Git branch, tag or commit for dkml-component-ocamlcompiler and dkml-component-ocamlrun"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-staging-curl:
@@ -155,10 +159,10 @@ jobs:
       # These are not independent of dkml-component-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
-      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
-      DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
-      DKML_COMPONENT_STAGING_OCAMLRUN:  "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
-      DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-compiler }}"
+      DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
+      DKML_COMPONENT_STAGING_OCAMLRUN:  "${{ github.event.inputs.dkml-compiler }}"
+      DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-compiler }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
       # By design `populate-cache` is not part of the cache key
@@ -169,8 +173,9 @@ jobs:
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
         DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
         DKML_COMPONENT_STAGING_CURL=${{ github.event.inputs.dkml-component-staging-curl }}
-        ALL_UNIXUTILS=${{ github.event.inputs.dkml-component-enduser-unixutils }}
-        ALL_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamcompiler }}
+        DKML_COMPONENT_ENDUSER_UNIXUTILS=${{ github.event.inputs.dkml-component-enduser-unixutils }}
+        ALL_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
+        ALL_COMPILER=${{ github.event.inputs.dkml-compiler }}
 
       OPAMROOT: ${{ matrix.opam-root }}
       VS_DIR: ${{ matrix.vsstudio-dir }}
@@ -341,27 +346,27 @@ jobs:
       - name: Pin dkml-base-compiler to source instead of Opam repository
         if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_BASE_COMPILER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-compiler.git#${DKML_BASE_COMPILER:-main}"
 
       - name: Pin conf-dkml-cross-toolchain to source instead of Opam repository
         if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-compiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
 
       - name: (Temporary) Pin ocaml.4.12.1 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML:-main}"
 
       - name: (Temporary) Pin ocaml-config.2 to source instead of Opam repository
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${TEMP_OCAML_CONFIG:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML_CONFIG:-main}"
 
       - name: Pin dkml-option-32bit to source instead of Opam repository
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_OPTION_32BIT:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-compiler.git#${DKML_OPTION_32BIT:-main}"
 
       - name: Pin dkml-component-staging-curl to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
