@@ -28,11 +28,11 @@ on:
         description: "Git branch, tag or commit for dkml-component-ocamlcompiler and dkml-component-ocamlrun"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
-      dkml-component-staging-curl:
+      dkml-component-curl:
         description: "Git branch, tag or commit for dkml-component-staging-curl package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
-      dkml-component-enduser-unixutils:
+      dkml-component-unixutils:
         description: "Git branch, tag or commit for dkml-component-offline-unixutils, dkml-component-network-unixutils and dkml-component-staging-unixutils packages"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
@@ -150,7 +150,9 @@ jobs:
       TEMP_OCAML:                       "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:                "${{ github.event.inputs.temp-ocaml-config }}"
       DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
-      DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-staging-curl }}"
+      # These are not independent of dkml-component-curl; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-curl }}"
       # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
@@ -158,7 +160,9 @@ jobs:
       DKML_COMPONENT_OFFLINE_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       # These are not independent of dkml-component-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
-      DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamcompiler }}"
+      DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      # These are not independent of dkml-compiler; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
       CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-compiler }}"
       DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
       DKML_COMPONENT_STAGING_OCAMLRUN:  "${{ github.event.inputs.dkml-compiler }}"
@@ -172,9 +176,9 @@ jobs:
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
         DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
-        DKML_COMPONENT_STAGING_CURL=${{ github.event.inputs.dkml-component-staging-curl }}
-        DKML_COMPONENT_ENDUSER_UNIXUTILS=${{ github.event.inputs.dkml-component-enduser-unixutils }}
-        ALL_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
+        ALL_COMPONENT_CURL=${{ github.event.inputs.dkml-component-curl }}
+        ALL_COMPONENT_UNIXUTILS=${{ github.event.inputs.dkml-component-unixutils }}
+        ALL_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         ALL_COMPILER=${{ github.event.inputs.dkml-compiler }}
 
       OPAMROOT: ${{ matrix.opam-root }}
@@ -371,22 +375,22 @@ jobs:
       - name: Pin dkml-component-staging-curl to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl "git://github.com/diskuv/dkml-component-staging-curl.git#${DKML_COMPONENT_STAGING_CURL:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl "git://github.com/diskuv/dkml-component-curl.git#${DKML_COMPONENT_STAGING_CURL:-main}"
 
       - name: Pin dkml-component-staging-unixutils to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_STAGING_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_STAGING_UNIXUTILS:-main}"
 
       - name: Pin dkml-component-network-unixutils to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_NETWORK_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_NETWORK_UNIXUTILS:-main}"
 
       - name: Pin dkml-component-offline-unixutils to source instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils "git://github.com/diskuv/dkml-component-enduser-unixutils.git#${DKML_COMPONENT_OFFLINE_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_OFFLINE_UNIXUTILS:-main}"
 
       # ocamlfind and ocamlbuild have patches necessary for Windows in diskuv-opam-repository
       - name: Pin ocamlfind ${{ env.PIN_OCAMLFIND }}, ocamlbuild ${{ env.PIN_OCAMLBUILD }}
