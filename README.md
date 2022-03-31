@@ -4,6 +4,14 @@ The DKML Installer for OCaml generates and distributes installers for OCaml.
 
 ## Releases
 
+*When ready, this paragraph will be changed to a link to the latest installer.*
+
+> You will be asked to accept a certificate from
+> `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
+> that was issued by
+> `Certum Code Signing CA SHA2` if your machine does not already have a
+> compatible Visual Studio.
+
 ## How it works
 
 We use the [dkml-install-api](https://diskuv.github.io/dkml-install-api/index.html)
