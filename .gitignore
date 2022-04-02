@@ -1,2 +1,12 @@
+# Opam
+_opam/
+
+# Visual Studio Code
+.vscode/settings.json
+
+# Dune
+_build/
+/*.install
+
 # GitHub Actions
 /download-cache/

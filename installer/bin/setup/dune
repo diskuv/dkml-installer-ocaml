@@ -1,0 +1,4 @@
+(executable
+ (public_name dkml-install-setup)
+ (name main)
+ (libraries dkml-package-textarchive.setup cmdliner private_common))
