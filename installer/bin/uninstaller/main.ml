@@ -1,12 +1,12 @@
 open Cmdliner
-open Dkml_package_textarchive_uninstaller
+open Dkml_package_console_uninstaller
 
 let uninstall_cmd =
   let doc = "the DKML OCaml uninstaller" in
   ( Term.(
       const uninstall
       $ const Private_common.program_name
-      $ Dkml_package_textarchive_common.package_args_t),
+      $ Dkml_package_console_common.package_args_t),
     Term.info "dkml-install-uninstaller" ~version:"%%VERSION%%" ~doc )
 
 let () =
