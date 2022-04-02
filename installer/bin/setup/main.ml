@@ -6,7 +6,8 @@ let setup_cmd =
   ( Term.(
       const setup
       $ const Private_common.program_name
-      $ Dkml_package_console_common.package_args_t),
+      $ Dkml_package_console_common.package_args_t
+          ~program_name:Private_common.program_name),
     Term.info "dkml-install-setup" ~version:"%%VERSION%%" ~doc )
 
 let () =
