@@ -48,4 +48,5 @@
   (conf-dkml-cross-toolchain              (= 4.12.1-1))
   (dkml-component-network-ocamlcompiler   (= 4.12.1-1))
   (dkml-install-runner                    (>= 0.1.0))
-  (dkml-package-console               (>= 0.1.0))))
+  (dkml-package-console                   (>= 0.1.0))
+  (diskuvbox                              (>= 0.1.0))))
