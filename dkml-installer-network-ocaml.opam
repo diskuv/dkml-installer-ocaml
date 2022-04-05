@@ -41,8 +41,10 @@ install: [
   # Create the installer executable after `dune install` (which is after
   # `build:[]` section) so Dune can do plugin rewriting since Dune edits (yes!)
   # the executables.
-  # The installers will be in $OPAM/share/dkml-installer-ocaml/
-  [ "install" "-d" "_build/installer-work" ]
+  # The installers will be in $OPAM/share/dkml-installer-ocaml/.
+  # For the benefit of Windows and macOS we keep the build directory name ("iw")
+  # small.
+  [ "install" "-d" "_build/iw" ]
   [ "install" "-d" "%{_:share}%" ]
   [
     "_build/default/installer/bin/generate/main.exe"
@@ -51,7 +53,7 @@ install: [
     "--program-version"
     version
     "--work-dir"
-    "_build/installer-work"
+    "_build/iw"
     "--target-dir"
     "%{_:share}%"
   ]
