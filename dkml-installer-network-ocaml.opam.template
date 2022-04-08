@@ -13,6 +13,8 @@ install: [
     name
     "--program-version"
     version
+    "--abi=windows_x86"
+    "--abi=windows_x86_64"
     "--work-dir"
     "_build/iw"
     "--target-dir"
