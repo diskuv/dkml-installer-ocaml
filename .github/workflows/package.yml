@@ -141,12 +141,14 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
-      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
-      DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
       TEMP_OCAML:                       "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:                "${{ github.event.inputs.temp-ocaml-config }}"
       DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
+      # These are not independent of dkml-install-api; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
+      DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
       # These are not independent of dkml-component-curl; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-curl }}"
@@ -158,11 +160,11 @@ jobs:
       # These are not independent of dkml-component-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_COMPONENT_STAGING_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
       # These are not independent of dkml-compiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-compiler }}"
       DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
-      DKML_COMPONENT_STAGING_OCAMLRUN:  "${{ github.event.inputs.dkml-compiler }}"
       DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-compiler }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
