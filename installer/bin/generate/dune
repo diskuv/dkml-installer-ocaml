@@ -1,4 +1,3 @@
 (executable
- (public_name dkml-install-generate)
  (name main)
  (libraries dkml-package-console.setup cmdliner))
