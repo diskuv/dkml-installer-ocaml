@@ -570,7 +570,7 @@ jobs:
       - name: Build installer for Windows
         if: ${{ startsWith(matrix.os, 'windows-') }}
         shell: cmd
-        timeout-minutes: 60
+        timeout-minutes: 120
         env:
           VSCMD_SKIP_SENDTELEMETRY: 1
           # Use env vars to communicate to crossplatform-functions.sh and
