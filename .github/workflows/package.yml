@@ -12,12 +12,8 @@ on:
         required: false
         type: boolean
         default: false
-      dkml-install:
-        description: "Git branch, tag or commit for dkml-install package"
-        required: false
-        default: "" # Change this to "@repository@" once published to Opam
-      dkml-install-runner:
-        description: "Git branch, tag or commit for dkml-install-runner package"
+      dkml-install-api:
+        description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-compiler:
@@ -25,15 +21,15 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-ocamlcompiler:
-        description: "Git branch, tag or commit for dkml-component-ocamlcompiler and dkml-component-ocamlrun"
+        description: "Git branch, tag or commit for dkml-component-*-ocamlcompiler and dkml-component-*-ocamlrun"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-curl:
-        description: "Git branch, tag or commit for dkml-component-staging-curl package"
+        description: "Git branch, tag or commit for dkml-component-*-curl package"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-unixutils:
-        description: "Git branch, tag or commit for dkml-component-offline-unixutils, dkml-component-network-unixutils and dkml-component-staging-unixutils packages"
+        description: "Git branch, tag or commit for dkml-component-*-unixutils packages"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml:
@@ -145,8 +141,9 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install }}"
-      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-runner }}"
+      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
+      DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
       TEMP_OCAML:                       "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:                "${{ github.event.inputs.temp-ocaml-config }}"
       DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
@@ -171,8 +168,9 @@ jobs:
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
       # By design `populate-cache` is not part of the cache key
       CACHE_KEY_GITHUB_INPUTS: >-
-        DKML_INSTALL=${{ github.event.inputs.dkml-install }}
-        DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-runner }}
+        DKML_INSTALL=${{ github.event.inputs.dkml-api }}
+        DKML_INSTALL_RUNNER=${{ github.event.inputs.dkml-install-api }}
+        DKML_PACKAGE_CONSOLE=${{ github.event.inputs.dkml-install-api }}
         TEMP_OCAML=${{ github.event.inputs.temp-ocaml }}
         TEMP_OCAML_CONFIG=${{ github.event.inputs.temp-ocaml-config }}
         DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
@@ -378,6 +376,8 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install .ci/g/dkml-install
 
+      #  dkml-install-runner
+
       - name: Checkout dkml-install-runner
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
         uses: actions/checkout@v2
@@ -390,6 +390,23 @@ jobs:
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner .ci/g/dkml-install-runner
+
+      #  dkml-package-console
+      
+      - name: Checkout dkml-package-console
+        if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-package-console
+          ref: ${{ env.DKML_PACKAGE_CONSOLE }}
+
+      - name: Pin dkml-package-console to checkout instead of Opam repository
+        if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
+
+      # dkml-base-compiler
 
       - name: Checkout dkml-base-compiler
         if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
@@ -495,6 +512,8 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils .ci/g/dkml-component-network-unixutils
 
+      # dkml-component-offline-unixutils
+
       - name: Checkout dkml-component-offline-unixutils
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         uses: actions/checkout@v2
@@ -509,12 +528,21 @@ jobs:
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
 
       # ocamlfind and ocamlbuild have patches necessary for Windows in diskuv-opam-repository
+
       - name: Pin ocamlfind ${{ env.PIN_OCAMLFIND }}, ocamlbuild ${{ env.PIN_OCAMLBUILD }}
         shell: bash
         run: |
           PATH="$PWD/bootstrap/bin:$PATH"
           opam pin add --yes --no-action -k version ocamlfind ${{ env.PIN_OCAMLFIND }}
           opam pin add --yes --no-action -k version ocamlbuild ${{ env.PIN_OCAMLBUILD }}
+
+      # diskuvbox is not yet available in Opam repository
+
+      - name: Pin diskuvbox
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
+
+      # Configuration ...
 
       - name: Use Visual Studio in DKML Opam packages
         if: ${{ startsWith(matrix.os, 'windows-') }}
