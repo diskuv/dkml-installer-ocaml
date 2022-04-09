@@ -8,7 +8,7 @@ let uninstall_cmd =
       $ const Private_common.program_name
       $ Dkml_package_console_common.package_args_t
           ~program_name:Private_common.program_name),
-    Term.info "dkml-install-uninstaller" ~version:"%%VERSION%%" ~doc )
+    Term.info "dkml-package-uninstaller" ~version:"%%VERSION%%" ~doc )
 
 let () =
   Term.(
