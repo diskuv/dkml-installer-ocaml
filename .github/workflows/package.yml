@@ -319,6 +319,18 @@ jobs:
           key:
             ${{ runner.os }}-opamrepo-${{ env.OPAM_ROOT_CACHE_NUMBER }}-${{ env.CACHE_NUMBER }}
 
+      # The action/checkout steps used for pinning will re-use existing Git objects
+      # because of caching
+      - name: Cache Git checkouts of Opam pins
+        uses: actions/cache@v2
+        env:
+          CACHE_NUMBER: 1
+        with:
+          path: |
+            ${{ matrix.opam-root }}/.ci/g
+          key:
+            ${{ runner.os }}-git-${{ env.CACHE_NUMBER }}
+
       - name: Setup Opam repositories
         shell: bash
         run: .github/workflows/scripts/all_setup_opam_repositories.sh
@@ -327,70 +339,174 @@ jobs:
         shell: bash
         run: .github/workflows/scripts/all_create_installer_opam_switch.sh
 
-      - name: Pin dkml-component-staging-ocamlrun to source instead of Opam repository
+      - name: Checkout dkml-component-staging-ocamlrun
+        if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-ocamlcompiler
+          ref: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN }}
+          path: .ci/g/dkml-component-ocamlcompiler
+
+      - name: Pin dkml-component-staging-ocamlrun to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-ocamlrun "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_STAGING_OCAMLRUN:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-ocamlrun .ci/g/dkml-component-ocamlcompiler
 
-      - name: Pin dkml-component-network-ocamlcompiler to source instead of Opam repository
+      - name: Checkout dkml-component-network-ocamlcompiler
+        if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-ocamlcompiler
+          path: .ci/g/dkml-component-network-ocamlcompiler
+          ref: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER }}
+
+      - name: Pin dkml-component-network-ocamlcompiler to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-ocamlcompiler "git://github.com/diskuv/dkml-component-ocamlcompiler.git#${DKML_COMPONENT_NETWORK_OCAMLCOMPILER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-ocamlcompiler .ci/g/dkml-component-network-ocamlcompiler
 
-      - name: Pin dkml-install to source instead of Opam repository
+      - name: Checkout dkml-install
+        if: ${{ env.DKML_INSTALL != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-install
+          ref: ${{ env.DKML_INSTALL }}
+
+      - name: Pin dkml-install to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install .ci/g/dkml-install
 
-      - name: Pin dkml-install-runner to source instead of Opam repository
+      - name: Checkout dkml-install-runner
+        if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-install-runner
+          ref: ${{ env.DKML_INSTALL_RUNNER }}
+
+      - name: Pin dkml-install-runner to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL_RUNNER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner .ci/g/dkml-install-runner
 
-      - name: Pin dkml-base-compiler to source instead of Opam repository
+      - name: Checkout dkml-base-compiler
+        if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-compiler
+          path: .ci/g/dkml-base-compiler
+          ref: ${{ env.DKML_BASE_COMPILER }}
+
+      - name: Pin dkml-base-compiler to checkout instead of Opam repository
         if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-compiler.git#${DKML_BASE_COMPILER:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler .ci/g/dkml-base-compiler
 
-      - name: Pin conf-dkml-cross-toolchain to source instead of Opam repository
+      - name: Checkout conf-dkml-cross-toolchain
+        if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/conf-dkml-cross-toolchain
+          path: .ci/g/conf-dkml-cross-toolchain
+          ref: ${{ env.CONF_DKML_CROSS_TOOLCHAIN }}
+
+      - name: Pin conf-dkml-cross-toolchain to checkout instead of Opam repository
         if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-compiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain .ci/g/conf-dkml-cross-toolchain
 
-      - name: (Temporary) Pin ocaml.4.12.1 to source instead of Opam repository
+      - name: Checkout ocaml
+        if: ${{ env.TEMP_OCAML != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-compiler
+          path: .ci/g/ocaml
+          ref: ${{ env.TEMP_OCAML }}
+
+      - name: Pin ocaml.4.12.1 to checkout instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 .ci/g/ocaml
 
-      - name: (Temporary) Pin ocaml-config.2 to source instead of Opam repository
+      - name: Checkout ocaml-config
+        if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-compiler
+          path: .ci/g/ocaml-config
+          ref: ${{ env.TEMP_OCAML_CONFIG }}
+
+      - name: Pin ocaml-config.2 to checkout instead of Opam repository
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML_CONFIG:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 .ci/g/ocaml-config
 
-      - name: Pin dkml-option-32bit to source instead of Opam repository
+      - name: Checkout dkml-option-32bit
+        if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-compiler
+          path: .ci/g/dkml-option-32bit
+          ref: ${{ env.DKML_OPTION_32BIT }}
+
+      - name: Pin dkml-option-32bit to checkout instead of Opam repository
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-compiler.git#${DKML_OPTION_32BIT:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit .ci/g/dkml-option-32bit
 
-      - name: Pin dkml-component-staging-curl to source instead of Opam repository
+      - name: Checkout dkml-component-staging-curl
+        if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-curl
+          path: .ci/g/dkml-component-staging-curl
+          ref: ${{ env.DKML_COMPONENT_STAGING_CURL }}
+
+      - name: Pin dkml-component-staging-curl to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl "git://github.com/diskuv/dkml-component-curl.git#${DKML_COMPONENT_STAGING_CURL:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl .ci/g/dkml-component-staging-curl
 
-      - name: Pin dkml-component-staging-unixutils to source instead of Opam repository
+      - name: Checkout dkml-component-staging-unixutils
+        if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-staging-unixutils
+          ref: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS }}
+
+      - name: Pin dkml-component-staging-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_STAGING_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils .ci/g/dkml-component-staging-unixutils
 
-      - name: Pin dkml-component-network-unixutils to source instead of Opam repository
+      - name: Checkout dkml-component-network-unixutils
+        if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-network-unixutils
+          ref: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS }}
+
+      - name: Pin dkml-component-network-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_NETWORK_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils .ci/g/dkml-component-network-unixutils
 
-      - name: Pin dkml-component-offline-unixutils to source instead of Opam repository
+      - name: Checkout dkml-component-offline-unixutils
+        if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-offline-unixutils
+          ref: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS }}
+
+      - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils "git://github.com/diskuv/dkml-component-unixutils.git#${DKML_COMPONENT_OFFLINE_UNIXUTILS:-main}"
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
 
       # ocamlfind and ocamlbuild have patches necessary for Windows in diskuv-opam-repository
       - name: Pin ocamlfind ${{ env.PIN_OCAMLFIND }}, ocamlbuild ${{ env.PIN_OCAMLBUILD }}
