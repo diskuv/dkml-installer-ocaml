@@ -17,7 +17,7 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-compiler:
-        description: "Git branch, tag or commit for dkml-base-compiler, conf-dkml-cross-toolchain and dkml-option-32bit"
+        description: "Git branch, tag or commit for dkml-base-compiler and dkml-option-32bit"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-ocamlcompiler:
@@ -38,6 +38,10 @@ on:
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml-config:
         description: "Git branch, tag or commit for ocaml-config package temporarily in the dkml-component-ocamlcompiler repository"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      conf-dkml-cross-toolchain:
+        description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       diskuv-opam-repository:
@@ -141,6 +145,7 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
+      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.conf-dkml-cross-toolchain }}"
       TEMP_OCAML:                       "${{ github.event.inputs.temp-ocaml }}"
       TEMP_OCAML_CONFIG:                "${{ github.event.inputs.temp-ocaml-config }}"
       DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
@@ -163,7 +168,6 @@ jobs:
       DKML_COMPONENT_STAGING_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
       # These are not independent of dkml-compiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
-      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.dkml-compiler }}"
       DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
       DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-compiler }}"
 
@@ -344,8 +348,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: diskuv/dkml-component-ocamlcompiler
-          ref: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN }}
           path: .ci/g/dkml-component-ocamlcompiler
+          ref: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-staging-ocamlrun to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
@@ -358,7 +362,7 @@ jobs:
         with:
           repository: diskuv/dkml-component-ocamlcompiler
           path: .ci/g/dkml-component-network-ocamlcompiler
-          ref: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER }}
+          ref: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-network-ocamlcompiler to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
@@ -371,7 +375,7 @@ jobs:
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-install
-          ref: ${{ env.DKML_INSTALL }}
+          ref: ${{ env.DKML_INSTALL }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-install to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
@@ -386,7 +390,7 @@ jobs:
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-install-runner
-          ref: ${{ env.DKML_INSTALL_RUNNER }}
+          ref: ${{ env.DKML_INSTALL_RUNNER }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-install-runner to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
@@ -401,7 +405,7 @@ jobs:
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-package-console
-          ref: ${{ env.DKML_PACKAGE_CONSOLE }}
+          ref: ${{ env.DKML_PACKAGE_CONSOLE }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-package-console to checkout instead of Opam repository
         if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
@@ -416,7 +420,7 @@ jobs:
         with:
           repository: diskuv/dkml-compiler
           path: .ci/g/dkml-base-compiler
-          ref: ${{ env.DKML_BASE_COMPILER }}
+          ref: ${{ env.DKML_BASE_COMPILER }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-base-compiler to checkout instead of Opam repository
         if: ${{ env.DKML_BASE_COMPILER != '@repository@' }}
@@ -429,7 +433,7 @@ jobs:
         with:
           repository: diskuv/conf-dkml-cross-toolchain
           path: .ci/g/conf-dkml-cross-toolchain
-          ref: ${{ env.CONF_DKML_CROSS_TOOLCHAIN }}
+          ref: ${{ env.CONF_DKML_CROSS_TOOLCHAIN }} # empty is no `ref`, which is default branch
 
       - name: Pin conf-dkml-cross-toolchain to checkout instead of Opam repository
         if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
@@ -442,7 +446,7 @@ jobs:
         with:
           repository: diskuv/dkml-compiler
           path: .ci/g/ocaml
-          ref: ${{ env.TEMP_OCAML }}
+          ref: ${{ env.TEMP_OCAML }} # empty is no `ref`, which is default branch
 
       - name: Pin ocaml.4.12.1 to checkout instead of Opam repository
         if: ${{ env.TEMP_OCAML != '@repository@' }}
@@ -455,7 +459,7 @@ jobs:
         with:
           repository: diskuv/dkml-compiler
           path: .ci/g/ocaml-config
-          ref: ${{ env.TEMP_OCAML_CONFIG }}
+          ref: ${{ env.TEMP_OCAML_CONFIG }} # empty is no `ref`, which is default branch
 
       - name: Pin ocaml-config.2 to checkout instead of Opam repository
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
@@ -468,7 +472,7 @@ jobs:
         with:
           repository: diskuv/dkml-compiler
           path: .ci/g/dkml-option-32bit
-          ref: ${{ env.DKML_OPTION_32BIT }}
+          ref: ${{ env.DKML_OPTION_32BIT }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-option-32bit to checkout instead of Opam repository
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
@@ -481,7 +485,7 @@ jobs:
         with:
           repository: diskuv/dkml-component-curl
           path: .ci/g/dkml-component-staging-curl
-          ref: ${{ env.DKML_COMPONENT_STAGING_CURL }}
+          ref: ${{ env.DKML_COMPONENT_STAGING_CURL }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-staging-curl to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
@@ -494,7 +498,7 @@ jobs:
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-staging-unixutils
-          ref: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS }}
+          ref: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-staging-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
@@ -507,7 +511,7 @@ jobs:
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-network-unixutils
-          ref: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS }}
+          ref: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-network-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
@@ -522,7 +526,7 @@ jobs:
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-offline-unixutils
-          ref: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS }}
+          ref: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS }} # empty is no `ref`, which is default branch
 
       - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
