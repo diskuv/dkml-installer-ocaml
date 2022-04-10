@@ -548,6 +548,12 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
 
+      # crunch has a bug on Windows that has not been upstreamed yet
+
+      - name: Pin crunch
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
+
       # Configuration ...
 
       - name: Use Visual Studio in DKML Opam packages
