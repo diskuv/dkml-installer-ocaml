@@ -31,4 +31,4 @@ if "%__INTERNAL__WIN32_BASH_HOOK%" == "true" (
   REM # for debugging
   env %ENVARGS% bash
 )
-env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% %M_DKMLOPTION_32BIT% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS% --verbose --debug-level 2
+env %ENVARGS% opam install --yes --switch installer-%INSTALLERNAME% %M_DKMLOPTIONS% %M_DKMLOPTION_32BIT% ./dkml-installer-%INSTALLERNAME%.opam %MOREARGS%
