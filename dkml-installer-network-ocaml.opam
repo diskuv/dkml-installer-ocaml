@@ -52,11 +52,23 @@ install: [
     name
     "--program-version"
     version
+
+    # Only Windows, Linux 64-bit and Darwin Intel which corresponds to
+    # the GitHub Actions runners in .github/workflows/.
+    # Later can add Dune cross-compiler to get Darwin ARM64.
     "--abi=windows_x86"
     "--abi=windows_x86_64"
+    "--abi=linux_x86_64"
+    "--abi=darwin_x86_64"
+
     "--work-dir"
     "_build/iw"
     "--target-dir"
     "%{_:share}%"
+
+    "--packager-setup-exe"
+    "_build/default/installer/bin/setup/main.exe"
+    "--packager-uninstaller-exe"
+    "_build/default/installer/bin/uninstaller/main.exe"
   ]
 ]
