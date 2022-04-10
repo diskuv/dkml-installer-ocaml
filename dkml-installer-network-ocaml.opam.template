@@ -5,8 +5,7 @@ install: [
   # The installers will be in $OPAM/share/dkml-installer-ocaml/.
   # For the benefit of Windows and macOS we keep the build directory name ("iw")
   # small.
-  [ "install" "-d" "_build/iw" ]
-  [ "install" "-d" "%{_:share}%" ]
+  [ "install" "-d" "%{_:share}%/w" ]
   [
     "_build/default/installer/bin/generate/main.exe"
     "--program-name"
@@ -23,9 +22,9 @@ install: [
     "--abi=darwin_x86_64"
 
     "--work-dir"
-    "_build/iw"
+    "%{_:share}%/w"
     "--target-dir"
-    "%{_:share}%"
+    "%{_:share}%/t"
 
     "--packager-setup-exe"
     "_build/default/installer/bin/setup/main.exe"
