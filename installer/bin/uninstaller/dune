@@ -1,4 +1,6 @@
 (executable
  (public_name dkml-install-uninstaller)
  (name main)
+ (modes
+  (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common))

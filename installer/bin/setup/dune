@@ -1,4 +1,6 @@
 (executable
  (public_name dkml-install-setup)
  (name main)
+ (modes
+  (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common))
