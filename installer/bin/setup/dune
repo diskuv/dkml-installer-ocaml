@@ -1,6 +1,24 @@
 (executable
- (public_name dkml-install-setup)
+ (public_name dkml-package-setup)
  (name main)
  (modes
   (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common))
+
+; ------------------------------------------------------
+
+; Validate on a machine that has awk that the executables do not have any
+; stub libraries except the ones built for ocamlrun.exe.
+; (We do not have a mechanism to distribute stublib DLLs!)
+
+(rule
+  (alias runtest)
+  (target dlls.txt.corrected)
+  (deps (:bc main.bc))
+  ; (enabled_if (<> %{os_type} Win32))
+  (action
+    (progn
+      (with-stdout-to %{target}.info (run ocamlobjinfo %{bc}))
+      (with-stdout-to %{target} (run awk "/.*:/ {x=0} /Used DLLs:/{x=1} x==1 {print}" %{target}.info))
+      (diff dlls.txt dlls.txt.corrected))))
+
