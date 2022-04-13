@@ -33,11 +33,11 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml:
-        description: "Git branch, tag or commit for ocaml package temporarily in the dkml-component-ocamlcompiler repository"
+        description: "Git branch, tag or commit for ocaml package temporarily in the dkml-compiler repository"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       temp-ocaml-config:
-        description: "Git branch, tag or commit for ocaml-config package temporarily in the dkml-component-ocamlcompiler repository"
+        description: "Git branch, tag or commit for ocaml-config package temporarily in the dkml-compiler repository"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       conf-dkml-cross-toolchain:
@@ -184,6 +184,7 @@ jobs:
         ALL_COMPONENT_UNIXUTILS=${{ github.event.inputs.dkml-component-unixutils }}
         ALL_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
         ALL_COMPILER=${{ github.event.inputs.dkml-compiler }}
+        CONF_DKML_CROSS_TOOLCHAIN=${{ inputs.conf-dkml-cross-toolchain }}
 
       OPAMROOT: ${{ matrix.opam-root }}
       VS_DIR: ${{ matrix.vsstudio-dir }}
@@ -427,6 +428,8 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler .ci/g/dkml-base-compiler
 
+      # conf-dkml-cross-toolchain
+
       - name: Checkout conf-dkml-cross-toolchain
         if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
         uses: actions/checkout@v2
@@ -439,6 +442,8 @@ jobs:
         if: ${{ env.CONF_DKML_CROSS_TOOLCHAIN != '@repository@' }}
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain .ci/g/conf-dkml-cross-toolchain
+
+      # ocaml
 
       - name: Checkout ocaml
         if: ${{ env.TEMP_OCAML != '@repository@' }}
@@ -453,6 +458,8 @@ jobs:
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 .ci/g/ocaml
 
+      # ocaml-config
+
       - name: Checkout ocaml-config
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         uses: actions/checkout@v2
@@ -465,6 +472,8 @@ jobs:
         if: ${{ env.TEMP_OCAML_CONFIG != '@repository@' }}
         shell: bash
         run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml-config.2 .ci/g/ocaml-config
+
+      # dkml-option-32bit
 
       - name: Checkout dkml-option-32bit
         if: ${{ env.DKML_OPTION_32BIT != '@repository@' }}
