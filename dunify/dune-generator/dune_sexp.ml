@@ -24,6 +24,8 @@ let action l = List ([ Atom "action" ] @ l)
 
 let progn l = List ([ Atom "progn" ] @ l)
 
+let ocamlopt_flags l = List ([ Atom "ocamlopt_flags" ] @ l)
+
 let run = _vararg_of_string "run"
 
 let with_stdout_to file l = List ([ Atom "with-stdout-to"; Atom file ] @ l)
@@ -39,6 +41,8 @@ let named_dep ~name dep = List [ Atom (":" ^ name); Atom dep ]
 let name = _arg_of_string "name"
 
 let alias = _arg_of_string "alias"
+
+let targets = _vararg_of_string "targets"
 
 let target = _arg_of_string "target"
 

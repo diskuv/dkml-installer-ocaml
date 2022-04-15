@@ -2,22 +2,45 @@
 ; Do not edit unless need to regenerate!
 ; When regenerating, erase **all** content from this file, save the file, and then run:
 ;   dune build installer/bin/dune.inc --auto-promote
+(executable (name discover) (libraries dune.configurator) (modules discover))
+
+(rule (targets admin-link-flags.sexp) (deps (:discover discover.exe))
+ (action (run %{discover})))
+
+(executable (public_name dkml-install-user-runner) (name runner_user)
+ (modules runner_user)
+ (libraries dkml-install-runner.user dkml-component-staging-unixutils
+  dkml-component-staging-ocamlrun dkml-component-staging-curl
+  dkml-component-network-unixutils dkml-component-network-ocamlcompiler))
+
+(executable (public_name dkml-install-admin-runner) (name runner_admin)
+ (modules runner_admin) (ocamlopt_flags (:include admin-link-flags.sexp))
+ (libraries dkml-install-runner.admin dkml-component-staging-unixutils
+  dkml-component-staging-ocamlrun dkml-component-staging-curl
+  dkml-component-network-unixutils dkml-component-network-ocamlcompiler))
+
 (executable (public_name dkml-install-create-installers)
  (name create_installers) (libraries dkml-package-console.setup cmdliner)
  (modules create_installers))
+
 (executable (name package_setup) (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-staging-unixutils dkml-component-staging-ocamlrun
   dkml-component-staging-curl dkml-component-network-unixutils
   dkml-component-network-ocamlcompiler)
  (modules package_setup))
+
 (executable (name package_uninstaller) (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
   dkml-component-staging-unixutils dkml-component-staging-ocamlrun
   dkml-component-staging-curl dkml-component-network-unixutils
   dkml-component-network-ocamlcompiler)
  (modules package_uninstaller))
-(install (section bin) (files package_setup.bc package_uninstaller.bc))
+
+(install (section bin)
+ (files (package_setup.bc as dkml-install-package-setup.bc)
+  (package_uninstaller.bc as dkml-install-package-uninstaller.bc)))
+
 (rule (alias runtest)
  (deps (:ps package_setup.bc) (:pu package_uninstaller.bc))
  (action

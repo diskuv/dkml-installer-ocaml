@@ -1,0 +1,14 @@
+; This library is built simply so Merlin / OCaml-LSP works, and to get
+; early detection of syntax/type errors.
+; The normal scenario is the code in this directory is crunched into ../main.exe
+; and unpacked + compiled during the Dune build of the installer generator.
+
+(library
+ (name private_ignored_code)
+ (libraries
+  cmdliner
+  dkml-package-console.setup
+  dkml-package-console.uninstaller
+  dkml-install-runner.user
+  dkml-install-runner.admin
+  dune.configurator))

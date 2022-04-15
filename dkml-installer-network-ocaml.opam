@@ -91,9 +91,14 @@ install: [
     "--target-dir"
     "%{_:share}%/t"
 
+    "--runner-admin-exe"
+    "_build/install/default/bin/dkml-install-admin-runner.exe"
+    "--runner-user-exe"
+    "_build/install/default/bin/dkml-install-user-runner.exe"
+    
     "--packager-setup-bytecode"
-    "_build/install/default/bin/package_setup.bc.exe"
+    "_build/install/default/bin/dkml-install-package-setup.bc.exe"    
     "--packager-uninstaller-bytecode"
-    "_build/install/default/bin/package_uninstaller.bc.exe"
+    "_build/install/default/bin/dkml-install-package-uninstaller.bc.exe"
   ]
 ]

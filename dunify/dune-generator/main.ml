@@ -2,28 +2,6 @@ open Cmdliner
 open Sexplib0
 open Bos
 
-(** [ocamlfind ()] performs the equivalent
-    of ["ocamlfind query -format '%p' -d -r dkml-install.register"] *)
-let ocamlfind () =
-  Fmt.epr "Initializing findlib: ";
-  Findlib.init ();
-  Fmt.epr "done.@.";
-
-  let descendants =
-    Fl_package_base.package_users ~preds:[] [ "dkml-install.register" ]
-  in
-  Fmt.epr "@[<hov 2>Descendants of dkml-install.register:@ @[%a@]@]@."
-    Fmt.(list ~sep:sp string)
-    descendants;
-
-  let components =
-    List.filter (Astring.String.is_prefix ~affix:"dkml-component-") descendants
-  in
-  Fmt.epr "@[<hov 2>Components of dkml-install.register:@ @[%a@]@]@."
-    Fmt.(list ~sep:sp string)
-    components;
-  components
-
 (* {1 Directories} *)
 
 let fpath_pp_mixed fmt v =
@@ -53,15 +31,63 @@ let write_dune_inc fmt ~output_rel dune_inc =
     "; When regenerating, erase **all** content from this file, save the file, \
      and then run:@\n";
   Fmt.pf fmt ";   dune build %a --auto-promote@\n" fpath_pp_mixed output_rel;
-  Fmt.pf fmt "%a@\n" Fmt.(list ~sep:(sps 0) Sexp.pp_hum) dune_inc;
+  Fmt.pf fmt "%a@\n" Fmt.(list ~sep:(any "@\n@\n") Sexp.pp_hum) dune_inc;
   Format.pp_print_flush fmt ()
 
-let main project_root corrected =
-  let components = ocamlfind () in
+let main () project_root corrected =
+  let components = Common_installer_generator.ocamlfind () in
+  let dkml_components = List.map (fun s -> "dkml-component-" ^ s) components in
   let project_rel_dir = project_rel_dir project_root in
+  let loglevel_flags =
+    (* See how link.exe is invoked through flexlink.exe *)
+    match Logs.level () with
+    | Some Logs.Debug | Some Logs.Info -> [ Sexp.Atom "-cclib"; Atom "-v" ]
+    | _ -> []
+  in
   let dune_inc =
     Dune_sexp.
       [
+        executable
+          [
+            name "discover";
+            libraries [ "dune.configurator" ];
+            modules [ "discover" ];
+          ];
+        rule
+          [
+            targets [ "admin-link-flags.sexp" ];
+            deps [ named_dep ~name:"discover" "discover.exe" ];
+            action [ run [ "%{discover}" ] ];
+          ];
+        executable
+          [
+            public_name "dkml-install-user-runner";
+            name "runner_user";
+            modules [ "runner_user" ];
+            libraries ([ "dkml-install-runner.user" ] @ dkml_components);
+          ];
+        (*
+           ; To view Application Manifest on Windows, or to sign it, make sure
+           ; any ".NET Framework <VERSION> SDK" component is installed with the
+           ; Visual Studio Installer. That will give you Mage.exe and MageUI.exe.
+           ; Confer: https://docs.microsoft.com/en-us/dotnet/framework/tools/mageui-exe-manifest-generation-and-editing-tool-graphical-client
+           ;
+           ; To extract the manifest file:
+           ;  & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe" '-inputresource:Z:\source\dkml-install-api\_build\install\default\bin\dkml-install-admin-runner.exe;#1' -out:admin2.manifest
+        *)
+        executable
+          [
+            public_name "dkml-install-admin-runner";
+            name "runner_admin";
+            modules [ "runner_admin" ];
+            ocamlopt_flags
+              [
+                List
+                  (loglevel_flags
+                  @ [ Atom ":include"; Atom "admin-link-flags.sexp" ]);
+              ];
+            libraries ([ "dkml-install-runner.admin" ] @ dkml_components);
+          ];
         executable
           [
             public_name "dkml-install-create-installers";
@@ -75,7 +101,7 @@ let main project_root corrected =
             modes_byte_exe;
             libraries
               ([ "dkml-package-console.setup"; "cmdliner"; "private_common" ]
-              @ components);
+              @ dkml_components);
             modules [ "package_setup" ];
           ];
         executable
@@ -88,7 +114,7 @@ let main project_root corrected =
                  "cmdliner";
                  "private_common";
                ]
-              @ components);
+              @ dkml_components);
             modules [ "package_uninstaller" ];
           ];
         install
@@ -97,8 +123,8 @@ let main project_root corrected =
             files
               [
                 (* Sigh. Dune always adds .exe to .bc files. *)
-                Atom "package_setup.bc";
-                Atom "package_uninstaller.bc";
+                destination_file ~filename:"package_setup.bc" ~destination:"dkml-install-package-setup.bc";
+                destination_file ~filename:"package_uninstaller.bc" ~destination:"dkml-install-package-uninstaller.bc";
               ];
           ];
         (*
@@ -112,8 +138,8 @@ let main project_root corrected =
             (* target "dlls.corrected.txt"; *)
             deps
               [
-                List [ Atom ":ps"; Atom "package_setup.bc" ];
-                List [ Atom ":pu"; Atom "package_uninstaller.bc" ];
+                named_dep ~name:"ps" "package_setup.bc";
+                named_dep ~name:"pu" "package_uninstaller.bc";
               ];
             action
               [
@@ -176,7 +202,15 @@ let project_root_t =
   let doc = "" in
   Arg.(required & opt (some dir) None & info ~doc [ "project-root" ])
 
-let main_t = Term.(const main $ project_root_t $ corrected_t)
+let setup_log style_renderer level =
+  Fmt_tty.setup_std_outputs ?style_renderer ();
+  Logs.set_level level;
+  Logs.set_reporter (Logs_fmt.reporter ())
+
+let setup_log_t =
+  Term.(const setup_log $ Fmt_cli.style_renderer () $ Logs_cli.level ())
+
+let main_t = Term.(const main $ setup_log_t $ project_root_t $ corrected_t)
 
 let () =
   let doc =

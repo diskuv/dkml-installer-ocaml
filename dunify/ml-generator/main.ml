@@ -1,94 +1,65 @@
 open Cmdliner
 open Bos
 
-let write_create_installers_ml fmt =
-  Fmt.pf fmt "%s"
-    {|
-    let () = Cmdliner.Term.(exit @@ Dkml_package_console_setup.create_installers ())
-    |};
-  Format.pp_print_flush fmt ()
+let copy_as_is file =
+  let content = Option.get (Code.read file) in
+  let ( let* ) = Rresult.R.bind in
+  let* z =
+    OS.File.with_oc (Fpath.v file)
+      (fun oc () ->
+        let fmt = Format.formatter_of_out_channel oc in
+        Fmt.pf fmt "%s" content;
+        Format.pp_print_flush fmt ();
+        Ok ())
+      ()
+  in
+  z
 
-let write_package_setup_ml fmt =
-  Fmt.pf fmt "%s"
-    {|
-    open Cmdliner
-    open Dkml_package_console_setup
-    
-    let setup_cmd =
-      let doc = "the DKML OCaml installer" in
-      ( Term.(
-          const setup
-          $ const Private_common.program_name
-          $ Dkml_package_console_common.package_args_t
-              ~program_name:Private_common.program_name),
-        Term.info "dkml-package-setup" ~version:"%%VERSION%%" ~doc )
-    
-    let () =
-      Term.(
-        exit
-        @@ Dkml_install_runner.Error_handling.catch_cmdliner_eval
-             (fun () -> eval ~catch:false setup_cmd)
-             (`Error `Exn))    
-    |};
-  Format.pp_print_flush fmt ()
+let pp_module_register fmt v =
+  let modulename =
+    (* staging-unixutils ==> Dkml_component_staging_unixutils *)
+    "dkml-component-" ^ v |> String.capitalize_ascii
+    |> String.map (function '-' -> '_' | c -> c)
+  in
+  Fmt.pf fmt "let () = %s.register ()" modulename
 
-let write_package_uninstaller_ml fmt =
-  Fmt.pf fmt "%s"
-    {|
-    open Cmdliner
-    open Dkml_package_console_uninstaller
-    
-    let uninstall_cmd =
-      let doc = "the DKML OCaml uninstaller" in
-      ( Term.(
-          const uninstall
-          $ const Private_common.program_name
-          $ Dkml_package_console_common.package_args_t
-              ~program_name:Private_common.program_name),
-        Term.info "dkml-package-uninstaller" ~version:"%%VERSION%%" ~doc )
-    
-    let () =
-      Term.(
-        exit
-        @@ Dkml_install_runner.Error_handling.catch_cmdliner_eval
-             (fun () -> eval ~catch:false uninstall_cmd)
-             (`Error `Exn))        
-    |};
-  Format.pp_print_flush fmt ()
+(** [copy_with_templates ~components file] copies [file] into the current
+    directory with replacing the comment ["(* TEMPLATE: register () *)"]
+    with [component.register ()] invocations for all [components]. *)
+let copy_with_templates ~components file =
+  let content = Option.get (Code.read file) in
+  let registration_statements =
+    Fmt.str "%a" Fmt.(list ~sep:(any "@\n") pp_module_register) components
+  in
+  let templatized_content =
+    (Str.global_replace
+       (Str.regexp_string "(* TEMPLATE: register () *)")
+       registration_statements)
+      content
+  in
+  let ( let* ) = Rresult.R.bind in
+  let* z =
+    OS.File.with_oc (Fpath.v file)
+      (fun oc () ->
+        let fmt = Format.formatter_of_out_channel oc in
+        Fmt.pf fmt "%s" templatized_content;
+        Format.pp_print_flush fmt ();
+        Ok ())
+      ()
+  in
+  z
 
 let main () =
+  let components = Common_installer_generator.ocamlfind () in
   Rresult.R.error_msg_to_invalid_arg
     (let ( let* ) = Rresult.R.bind in
-     let* z =
-       OS.File.with_oc
-         (Fpath.v "create_installers.ml")
-         (fun oc () ->
-           let fmt = Format.formatter_of_out_channel oc in
-           write_create_installers_ml fmt;
-           Ok ())
-         ()
-     in
-     let* () = z in
-     let* z =
-       OS.File.with_oc
-         (Fpath.v "package_setup.ml")
-         (fun oc () ->
-           let fmt = Format.formatter_of_out_channel oc in
-           write_package_setup_ml fmt;
-           Ok ())
-         ()
-     in
-     let* () = z in
-     let* z =
-       OS.File.with_oc
-         (Fpath.v "package_uninstaller.ml")
-         (fun oc () ->
-           let fmt = Format.formatter_of_out_channel oc in
-           write_package_uninstaller_ml fmt;
-           Ok ())
-         ()
-     in
-     z)
+     let* () = copy_as_is "discover.ml" in
+     let* () = copy_as_is "create_installers.ml" in
+     let* () = copy_with_templates ~components "runner_admin.ml" in
+     let* () = copy_with_templates ~components "runner_user.ml" in
+     let* () = copy_with_templates ~components "package_setup.ml" in
+     let* () = copy_with_templates ~components "package_uninstaller.ml" in
+     Ok ())
 
 let main_t = Term.(const main $ const ())
 

@@ -1,4 +1,11 @@
+(rule
+ (deps
+  (glob_files code/*.ml))
+ (target code.ml)
+ (action
+  (run ocaml-crunch -m plain -e ml -o %{target} code/)))
+
 (executable
  (name main)
  (public_name ml-of-installer-generator)
- (libraries bos cmdliner))
+ (libraries bos cmdliner common_installer_generator str))

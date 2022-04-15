@@ -1,0 +1,3 @@
+(library
+ (name common_installer_generator)
+ (libraries astring findlib fmt))

@@ -1,4 +1,13 @@
 (executable
  (name main)
  (public_name dune-of-installer-generator)
- (libraries bos cmdliner fpath findlib sexplib0))
+ (libraries
+  bos
+  cmdliner
+  common_installer_generator
+  fmt.cli
+  fmt.tty
+  fpath
+  logs.cli
+  logs.fmt
+  sexplib0))
