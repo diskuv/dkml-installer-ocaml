@@ -72,7 +72,7 @@ install: [
   # small.
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
-    "_build/default/installer/bin/generate/main.exe"
+    "_build/install/default/bin/dkml-install-create-installers.exe"
     "--program-name"
     name
     "--program-version"
@@ -92,8 +92,8 @@ install: [
     "%{_:share}%/t"
 
     "--packager-setup-bytecode"
-    "_build/default/installer/bin/setup/main.bc"
+    "_build/install/default/bin/package_setup.bc.exe"
     "--packager-uninstaller-bytecode"
-    "_build/default/installer/bin/uninstaller/main.bc"
+    "_build/install/default/bin/package_uninstaller.bc.exe"
   ]
 ]

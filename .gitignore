@@ -3,6 +3,7 @@ _opam/
 
 # Visual Studio Code
 .vscode/settings.json
+.vscode/launch.json
 
 # Dune
 _build/

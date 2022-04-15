@@ -11,6 +11,8 @@
 *.opam.template text
 Makefile text
 dune text
+dune.inc text
+dune.inc.corrected text
 dune-project text
 opam text
 
@@ -22,6 +24,8 @@ opam text
 *.ml text eol=lf
 *.opam text eol=lf
 *.opam.template text eol=lf
+dune.inc text eol=lf
+dune.inc.corrected text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
