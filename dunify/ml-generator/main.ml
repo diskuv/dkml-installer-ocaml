@@ -54,7 +54,7 @@ let main () =
   Rresult.R.error_msg_to_invalid_arg
     (let ( let* ) = Rresult.R.bind in
      let* () = copy_as_is "discover.ml" in
-     let* () = copy_as_is "create_installers.ml" in
+     let* () = copy_with_templates ~components "create_installers.ml" in
      let* () = copy_with_templates ~components "runner_admin.ml" in
      let* () = copy_with_templates ~components "runner_user.ml" in
      let* () = copy_with_templates ~components "package_setup.ml" in

@@ -20,7 +20,11 @@
   dkml-component-network-unixutils dkml-component-network-ocamlcompiler))
 
 (executable (public_name dkml-install-create-installers)
- (name create_installers) (libraries dkml-package-console.setup cmdliner)
+ (name create_installers)
+ (libraries dkml-package-console.setup cmdliner
+  dkml-component-staging-unixutils dkml-component-staging-ocamlrun
+  dkml-component-staging-curl dkml-component-network-unixutils
+  dkml-component-network-ocamlcompiler)
  (modules create_installers))
 
 (executable (name package_setup) (modes (byte exe))

@@ -92,7 +92,8 @@ let main () project_root corrected =
           [
             public_name "dkml-install-create-installers";
             name "create_installers";
-            libraries [ "dkml-package-console.setup"; "cmdliner" ];
+            libraries
+              ([ "dkml-package-console.setup"; "cmdliner" ] @ dkml_components);
             modules [ "create_installers" ];
           ];
         executable
@@ -123,8 +124,10 @@ let main () project_root corrected =
             files
               [
                 (* Sigh. Dune always adds .exe to .bc files. *)
-                destination_file ~filename:"package_setup.bc" ~destination:"dkml-install-package-setup.bc";
-                destination_file ~filename:"package_uninstaller.bc" ~destination:"dkml-install-package-uninstaller.bc";
+                destination_file ~filename:"package_setup.bc"
+                  ~destination:"dkml-install-package-setup.bc";
+                destination_file ~filename:"package_uninstaller.bc"
+                  ~destination:"dkml-install-package-uninstaller.bc";
               ];
           ];
         (*
