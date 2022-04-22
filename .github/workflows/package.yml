@@ -1,0 +1,402 @@
+name: Package OCaml Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      populate-cache:
+        description: "Enable if downloads should occur but not builds. Falls back to a full build if not supported by Opam"
+        required: false
+        type: boolean
+        default: false
+      dkml-install-api:
+        description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-compiler:
+        description: "Git branch, tag or commit for dkml-base-compiler, dkml-option-32bit, ocaml and ocaml-config"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-ocamlcompiler:
+        description: "Git branch, tag or commit for dkml-component-*-ocamlcompiler"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-ocamlrun:
+        description: "Git branch, tag or commit for dkml-component-*-ocamlrun"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-opam:
+        description: "Git branch, tag or commit for dkml-component-*-opam"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-curl:
+        description: "Git branch, tag or commit for dkml-component-*-curl package"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      dkml-component-unixutils:
+        description: "Git branch, tag or commit for dkml-component-*-unixutils packages"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      conf-dkml-cross-toolchain:
+        description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
+        required: false
+        default: "" # Change this to "@repository@" once published to Opam
+      diskuv-opam-repository:
+        # Used by all_setup_opam_repositories.sh
+        description: "Git branch, tag or commit for the diskuv-opam-repository repository"
+        required: false
+        default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG is used as default for empty strings
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  setup-dkml:
+    uses: 'diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@v0'
+    with:
+      ocaml-compiler: 4.12.1
+      fdopen-opamexe-bootstrap: true # Use opam.exe from fdopen's site on Windows. Temporary mitigation until a transient bug is fixed.
+
+  build:
+    # Wait until `setup-dkml` is finished
+    needs: setup-dkml
+    
+    # Five (5) build environments will be available. You can include
+    # all of them or a subset of them.
+    strategy:
+      fail-fast: false
+      matrix:
+        # installer_name
+        #   The suffix INSTALLER_NAME in dkml-installer-INSTALLER_NAME.ocaml
+        installer_name:
+          - network-ocaml
+        include:
+          - os: windows-2019
+            abi: win32-windows_x86
+            dkml-host-abi: windows_x86
+            default_shell: msys2 {0}
+          - os: windows-2019
+            abi: win32-windows_x86_64
+            dkml-host-abi: windows_x86_64
+            default_shell: msys2 {0}
+          - os: macos-latest
+            abi: macos-darwin_all
+            dkml-host-abi: darwin_x86_64
+            default_shell: sh
+          - os: ubuntu-latest
+            abi: manylinux2014-linux_x86
+            default_shell: sh
+            dkml-host-abi: linux_x86
+          - os: ubuntu-latest
+            abi: manylinux2014-linux_x86_64
+            default_shell: sh
+            dkml-host-abi: linux_x86_64
+
+    runs-on: ${{ matrix.os }}
+    name: build-${{ matrix.abi }}
+
+    env:
+      SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
+      # Although the user expressed desire to populate the cache, only
+      # Opam 2.1 (?) and greater has the --download-only option. The OS
+      # provided opam may not have the option.
+      CAN_DOWNLOAD_ONLY:      ${{ matrix.bootstrap-opam-version != 'os' }}
+
+      # When non-empty, instead of building the standard components from the
+      # central Opam repository, use the github/gitlab development repositories
+      # directly.
+      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.conf-dkml-cross-toolchain }}"
+      DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
+      DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-curl }}"
+      DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
+      DKML_COMPONENT_STAGING_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
+      DKML_COMPONENT_STAGING_OPAM:          "${{ github.event.inputs.dkml-component-opam }}"
+      # These are not independent of dkml-install-api; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
+      DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
+      # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
+      DKML_COMPONENT_NETWORK_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
+      DKML_COMPONENT_OFFLINE_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
+      # These are not independent of dkml-compiler; they reside in same
+      # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
+      DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-compiler }}"
+      TEMP_OCAML:                       "${{ github.event.inputs.dkml-compiler }}"
+      TEMP_OCAML_CONFIG:                "${{ github.event.inputs.dkml-compiler }}"
+
+      # `>-` will flatten the multiple lines into a single line with no trailing EOL.
+      # By design `populate-cache` is not part of the cache key
+      CACHE_KEY_GITHUB_INPUTS: >-
+        DKML_INSTALL=${{ github.event.inputs.dkml-api }}
+        DKML_INSTALL_API=${{ github.event.inputs.dkml-install-api }}
+        DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
+        ALL_COMPONENT_CURL=${{ github.event.inputs.dkml-component-curl }}
+        ALL_COMPONENT_UNIXUTILS=${{ github.event.inputs.dkml-component-unixutils }}
+        ALL_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
+        ALL_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
+        ALL_COMPONENT_OPAM=${{ github.event.inputs.dkml-component-opam }}
+        DKML_COMPILER=${{ github.event.inputs.dkml-compiler }}
+        CONF_DKML_CROSS_TOOLCHAIN=${{ inputs.conf-dkml-cross-toolchain }}
+
+      # Remove warnings
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      # BOILERPLATE START: setup-dkml
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install MSYS2 to provide Unix shell (Windows only)
+        if: startsWith(matrix.dkml-host-abi, 'windows')
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          update: true
+          install: >-
+            tree
+            wget
+            make
+            pkg-config
+            rsync
+            diffutils
+            patch
+            unzip
+            git
+            xz
+            tar
+
+      - name: Download setup-dkml artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: .ci/dist
+
+      - name: Import build environments from setup-dkml
+        run: |
+          ${{ needs.setup-dkml.outputs.import_func }}
+          import ${{ matrix.host_target_abis }}
+
+      - name: Cache Opam downloads by host
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.opam-root }}/download-cache
+          key: ${{ matrix.dkml-host-abi }}
+      # BOILERPLATE END: setup-dkml
+
+      # The action/checkout steps used for pinning will re-use existing Git objects
+      # because of caching
+      - name: Cache Git checkouts of Opam pins by OS
+        uses: actions/cache@v2
+        with:
+          path: .ci/g
+          key: ${{ runner.os }}-gitpin
+
+      # dkml-component-staging-opam
+      
+      - name: Checkout dkml-component-staging-opam
+        if: ${{ env.DKML_COMPONENT_STAGING_OPAM != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-opam
+          path: .ci/g/dkml-component-staging-opam
+          ref: ${{ env.DKML_COMPONENT_STAGING_OPAM }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-staging-opam to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_OPAM != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-opam .ci/g/dkml-component-staging-opam
+
+      # dkml-component-staging-ocamlrun
+      
+      - name: Checkout dkml-component-staging-ocamlrun
+        if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-ocamlrun
+          path: .ci/g/dkml-component-staging-ocamlrun
+          ref: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-staging-ocamlrun to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-ocamlrun .ci/g/dkml-component-staging-ocamlrun
+
+      # dkml-component-network-ocamlcompiler
+      
+      - name: Checkout dkml-component-network-ocamlcompiler
+        if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-ocamlcompiler
+          path: .ci/g/dkml-component-network-ocamlcompiler
+          ref: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-network-ocamlcompiler to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-ocamlcompiler .ci/g/dkml-component-network-ocamlcompiler
+
+      # dkml-install
+
+      - name: Checkout dkml-install
+        if: ${{ env.DKML_INSTALL != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-install
+          ref: ${{ env.DKML_INSTALL }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-install to checkout instead of Opam repository
+        if: ${{ env.DKML_INSTALL != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install .ci/g/dkml-install
+
+      #  dkml-install-runner
+
+      - name: Checkout dkml-install-runner
+        if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-install-runner
+          ref: ${{ env.DKML_INSTALL_RUNNER }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-install-runner to checkout instead of Opam repository
+        if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner .ci/g/dkml-install-runner
+
+      #  dkml-package-console
+      
+      - name: Checkout dkml-package-console
+        if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-package-console
+          ref: ${{ env.DKML_PACKAGE_CONSOLE }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-package-console to checkout instead of Opam repository
+        if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
+
+      # dkml-component-staging-curl
+      
+      - name: Checkout dkml-component-staging-curl
+        if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-curl
+          path: .ci/g/dkml-component-staging-curl
+          ref: ${{ env.DKML_COMPONENT_STAGING_CURL }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-staging-curl to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-curl .ci/g/dkml-component-staging-curl
+
+      # dkml-component-staging-unixutils
+      
+      - name: Checkout dkml-component-staging-unixutils
+        if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-staging-unixutils
+          ref: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-staging-unixutils to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-staging-unixutils .ci/g/dkml-component-staging-unixutils
+
+      # dkml-component-network-unixutils
+
+      - name: Checkout dkml-component-network-unixutils
+        if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-network-unixutils
+          ref: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-network-unixutils to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-network-unixutils .ci/g/dkml-component-network-unixutils
+
+      # dkml-component-offline-unixutils
+
+      - name: Checkout dkml-component-offline-unixutils
+        if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-offline-unixutils
+          ref: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
+
+      # diskuvbox is not yet available in Opam repository
+
+      - name: Pin diskuvbox
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
+
+      # crunch has a bug on Windows that has not been upstreamed yet
+
+      - name: Pin crunch
+        shell: bash
+        run: PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
+
+      # BOILERPLATE START: setup-dkml
+      - name: Package up the installer
+        run: |
+          #!/bin/sh
+          set -eufx
+          opamrun install ./dkml-installer-${{ matrix.installer_name }}.opam --with-test --yes
+
+          # Examine the installer
+          _share=$(opamrun var dkml-installer-${{ matrix.installer_name }}:share)
+          opamrun install diskuvbox --yes
+          opamrun exec -- diskuvbox tree --encoding UTF-8 "$_share"
+
+          # Package up whatever you built
+          install -d dist
+          opamrun exec -- tar cvfCz dist/${{ matrix.host_target_abis }}.tar.gz "$_share" .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.host_target_abis }}
+          path: dist/${{ matrix.host_target_abis }}.tar.gz
+      # BOILERPLATE END: setup-dkml
+
+  release:
+    runs-on: ubuntu-latest
+    # Wait until `build` complete
+    needs:
+      - build
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Remove setup artifacts
+        run: rm -rf setup-*
+        working-directory: dist
+
+      - name: Display files to be distributed
+        run: ls -R
+        working-directory: dist
+
+      - name: Release (only when Git tag pushed)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/*
