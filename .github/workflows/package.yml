@@ -3,11 +3,6 @@ name: Package OCaml Releases
 on:
   workflow_dispatch:
     inputs:
-      populate-cache:
-        description: "Enable if downloads should occur but not builds. Falls back to a full build if not supported by Opam"
-        required: false
-        type: boolean
-        default: false
       dkml-install-api:
         description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
         required: false
@@ -55,6 +50,9 @@ jobs:
     with:
       ocaml-compiler: 4.12.1
       fdopen-opamexe-bootstrap: true # Use opam.exe from fdopen's site on Windows. Temporary mitigation until a transient bug is fixed.
+      dkml-compiler: ${{ github.event.inputs.dkml-compiler }}
+      conf-dkml-cross-toolchain: ${{ github.event.inputs.conf-dkml-cross-toolchain }}
+      diskuv-opam-repository: ${{ github.event.inputs.diskuv-opam-repository }}
 
   build:
     # Wait until `setup-dkml` is finished
@@ -95,12 +93,6 @@ jobs:
     name: build-${{ matrix.abi }}
 
     env:
-      SHOULD_POPULATE_CACHE:  ${{ github.event.inputs.populate-cache }}
-      # Although the user expressed desire to populate the cache, only
-      # Opam 2.1 (?) and greater has the --download-only option. The OS
-      # provided opam may not have the option.
-      CAN_DOWNLOAD_ONLY:      ${{ matrix.bootstrap-opam-version != 'os' }}
-
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
@@ -128,7 +120,6 @@ jobs:
       TEMP_OCAML_CONFIG:                "${{ github.event.inputs.dkml-compiler }}"
 
       # `>-` will flatten the multiple lines into a single line with no trailing EOL.
-      # By design `populate-cache` is not part of the cache key
       CACHE_KEY_GITHUB_INPUTS: >-
         DKML_INSTALL=${{ github.event.inputs.dkml-api }}
         DKML_INSTALL_API=${{ github.event.inputs.dkml-install-api }}
