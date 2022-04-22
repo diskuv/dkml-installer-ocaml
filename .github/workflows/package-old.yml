@@ -1,4 +1,4 @@
-name: Package OCaml Releases
+name: Package OCaml Releases (old)
 
 env:
   DEFAULT_DISKUV_OPAM_REPOSITORY_TAG: "19372192396b46dc51900022a19373fc1f2188e7" # "v0.4.0-prerel19_r2" when released
