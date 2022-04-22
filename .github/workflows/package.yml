@@ -63,10 +63,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # installer_name
-        #   The suffix INSTALLER_NAME in dkml-installer-INSTALLER_NAME.ocaml
-        installer_name:
-          - network-ocaml
         include:
           - os: windows-2019
             abi: win32-windows_x86
@@ -350,10 +346,10 @@ jobs:
         run: |
           #!/bin/sh
           set -eufx
-          opamrun install ./dkml-installer-${{ matrix.installer_name }}.opam --with-test --yes
+          opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes
 
           # Examine the installer
-          _share=$(opamrun var dkml-installer-${{ matrix.installer_name }}:share)
+          _share=$(opamrun var dkml-installer-network-ocaml:share)
           opamrun install diskuvbox --yes
           opamrun exec -- diskuvbox tree --encoding UTF-8 "$_share"
 
