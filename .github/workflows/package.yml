@@ -347,7 +347,7 @@ jobs:
               opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
+              opamrun exec -- cat "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
               opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
@@ -367,7 +367,7 @@ jobs:
           set -euf
           case "${{ matrix.dkml-host-abi }}" in
             windows_*)
-              find _final -name "setup-*.exe" -exec {} \;
+              find _final -name "setup-*.exe" -exec {} -v -v --color=always \;
           esac
 
       - uses: actions/upload-artifact@v3

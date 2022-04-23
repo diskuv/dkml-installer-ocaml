@@ -78,11 +78,12 @@ install: [
     "--program-version"
     version
 
-    # Only Windows, Linux 64-bit and Darwin Intel which corresponds to
-    # the GitHub Actions runners in .github/workflows/.
+    # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
+    # corresponds to the build environments of GitHub workflow setup-dkml.yml.
     # Later can add Dune cross-compiler to get Darwin ARM64.
     "--abi=windows_x86"
     "--abi=windows_x86_64"
+    "--abi=linux_x86"
     "--abi=linux_x86_64"
     "--abi=darwin_x86_64"
 
