@@ -18,13 +18,13 @@ depends: [
   # with the (irrelevant) test.c file:
   #    #include <stdio.h>
   #    #include <caml/config.h>
-  #  
+  #
   #    #ifdef ARCH_BIG_ENDIAN
   #    const char *s0 = "BEGIN-0-true-END";
   #    #else
   #    const char *s0 = "BEGIN-0-false-END";
   #    #endif
-  #  
+  #
   #    #ifdef ARCH_SIXTYFOUR
   #    const char *s1 = "BEGIN-1-true-END";
   #    #else
@@ -72,7 +72,7 @@ install: [
   # small.
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
-    "_build/install/default/bin/dkml-install-create-installers.exe"
+    "_build/install/default/bin/dkml-install-create-installers%{exe}%"
     "--program-name"
     name
     "--program-version"
@@ -92,13 +92,13 @@ install: [
     "%{_:share}%/t"
 
     "--runner-admin-exe"
-    "_build/install/default/bin/dkml-install-admin-runner.exe"
+    "_build/install/default/bin/dkml-install-admin-runner%{exe}%"
     "--runner-user-exe"
-    "_build/install/default/bin/dkml-install-user-runner.exe"
-    
+    "_build/install/default/bin/dkml-install-user-runner%{exe}%"
+
     "--packager-setup-bytecode"
-    "_build/install/default/bin/dkml-install-package-setup.bc.exe"    
+    "_build/install/default/bin/dkml-install-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"
-    "_build/install/default/bin/dkml-install-package-uninstaller.bc.exe"
+    "_build/install/default/bin/dkml-install-package-uninstaller.bc%{exe}%"
   ]
 ]

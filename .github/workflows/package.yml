@@ -329,7 +329,7 @@ jobs:
         # `digestif`
         run: |
           #!/bin/sh
-          set -eufx
+          set -euf
           case "${{ matrix.dkml-host-abi }}" in
             linux*) opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes --no-depexts ;;
             *) opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes ;;
@@ -338,11 +338,11 @@ jobs:
           # Examine the installer
           _share=$(opamrun var dkml-installer-network-ocaml:share)
           opamrun install diskuvbox --yes
-          opamrun exec -- diskuvbox tree --encoding UTF-8 "$_share"
+          opamrun exec -- diskuvbox tree -d 5 --encoding UTF-8 "$_share"
 
           # Package up whatever you built
           install -d dist
-          opamrun exec -- tar cvfCz dist/${{ matrix.abi }}.tar.gz "$_share" .
+          opamrun exec -- tar cfCz dist/${{ matrix.abi }}.tar.gz "$_share" .
 
       - uses: actions/upload-artifact@v3
         with:
