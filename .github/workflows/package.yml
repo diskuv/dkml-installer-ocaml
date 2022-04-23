@@ -318,10 +318,19 @@ jobs:
 
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
+        # Because of the error on manylinux2014 (CentOS 7):
+        #   No solution found, exiting
+        #   - conf-pkg-config
+        #   depends on the unavailable system package 'pkgconfig'.
+        # we use `--no-depexts`. The dockcross manylinux2014 has package names
+        # pkgconfig.i686 and pkgconfig.x86_64, it does not seem to match what
+        # opam 2.1.0 is looking for ("pkgconfig").
+        # `conf-pkg-config` is needed by `dkml-component-staging-unixutils` ->
+        # `digestif`
         run: |
           #!/bin/sh
           set -eufx
-          opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes
+          opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes --no-depexts
 
           # Examine the installer
           _share=$(opamrun var dkml-installer-network-ocaml:share)
