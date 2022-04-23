@@ -39,7 +39,7 @@ on:
         # Used by all_setup_opam_repositories.sh
         description: "Git branch, tag or commit for the diskuv-opam-repository repository"
         required: false
-        default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG is used as default for empty strings
+        default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG in setup-dkml is used as default for empty strings
   push:
     branches:
       - 'main'
@@ -97,9 +97,7 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      CONF_DKML_CROSS_TOOLCHAIN:        "${{ github.event.inputs.conf-dkml-cross-toolchain }}"
-      DISKUV_OPAM_REPOSITORY:           "${{ github.event.inputs.diskuv-opam-repository }}"
-      DKML_COMPONENT_STAGING_CURL:      "${{ github.event.inputs.dkml-component-curl }}"
+      DKML_COMPONENT_STAGING_CURL:          "${{ github.event.inputs.dkml-component-curl }}"
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
       DKML_COMPONENT_STAGING_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
       DKML_COMPONENT_STAGING_OPAM:          "${{ github.event.inputs.dkml-component-opam }}"
@@ -113,25 +111,6 @@ jobs:
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       DKML_COMPONENT_NETWORK_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       DKML_COMPONENT_OFFLINE_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
-      # These are not independent of dkml-compiler; they reside in same
-      # repository; we cannot go over max 10 GitHub workflow inputs.
-      DKML_OPTION_32BIT:                "${{ github.event.inputs.dkml-compiler }}"
-      DKML_BASE_COMPILER:               "${{ github.event.inputs.dkml-compiler }}"
-      TEMP_OCAML:                       "${{ github.event.inputs.dkml-compiler }}"
-      TEMP_OCAML_CONFIG:                "${{ github.event.inputs.dkml-compiler }}"
-
-      # `>-` will flatten the multiple lines into a single line with no trailing EOL.
-      CACHE_KEY_GITHUB_INPUTS: >-
-        DKML_INSTALL=${{ github.event.inputs.dkml-api }}
-        DKML_INSTALL_API=${{ github.event.inputs.dkml-install-api }}
-        DISKUV_OPAM_REPOSITORY=${{ github.event.inputs.diskuv-opam-repository }}
-        ALL_COMPONENT_CURL=${{ github.event.inputs.dkml-component-curl }}
-        ALL_COMPONENT_UNIXUTILS=${{ github.event.inputs.dkml-component-unixutils }}
-        ALL_COMPONENT_OCAMLCOMPILER=${{ github.event.inputs.dkml-component-ocamlcompiler }}
-        ALL_COMPONENT_OCAMLRUN=${{ github.event.inputs.dkml-component-ocamlrun }}
-        ALL_COMPONENT_OPAM=${{ github.event.inputs.dkml-component-opam }}
-        DKML_COMPILER=${{ github.event.inputs.dkml-compiler }}
-        CONF_DKML_CROSS_TOOLCHAIN=${{ inputs.conf-dkml-cross-toolchain }}
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
