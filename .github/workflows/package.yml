@@ -344,10 +344,10 @@ jobs:
           install -d _final
           case "${{ matrix.dkml-host-abi }}" in
             darwin* | linux_*)
-              "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz tar --gzip
               ;;
             windows_*)
-              find "$_share"/t -maxdepth 1 -name "setup-dkml-installer-network-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} _final/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-dkml-installer-network-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} _final/ \;
               ;;
           esac
 
