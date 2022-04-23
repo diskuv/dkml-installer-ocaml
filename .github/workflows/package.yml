@@ -162,7 +162,7 @@ jobs:
       - name: Import build environments from setup-dkml
         run: |
           ${{ needs.setup-dkml.outputs.import_func }}
-          import ${{ matrix.host_target_abis }}
+          import ${{ matrix.abi }}
 
       - name: Cache Opam downloads by host
         uses: actions/cache@v2
@@ -355,12 +355,12 @@ jobs:
 
           # Package up whatever you built
           install -d dist
-          opamrun exec -- tar cvfCz dist/${{ matrix.host_target_abis }}.tar.gz "$_share" .
+          opamrun exec -- tar cvfCz dist/${{ matrix.abi }}.tar.gz "$_share" .
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.host_target_abis }}
-          path: dist/${{ matrix.host_target_abis }}.tar.gz
+          name: ${{ matrix.abi }}
+          path: dist/${{ matrix.abi }}.tar.gz
       # BOILERPLATE END: setup-dkml
 
   release:
