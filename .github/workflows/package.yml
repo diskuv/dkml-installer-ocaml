@@ -88,6 +88,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: build-${{ matrix.abi }}
 
+    # Use a Unix shell by default, even on Windows
+    defaults:
+      run:
+        shell: ${{ matrix.default_shell }}
+
     env:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
@@ -130,6 +135,7 @@ jobs:
 
       # Remove warnings
       HOMEBREW_NO_INSTALL_CLEANUP: 1
+
     steps:
       # BOILERPLATE START: setup-dkml
       - name: Checkout code
