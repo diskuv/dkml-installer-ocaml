@@ -3,11 +3,16 @@
 (name dkml-installer-network-ocaml)
 (version 0.4.0)
 
+; NOTE 1
 ; Since *.opam.template does not support build:[] steps
 ; (at least in Dune 2.9.3) we cannot use --relocatable as in:
 ;   ["dune" "install" "-p" name "--relocatable" "--create-install-files" name]
 ; So we cannot do:
 ;  (generate_opam_files true)
+;
+; NOTE 2
+; We are no longer using Dune plugins, so we should go back to
+; generate_opam_files
 
 (package
  (name dkml-installer-network-ocaml))

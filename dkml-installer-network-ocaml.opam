@@ -60,7 +60,7 @@ build: [
     "@runtest" {with-test}
     "@doc" {with-doc}
   ]
-  ["dune" "install" "-p" name "--relocatable" "--create-install-files" name]
+  ["dune" "install" "-p" name "--create-install-files" name]
 ]
 dev-repo: "git+https://github.com/diskuv/dkml-installer-ocaml.git"
 install: [
