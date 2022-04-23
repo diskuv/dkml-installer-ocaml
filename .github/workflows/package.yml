@@ -189,10 +189,11 @@ jobs:
           path: .ci/g/dkml-component-staging-opam
           ref: ${{ env.DKML_COMPONENT_STAGING_OPAM }} # empty is no `ref`, which is default branch
 
-      - name: Pin dkml-component-staging-opam to checkout instead of Opam repository
+      - name: Pin dkml-component-staging-opam32 and dkml-component-staging-opam64 to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_OPAM != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-staging-opam .ci/g/dkml-component-staging-opam
+        run: |
+          opamrun pin add --yes --no-action dkml-component-staging-opam32 .ci/g/dkml-component-staging-opam
+          opamrun pin add --yes --no-action dkml-component-staging-opam64 .ci/g/dkml-component-staging-opam
 
       # dkml-component-staging-ocamlrun
       
@@ -206,8 +207,7 @@ jobs:
 
       - name: Pin dkml-component-staging-ocamlrun to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-staging-ocamlrun .ci/g/dkml-component-staging-ocamlrun
+        run: opamrun pin add --yes --no-action dkml-component-staging-ocamlrun .ci/g/dkml-component-staging-ocamlrun
 
       # dkml-component-network-ocamlcompiler
       
@@ -221,8 +221,7 @@ jobs:
 
       - name: Pin dkml-component-network-ocamlcompiler to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-network-ocamlcompiler .ci/g/dkml-component-network-ocamlcompiler
+        run: opamrun pin add --yes --no-action dkml-component-network-ocamlcompiler .ci/g/dkml-component-network-ocamlcompiler
 
       # dkml-install
 
@@ -236,8 +235,7 @@ jobs:
 
       - name: Pin dkml-install to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-install .ci/g/dkml-install
+        run: opamrun pin add --yes --no-action dkml-install .ci/g/dkml-install
 
       #  dkml-install-runner
 
@@ -251,8 +249,7 @@ jobs:
 
       - name: Pin dkml-install-runner to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-install-runner .ci/g/dkml-install-runner
+        run: opamrun pin add --yes --no-action dkml-install-runner .ci/g/dkml-install-runner
 
       #  dkml-package-console
       
@@ -266,8 +263,7 @@ jobs:
 
       - name: Pin dkml-package-console to checkout instead of Opam repository
         if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
+        run: opamrun pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
 
       # dkml-component-staging-curl
       
@@ -281,8 +277,7 @@ jobs:
 
       - name: Pin dkml-component-staging-curl to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-staging-curl .ci/g/dkml-component-staging-curl
+        run: opamrun pin add --yes --no-action dkml-component-staging-curl .ci/g/dkml-component-staging-curl
 
       # dkml-component-staging-unixutils
       
@@ -296,8 +291,7 @@ jobs:
 
       - name: Pin dkml-component-staging-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-staging-unixutils .ci/g/dkml-component-staging-unixutils
+        run: opamrun pin add --yes --no-action dkml-component-staging-unixutils .ci/g/dkml-component-staging-unixutils
 
       # dkml-component-network-unixutils
 
@@ -311,8 +305,7 @@ jobs:
 
       - name: Pin dkml-component-network-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-network-unixutils .ci/g/dkml-component-network-unixutils
+        run: opamrun pin add --yes --no-action dkml-component-network-unixutils .ci/g/dkml-component-network-unixutils
 
       # dkml-component-offline-unixutils
 
@@ -326,20 +319,17 @@ jobs:
 
       - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
+        run: opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
 
       # diskuvbox is not yet available in Opam repository
 
       - name: Pin diskuvbox
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
+        run: opamrun pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
 
       # crunch has a bug on Windows that has not been upstreamed yet
 
       - name: Pin crunch
-        shell: bash
-        run: PATH="$PWD/bootstrap/bin:$PATH" opamrun pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
+        run: opamrun pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
 
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
