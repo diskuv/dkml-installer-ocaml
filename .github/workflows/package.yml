@@ -343,8 +343,12 @@ jobs:
           # Finalize the Console installer (each type of installer has its unique finalization procedure)
           install -d _final
           case "${{ matrix.dkml-host-abi }}" in
-            darwin* | linux_*)
+            linux_*)
               opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz tar --gzip
+              ;;
+            darwin*)
+              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
+              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
               opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-dkml-installer-network-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} _final/ \;
@@ -353,7 +357,18 @@ jobs:
 
           # Package up whatever you built
           install -d dist
+          opamrun exec -- diskuvbox tree -d 3 --encoding UTF-8 "_final"
           opamrun exec -- tar cfCz dist/${{ matrix.abi }}.tar.gz _final .
+
+      - name: Test the installer (Windows)
+        if: startsWith(matrix.dkml-host-abi, 'windows_')
+        run: |
+          #!/bin/sh
+          set -euf
+          case "${{ matrix.dkml-host-abi }}" in
+            windows_*)
+              find _final -name "setup-*.exe" -exec {} \;
+          esac
 
       - uses: actions/upload-artifact@v3
         with:
