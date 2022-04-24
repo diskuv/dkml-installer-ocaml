@@ -316,6 +316,11 @@ jobs:
       - name: Pin crunch
         run: opamrun pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
 
+      # curly has a bug on Windows that has not been released to Opam yet
+
+      - name: Pin curly
+        run: opamrun pin add --yes --no-action -k version curly 0.2.1-windows-env_r2
+
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
         # Because of the error on manylinux2014 (CentOS 7):
