@@ -362,13 +362,18 @@ jobs:
 
       - name: Test the installer (Windows)
         if: startsWith(matrix.dkml-host-abi, 'windows_')
+        # If we don't change it then msys2/setup-msys2@v2 will conflict with
+        # the dkml-component-unixutils' MSYS2 ... you get:
+        #    *** fatal error - cygheap base mismatch detected - 0x180348408/0x180349408.
+        #   This problem is probably due to using incompatible versions of the cygwin DLL.
+        shell: pwsh
         run: |
-          #!/bin/sh
-          set -euf
-          case "${{ matrix.dkml-host-abi }}" in
-            windows_*)
-              find _final -name "setup-*.exe" -exec {} -v -v --color=always \;
-          esac
+          $setups = Get-ChildItem -Path _final -Filter "setup-*.exe"
+          foreach ($setup in $setups)
+          {
+            Write-Host "Running $($setup.FullName) ..."
+            & $setup.FullName -v -v --color=always
+          }
 
       - uses: actions/upload-artifact@v3
         with:
