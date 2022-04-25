@@ -345,25 +345,20 @@ jobs:
           opamrun install diskuvbox --yes
           opamrun exec -- diskuvbox tree -d 6 --encoding UTF-8 "$_share"
 
-          # Finalize the Console installer (each type of installer has its unique finalization procedure)
-          install -d _final
+          # Finalize and distribute the Console installer (each type of installer has its unique finalization procedure)
+          install -d dist
           case "${{ matrix.dkml-host-abi }}" in
             linux_*)
-              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
               opamrun exec -- cat "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
-              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o _final -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/bundle-dkml-installer-network-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-dkml-installer-network-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} _final/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-dkml-installer-network-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
               ;;
           esac
-
-          # Package up whatever you built
-          install -d dist
-          opamrun exec -- diskuvbox tree -d 3 --encoding UTF-8 "_final"
-          opamrun exec -- tar cfCz dist/${{ matrix.abi }}.tar.gz _final .
 
       - name: Test the installer (Windows)
         if: startsWith(matrix.dkml-host-abi, 'windows_')
@@ -397,8 +392,8 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.abi }}
-          path: dist/${{ matrix.abi }}.tar.gz
+          name: ${{ matrix.dkml-host-abi }}
+          path: dist/
       # BOILERPLATE END: setup-dkml
 
   release:
@@ -415,13 +410,23 @@ jobs:
         run: rm -rf setup-*
         working-directory: dist
 
+      - name: Restructure multi-ABI directories
+        run: |
+          _release="$(pwd)/_release"
+          install -d "$_release"
+
+          cd dist
+          find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
+            rsync -av $distname/ "$_release"
+          done
+
       - name: Display files to be distributed
         run: ls -R
-        working-directory: dist
+        working-directory: _release
 
       - name: Release (only when Git tag pushed)
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            dist/*
+            _release/*
