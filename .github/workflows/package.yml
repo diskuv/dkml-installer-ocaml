@@ -386,7 +386,7 @@ jobs:
         #   This problem is probably due to using incompatible versions of the cygwin DLL.
         shell: pwsh
         run: |
-          $setups = Get-ChildItem -Path _final -Filter "setup-*.exe"
+          $setups = Get-ChildItem -Path dist -Filter "setup-*.exe"
           foreach ($setup in $setups)
           {
             Write-Host "Running $($setup.FullName) ..."
