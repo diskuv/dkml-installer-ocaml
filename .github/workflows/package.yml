@@ -380,7 +380,7 @@ jobs:
             C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;\
             C:\\Program Files\\Docker;\
             C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit"
-        # If we don't change it then msys2/setup-msys2@v2 will conflict with
+        # If we don't change the shell then msys2/setup-msys2@v2 will conflict with
         # the dkml-component-unixutils' MSYS2 ... you get:
         #    *** fatal error - cygheap base mismatch detected - 0x180348408/0x180349408.
         #   This problem is probably due to using incompatible versions of the cygwin DLL.
@@ -391,6 +391,7 @@ jobs:
           {
             Write-Host "Running $($setup.FullName) ..."
             & $setup.FullName -v -v --color=always
+            & "$env:LOCALAPPDATA"\Programs\DiskuvOCaml\0\usr\bin\ocamlopt.exe -config
           }
 
       - uses: actions/upload-artifact@v3
