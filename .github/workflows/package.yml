@@ -396,7 +396,7 @@ jobs:
           {
             Write-Host "Running $($setup.FullName) ..."
             & $setup.FullName -v -v --color=always
-            & "$env:LOCALAPPDATA"\Programs\DiskuvOCaml\0\usr\bin\ocamlopt.exe -config
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\usr\bin\ocamlopt.exe" -config
           }
 
       - uses: actions/upload-artifact@v3
