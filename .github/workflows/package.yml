@@ -114,6 +114,7 @@ jobs:
       DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
       DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
       DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
+      DKML_COMPONENT_XX_CONSOLE:        "${{ github.event.inputs.dkml-install-api }}"
       # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
@@ -258,6 +259,20 @@ jobs:
         if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
 
+      #  dkml-component-xx-console
+
+      - name: Checkout dkml-component-xx-console
+        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
+        uses: actions/checkout@v2
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-component-xx-console
+          ref: ${{ env.DKML_COMPONENT_XX_CONSOLE }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-xx-console to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
+        run: opamrun pin add --yes --no-action dkml-component-xx-console .ci/g/dkml-component-xx-console
+
       # dkml-component-staging-curl
 
       - name: Checkout dkml-component-staging-curl
@@ -313,21 +328,6 @@ jobs:
       - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
-
-      # diskuvbox is not yet available in Opam repository
-
-      - name: Pin diskuvbox
-        run: opamrun pin add --yes --no-action diskuvbox 'https://github.com/diskuv/diskuvbox.git#main'
-
-      # crunch has a bug on Windows that has not been upstreamed yet
-
-      - name: Pin crunch
-        run: opamrun pin add --yes --no-action crunch 'https://github.com/jonahbeckford/ocaml-crunch.git#feature-windowsopen'
-
-      # curly has a bug on Windows that has not been released to Opam yet
-
-      - name: Pin curly
-        run: opamrun pin add --yes --no-action -k version curly 0.2.1-windows-env_r2
 
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
