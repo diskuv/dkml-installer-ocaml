@@ -70,23 +70,28 @@ jobs:
           - os: windows-2019
             abi: win32-windows_x86
             dkml-host-abi: windows_x86
+            opam-root: D:/.opam
             default_shell: msys2 {0}
           - os: windows-2019
             abi: win32-windows_x86_64
             dkml-host-abi: windows_x86_64
+            opam-root: D:/.opam
             default_shell: msys2 {0}
           - os: macos-latest
             abi: macos-darwin_all
             dkml-host-abi: darwin_x86_64
+            opam-root: /Users/runner/.opam
             default_shell: sh
           - os: ubuntu-latest
             abi: manylinux2014-linux_x86
-            default_shell: sh
             dkml-host-abi: linux_x86
+            opam-root: .ci/opamroot
+            default_shell: sh
           - os: ubuntu-latest
             abi: manylinux2014-linux_x86_64
-            default_shell: sh
             dkml-host-abi: linux_x86_64
+            opam-root: .ci/opamroot
+            default_shell: sh
 
     runs-on: ${{ matrix.os }}
     name: build-${{ matrix.abi }}
