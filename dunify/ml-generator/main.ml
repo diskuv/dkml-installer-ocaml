@@ -51,6 +51,7 @@ let copy_with_templates ~components file =
 
 let main () =
   let components = Common_installer_generator.ocamlfind () in
+
   Rresult.R.error_msg_to_invalid_arg
     (let ( let* ) = Rresult.R.bind in
      let* () = copy_as_is "discover.ml" in
