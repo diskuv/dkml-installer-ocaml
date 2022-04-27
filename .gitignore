@@ -5,6 +5,9 @@ _opam/
 .vscode/settings.json
 .vscode/launch.json
 
+# Visual Studio
+.vs/
+
 # Dune
 _build/
 /*.install

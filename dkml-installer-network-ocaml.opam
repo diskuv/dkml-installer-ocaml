@@ -39,12 +39,10 @@ depends: [
   # Only patch in Diskuv repository is for v0.14.1. Need to upstream fix the problem.
   "ppx_expect" {= "v0.14.1"}
 
-  "dkml-base-compiler" {= "4.12.1"}
-  "conf-dkml-cross-toolchain" {= "4.12.1"}
+  "ocaml" {= "4.12.1"}
   "dkml-component-network-ocamlcompiler" {= "4.12.1"}
   "dkml-install-runner" {>= "0.1.0"}
   "dkml-package-console" {>= "0.1.0"}
-  "diskuvbox" {>= "0.1.0"}
 ]
 build: [
   ["dune" "subst"] {dev}
