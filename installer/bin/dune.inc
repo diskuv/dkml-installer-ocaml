@@ -23,7 +23,7 @@
 
 (executable (public_name dkml-install-create-installers)
  (name create_installers)
- (libraries dkml-package-console.setup cmdliner
+ (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
   dkml-component-staging-curl dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64

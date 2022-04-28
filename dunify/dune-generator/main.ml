@@ -93,7 +93,8 @@ let main () project_root corrected =
             public_name "dkml-install-create-installers";
             name "create_installers";
             libraries
-              ([ "dkml-package-console.setup"; "cmdliner" ] @ dkml_components);
+              ([ "dkml-package-console.setup"; "cmdliner"; "private_common" ]
+              @ dkml_components);
             modules [ "create_installers" ];
           ];
         executable

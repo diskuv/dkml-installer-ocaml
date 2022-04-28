@@ -71,8 +71,6 @@ install: [
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
     "_build/install/default/bin/dkml-install-create-installers%{exe}%"
-    "--program-name"
-    name
     "--program-version"
     version
 
