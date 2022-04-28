@@ -449,8 +449,8 @@ jobs:
 
   vagrant-up:
     # Wait for release
-    needs:
-      - release
+    # needs:
+    #   - release
 
     # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
     runs-on: macos-10.15
