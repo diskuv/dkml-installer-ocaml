@@ -127,7 +127,9 @@ jobs:
     steps:
       # BOILERPLATE START: setup-dkml
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install MSYS2 to provide Unix shell (Windows only)
         if: startsWith(matrix.dkml-host-abi, 'windows')
@@ -437,5 +439,52 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          prerelease: true # becomes a real release after it is signed externally
           files: |
             _release/*
+
+  #----------------------------------------------
+  # Testing that requires a (pre)release download
+  #----------------------------------------------
+
+  vagrant-up:
+    # Wait for release
+    needs:
+      - release
+
+    # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
+    runs-on: macos-10.15
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Cache Vagrant boxes
+      uses: actions/cache@v2
+      with:
+        path: ~/.vagrant.d/boxes
+        key: ${{ runner.os }}-vagrant-${{ hashFiles('vagrant/win32/Vagrantfile') }}
+        restore-keys: |
+          ${{ runner.os }}-vagrant-
+
+    - name: Sanitize
+      run: rm -rf ~/playground
+
+    - name: vagrant up for latest tag
+      run: |
+        #!/bin/sh
+        set -eufx
+        git tag
+        git describe --abbrev=0 | tee vagrant/win32/tagversion.txt
+        awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+
+        cd vagrant/win32
+        vagrant up
+
+    - name: Check test_installation.t status
+      run: |
+        set -x ; EXITC=$(awk 'NF>0{print $1}' vagrant/win32/test_installation.t/exitcode.en-US.txt) ; if [ ! "$EXITC" = 0 ]; then echo "FATAL: Vagrant test_installation.t FAILED with exit code $EXITC"; exit 1; fi
+
+    - name: Check playground creation
+      run: |
+        set -x ; find vagrant/win32/playground ; if [ ! -e vagrant/win32/playground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant playground creation FAILED"; exit 1; fi

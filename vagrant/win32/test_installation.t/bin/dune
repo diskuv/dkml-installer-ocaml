@@ -1,0 +1,7 @@
+(executables
+ (names main)
+ (libraries test_installation))
+
+(install
+ (section bin)
+ (files (main.exe as test_installation)))
