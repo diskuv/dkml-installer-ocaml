@@ -16,7 +16,15 @@ Other operating system instructions can be found at https://www.vagrantup.com/do
 
 ### English Testing
 
-Just type `vagrant up`
+Type in PowerShell:
+
+```powershell
+git describe --abbrev=0 --tags > tagversion.txt
+
+(Select-String -Path ..\..\dkml-installer-network-ocaml.opam -Pattern "^version:").Line -replace 'version: *"(.*)"', '$1' > opamversion.txt
+
+vagrant up
+```
 
 ### Non-English Testing
 
@@ -30,6 +38,8 @@ SECOND, to start the Windows virtual machines you can use the following PowerShe
 
 ```powershell
 # Only English (en-US)
+git describe --abbrev=0 --tags > tagversion.txt
+(Select-String -Path ..\..\dkml-installer-network-ocaml.opam -Pattern "^version:").Line -replace 'version: *"(.*)"', '$1' > opamversion.txt
 vagrant up
 
 # You can only bring "up" one of these at a time (as of 2021-11-17) since
