@@ -128,8 +128,6 @@ jobs:
       # BOILERPLATE START: setup-dkml
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Install MSYS2 to provide Unix shell (Windows only)
         if: startsWith(matrix.dkml-host-abi, 'windows')
@@ -458,6 +456,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Cache Vagrant boxes
       uses: actions/cache@v2
@@ -474,8 +474,7 @@ jobs:
       run: |
         #!/bin/sh
         set -eufx
-        git tag
-        git describe --abbrev=0 | tee vagrant/win32/tagversion.txt
+        git describe --abbrev=0 --tags | tee vagrant/win32/tagversion.txt
         awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
 
         cd vagrant/win32

@@ -8,10 +8,13 @@ chcp.com # display code page
 # Get the version which can't be embedded in this UTF-16 BE file (encoding not supported by bumpversion)
 $HereScript = $MyInvocation.MyCommand.Path
 $HereDir = (get-item $HereScript).Directory
-if (!(Test-Path -Path $HereDir\dkmlversion.txt)) {
-    throw "Could not locate dkmlversion.txt in $HereDir"
+if (!(Test-Path -Path $HereDir\opamversion.txt)) {
+    throw "Could not locate opamversion.txt in $HereDir"
 }
 $OpamVersion = (Get-Content $HereDir\opamversion.txt -TotalCount 1).Trim()
+if (!(Test-Path -Path $HereDir\tagversion.txt)) {
+  throw "Could not locate tagversion.txt in $HereDir"
+}
 $TagVersion = (Get-Content $HereDir\tagversion.txt -TotalCount 1).Trim()
 
 # ========================
