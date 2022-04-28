@@ -179,7 +179,7 @@ jobs:
 
       - name: Checkout dkml-component-staging-opam
         if: ${{ env.DKML_COMPONENT_STAGING_OPAM != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-opam
           path: .ci/g/dkml-component-staging-opam
@@ -195,7 +195,7 @@ jobs:
 
       - name: Checkout dkml-component-staging-ocamlrun
         if: ${{ env.DKML_COMPONENT_STAGING_OCAMLRUN != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-ocamlrun
           path: .ci/g/dkml-component-staging-ocamlrun
@@ -209,7 +209,7 @@ jobs:
 
       - name: Checkout dkml-component-network-ocamlcompiler
         if: ${{ env.DKML_COMPONENT_NETWORK_OCAMLCOMPILER != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-ocamlcompiler
           path: .ci/g/dkml-component-network-ocamlcompiler
@@ -223,7 +223,7 @@ jobs:
 
       - name: Checkout dkml-install
         if: ${{ env.DKML_INSTALL != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-install
@@ -237,7 +237,7 @@ jobs:
 
       - name: Checkout dkml-install-runner
         if: ${{ env.DKML_INSTALL_RUNNER != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-install-runner
@@ -251,7 +251,7 @@ jobs:
 
       - name: Checkout dkml-package-console
         if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-package-console
@@ -265,7 +265,7 @@ jobs:
 
       - name: Checkout dkml-component-xx-console
         if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-install-api
           path: .ci/g/dkml-component-xx-console
@@ -279,7 +279,7 @@ jobs:
 
       - name: Checkout dkml-component-staging-curl
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-curl
           path: .ci/g/dkml-component-staging-curl
@@ -293,7 +293,7 @@ jobs:
 
       - name: Checkout dkml-component-staging-unixutils
         if: ${{ env.DKML_COMPONENT_STAGING_UNIXUTILS != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-staging-unixutils
@@ -307,7 +307,7 @@ jobs:
 
       - name: Checkout dkml-component-network-unixutils
         if: ${{ env.DKML_COMPONENT_NETWORK_UNIXUTILS != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-network-unixutils
@@ -321,7 +321,7 @@ jobs:
 
       - name: Checkout dkml-component-offline-unixutils
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: diskuv/dkml-component-unixutils
           path: .ci/g/dkml-component-offline-unixutils
