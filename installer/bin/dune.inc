@@ -2,9 +2,12 @@
 ; Do not edit unless need to regenerate!
 ; When regenerating, erase **all** content from this file, save the file, and then run:
 ;   dune build installer/bin/dune.inc --auto-promote
-(executable (name discover) (libraries dune.configurator) (modules discover))
+(executable (name discover) (libraries dune.configurator bos fpath)
+ (modules discover))
 
-(rule (targets admin-link-flags.sexp) (deps (:discover discover.exe))
+(rule (targets admin-link-flags.sexp console-link-flags.sexp)
+ (deps (:discover discover.exe) entry-application.manifest
+  entry.assembly.manifest)
  (action (run %{discover})))
 
 (executable (public_name dkml-install-user-runner) (name runner_user)
@@ -23,12 +26,27 @@
 
 (executable (public_name dkml-install-create-installers)
  (name create_installers)
- (libraries dkml-package-console.setup cmdliner private_common
+ (libraries dkml-package-console.create cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
   dkml-component-staging-curl dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils)
  (modules create_installers))
+
+(executable (public_name dkml-install-package-entry) (name entry_main)
+ (libraries dkml-package-console.entry cmdliner private_common
+  dkml-component-network-ocamlcompiler dkml-component-network-unixutils
+  dkml-component-staging-curl dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils)
+ (modules entry_main) (ocamlopt_flags (:include console-link-flags.sexp)))
+
+(executable (name entry_assembly_manifest)
+ (libraries dkml-package-console.common fmt)
+ (modules entry_assembly_manifest))
+
+(rule (target entry.assembly.manifest)
+ (action (with-stdout-to %{target} (run %{exe:entry_assembly_manifest.exe}))))
 
 (executable (name package_setup) (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common

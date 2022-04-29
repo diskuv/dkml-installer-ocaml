@@ -2,7 +2,11 @@ open Cmdliner
 open Bos
 
 let copy_as_is file =
-  let content = Option.get (Code.read file) in
+  let content =
+    match Code.read file with
+    | Some x -> x
+    | None -> failwith (Fmt.str "No %s in crunched code.ml" file)
+  in
   let ( let* ) = Rresult.R.bind in
   let* z =
     OS.File.with_oc (Fpath.v file)
@@ -55,6 +59,9 @@ let main () =
   Rresult.R.error_msg_to_invalid_arg
     (let ( let* ) = Rresult.R.bind in
      let* () = copy_as_is "discover.ml" in
+     let* () = copy_as_is "entry_main.ml" in
+     let* () = copy_as_is "entry-application.manifest" in
+     let* () = copy_as_is "entry_assembly_manifest.ml" in
      let* () = copy_with_templates ~components "create_installers.ml" in
      let* () = copy_with_templates ~components "runner_admin.ml" in
      let* () = copy_with_templates ~components "runner_user.ml" in

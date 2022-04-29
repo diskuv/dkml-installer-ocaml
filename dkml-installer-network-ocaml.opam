@@ -93,6 +93,8 @@ install: [
     "--runner-user-exe"
     "_build/install/default/bin/dkml-install-user-runner%{exe}%"
 
+    "--packager-entry-exe"
+    "_build/install/default/bin/dkml-install-package-entry%{exe}%"
     "--packager-setup-bytecode"
     "_build/install/default/bin/dkml-install-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"

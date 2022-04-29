@@ -7,6 +7,8 @@
  (name private_ignored_code)
  (libraries
   cmdliner
+  dkml-package-console.create
+  dkml-package-console.entry
   dkml-package-console.setup
   dkml-package-console.uninstaller
   dkml-install-runner.user

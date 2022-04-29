@@ -28,7 +28,8 @@ let ocamlopt_flags l = List ([ Atom "ocamlopt_flags" ] @ l)
 
 let run = _vararg_of_string "run"
 
-let with_stdout_to file l = List ([ Atom "with-stdout-to"; Atom file ] @ l)
+let with_stdout_to file action =
+  List [ Atom "with-stdout-to"; Atom file; action ]
 
 let diff ~actual ~expected = List [ Atom "diff"; Atom actual; Atom expected ]
 

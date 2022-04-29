@@ -38,6 +38,7 @@ $old = $env:PATH ; $env:PATH += ";$windowskit" ; with-dkml rm -rf _build/t _buil
     --work-dir _build/w --target-dir _build/t `
     --runner-admin-exe _build/install/default/bin/dkml-install-admin-runner.exe `
     --runner-user-exe _build/install/default/bin/dkml-install-user-runner.exe `
+    --packager-entry-exe _build/install/default/bin/dkml-install-package-entry.exe `
     --packager-setup-bytecode _build/install/default/bin/dkml-install-package-setup.bc.exe `
     --packager-uninstaller-bytecode _build/install/default/bin/dkml-install-package-uninstaller.bc.exe `
     -vv ; $env:PATH = $old

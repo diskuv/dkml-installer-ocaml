@@ -50,13 +50,18 @@ let main () project_root corrected =
         executable
           [
             name "discover";
-            libraries [ "dune.configurator" ];
+            libraries [ "dune.configurator"; "bos"; "fpath" ];
             modules [ "discover" ];
           ];
         rule
           [
-            targets [ "admin-link-flags.sexp" ];
-            deps [ named_dep ~name:"discover" "discover.exe" ];
+            targets [ "admin-link-flags.sexp"; "console-link-flags.sexp" ];
+            deps
+              [
+                named_dep ~name:"discover" "discover.exe";
+                Atom "entry-application.manifest";
+                Atom "entry.assembly.manifest";
+              ];
             action [ run [ "%{discover}" ] ];
           ];
         executable
@@ -66,15 +71,6 @@ let main () project_root corrected =
             modules [ "runner_user" ];
             libraries ([ "dkml-install-runner.user" ] @ dkml_components);
           ];
-        (*
-           ; To view Application Manifest on Windows, or to sign it, make sure
-           ; any ".NET Framework <VERSION> SDK" component is installed with the
-           ; Visual Studio Installer. That will give you Mage.exe and MageUI.exe.
-           ; Confer: https://docs.microsoft.com/en-us/dotnet/framework/tools/mageui-exe-manifest-generation-and-editing-tool-graphical-client
-           ;
-           ; To extract the manifest file:
-           ;  & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe" '-inputresource:Z:\source\dkml-install-api\_build\install\default\bin\dkml-install-admin-runner.exe;#1' -out:admin2.manifest
-        *)
         executable
           [
             public_name "dkml-install-admin-runner";
@@ -96,6 +92,36 @@ let main () project_root corrected =
               ([ "dkml-package-console.create"; "cmdliner"; "private_common" ]
               @ dkml_components);
             modules [ "create_installers" ];
+          ];
+        executable
+          [
+            public_name "dkml-install-package-entry";
+            name "entry_main";
+            libraries
+              ([ "dkml-package-console.entry"; "cmdliner"; "private_common" ]
+              @ dkml_components);
+            modules [ "entry_main" ];
+            ocamlopt_flags
+              [
+                List
+                  (loglevel_flags
+                  @ [ Atom ":include"; Atom "console-link-flags.sexp" ]);
+              ];
+          ];
+        executable
+          [
+            name "entry_assembly_manifest";
+            libraries [ "dkml-package-console.common"; "fmt" ];
+            modules [ "entry_assembly_manifest" ];
+          ];
+        rule
+          [
+            target "entry.assembly.manifest";
+            action
+              [
+                with_stdout_to "%{target}"
+                  (run [ "%{exe:entry_assembly_manifest.exe}" ]);
+              ];
           ];
         executable
           [
@@ -150,27 +176,25 @@ let main () project_root corrected =
                 progn
                   [
                     with_stdout_to "package_setup.info.txt"
-                      [ run [ "ocamlobjinfo"; "%{ps}" ] ];
+                      (run [ "ocamlobjinfo"; "%{ps}" ]);
                     with_stdout_to "package_uninstaller.info.txt"
-                      [ run [ "ocamlobjinfo"; "%{pu}" ] ];
+                      (run [ "ocamlobjinfo"; "%{pu}" ]);
                     with_stdout_to "dlls.corrected.txt"
-                      [
-                        progn
-                          [
-                            run
-                              [
-                                "awk";
-                                {|/.*:/ {x=0} /Used DLLs:/{x=1; $1="package_setup.bc Used"} x==1 {print}|};
-                                "package_setup.info.txt";
-                              ];
-                            run
-                              [
-                                "awk";
-                                {|/.*:/ {x=0} /Used DLLs:/{x=1; $1="package_uninstaller.bc Used"} x==1 {print}|};
-                                "package_uninstaller.info.txt";
-                              ];
-                          ];
-                      ];
+                      (progn
+                         [
+                           run
+                             [
+                               "awk";
+                               {|/.*:/ {x=0} /Used DLLs:/{x=1; $1="package_setup.bc Used"} x==1 {print}|};
+                               "package_setup.info.txt";
+                             ];
+                           run
+                             [
+                               "awk";
+                               {|/.*:/ {x=0} /Used DLLs:/{x=1; $1="package_uninstaller.bc Used"} x==1 {print}|};
+                               "package_uninstaller.info.txt";
+                             ];
+                         ]);
                     diff_q ~actual:"dlls.txt" ~expected:"dlls.corrected.txt";
                   ];
               ];

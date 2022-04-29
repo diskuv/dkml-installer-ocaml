@@ -1,11 +1,14 @@
 (rule
  (targets
-  discover.ml
   create_installers.ml
-  runner_user.ml
-  runner_admin.ml
+  discover.ml
+  entry_assembly_manifest.ml
+  entry_main.ml
+  entry-application.manifest
   package_setup.ml
-  package_uninstaller.ml)
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
  (action
   (progn
    ; in real code: (run ml-of-installer-generator)
@@ -14,12 +17,15 @@
 (rule
  (target dune.inc)
  (deps
-  discover.ml
   create_installers.ml
-  runner_user.ml
-  runner_admin.ml
+  discover.ml
+  entry_assembly_manifest.ml
+  entry_main.ml
+  entry-application.manifest
   package_setup.ml
-  package_uninstaller.ml)
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
  (mode promote)
  (action
   (progn

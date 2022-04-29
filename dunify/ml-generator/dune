@@ -1,9 +1,10 @@
 (rule
  (deps
-  (glob_files code/*.ml))
+  (glob_files code/*.ml)
+  (glob_files code/*.manifest))
  (target code.ml)
  (action
-  (run ocaml-crunch -m plain -e ml -o %{target} code/)))
+  (run ocaml-crunch -m plain -e ml -e manifest -o %{target} code/)))
 
 (executable
  (name main)
