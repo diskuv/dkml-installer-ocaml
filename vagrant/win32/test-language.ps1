@@ -24,8 +24,13 @@ $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVer
 Write-Host "Downloading from $url ..."
 Invoke-WebRequest $url -OutFile "$env:TEMP\setup.exe"
 
+#   skip confirmation question at end of setup.exe
+$env:CI = "true"
+#   because setup.exe is 7z sfx, which unpacks and runs the different embedded setup.exe, the CI may not propagate
+[Environment]::SetEnvironmentVariable("CI", "true", 'User')
+[Environment]::SetEnvironmentVariable("CI", "true", 'Machine') # probably unnecessary!
+
 Write-Host "Running setup.exe ..."
-$env:CI = "true" # skip confirmation question at end of setup.exe
 & "$env:TEMP\setup.exe"
 
 Write-Host "Done installation."
