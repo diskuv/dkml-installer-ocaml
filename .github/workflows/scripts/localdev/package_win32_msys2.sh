@@ -90,8 +90,6 @@ PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install "git
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-install-runner "git://github.com/diskuv/dkml-install-api.git#${DKML_INSTALL_RUNNER:-main}"
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-base-compiler "git://github.com/diskuv/dkml-compiler.git#${DKML_BASE_COMPILER:-main}"
 PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action conf-dkml-cross-toolchain "git://github.com/diskuv/dkml-compiler.git#${CONF_DKML_CROSS_TOOLCHAIN:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action ocaml.4.12.1 "git://github.com/diskuv/dkml-compiler.git#${TEMP_OCAML:-main}"
-PATH="$PWD/bootstrap/bin:$PATH" opam pin add --yes --no-action dkml-option-32bit "git://github.com/diskuv/dkml-compiler.git#${DKML_OPTION_32BIT:-main}"
 
 # --> Pin ocamlfind
 PATH="$PWD/bootstrap/bin:$PATH"

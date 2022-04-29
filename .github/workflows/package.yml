@@ -8,7 +8,7 @@ on:
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-compiler:
-        description: "Git branch, tag or commit for dkml-base-compiler, dkml-option-32bit, ocaml and ocaml-config"
+        description: "Git branch, tag or commit for dkml-base-compiler"
         required: false
         default: "" # Change this to "@repository@" once published to Opam
       dkml-component-ocamlcompiler:
