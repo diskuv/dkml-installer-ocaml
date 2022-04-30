@@ -89,9 +89,9 @@ install: [
     "%{_:share}%/t"
 
     "--runner-admin-exe"
-    "_build/install/default/bin/dkml-install-admin-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-install-admin-runner%{exe}%"
     "--runner-user-exe"
-    "_build/install/default/bin/dkml-install-user-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-install-user-runner%{exe}%"
 
     # 1. entry.exe should be hardcoded with which ABI should be used downstream.
     # 2. perhaps should be wildcard so _build/install/default,
@@ -100,10 +100,10 @@ install: [
     #    `default` will be host_abi (or better ocamlc_abi). And all others
     #    are looped through --abi and checked to see if the `default.ABI` exists
     "--packager-entry-exe"
-    "_build/install/default/bin/dkml-install-package-entry%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-install-package-entry%{exe}%"
     "--packager-setup-bytecode"
-    "_build/install/default/bin/dkml-install-package-setup.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-install-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"
-    "_build/install/default/bin/dkml-install-package-uninstaller.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-install-package-uninstaller.bc%{exe}%"
   ]
 ]
