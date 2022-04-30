@@ -5,28 +5,38 @@ $SystemLocale = (Get-WinSystemLocale).Name
 Get-WinSystemLocale # display locale
 chcp.com # display code page
 
-# Get the version which can't be embedded in this UTF-16 BE file (encoding not supported by bumpversion)
 $HereScript = $MyInvocation.MyCommand.Path
 $HereDir = (get-item $HereScript).Directory
-if (!(Test-Path -Path $HereDir\opamversion.txt)) {
-    throw "Could not locate opamversion.txt in $HereDir"
-}
-$OpamVersion = (Get-Content $HereDir\opamversion.txt -TotalCount 1).Trim()
-if (!(Test-Path -Path $HereDir\tagversion.txt)) {
-  throw "Could not locate tagversion.txt in $HereDir"
-}
-$TagVersion = (Get-Content $HereDir\tagversion.txt -TotalCount 1).Trim()
 
 # ========================
 # START Install instructions from https://diskuv.gitlab.io/diskuv-ocaml/index.html
 
-$url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/setup-diskuv-ocaml-windows_x86_64-$OpamVersion.exe"
-Write-Host "Downloading from $url ..."
-Invoke-WebRequest $url -OutFile "$env:TEMP\setup.exe"
-
-Write-Host "Running setup.exe ..."
 #   --ci will skip confirmation question at end of setup.exe
-& "$env:TEMP\setup.exe" --ci
+$opts = "--ci"
+
+if (Test-Path $HereDir\setup.exe) {
+  Write-Host "Running supplied setup.exe ..."
+  & "$HereDir\setup.exe" $opts
+
+} else {
+  # Get the versions which can't be embedded in this UTF-16 BE file
+  # (ex. UTF-16 BE encoding not supported by `bumpversion`)
+  if (!(Test-Path -Path $HereDir\opamversion.txt)) {
+    throw "Could not locate opamversion.txt in $HereDir"
+  }
+  $OpamVersion = (Get-Content $HereDir\opamversion.txt -TotalCount 1).Trim()
+  if (!(Test-Path -Path $HereDir\tagversion.txt)) {
+    throw "Could not locate tagversion.txt in $HereDir"
+  }
+  $TagVersion = (Get-Content $HereDir\tagversion.txt -TotalCount 1).Trim()
+
+  $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/setup-diskuv-ocaml-windows_x86_64-$OpamVersion.exe"
+  Write-Host "Downloading from $url ..."
+  Invoke-WebRequest $url -OutFile "$env:TEMP\setup.exe"
+
+  Write-Host "Running setup.exe ..."
+  & "$env:TEMP\setup.exe" $opts
+}
 
 Write-Host "Done installation."
 

@@ -94,7 +94,7 @@ jobs:
             default_shell: sh
 
     runs-on: ${{ matrix.os }}
-    name: build-${{ matrix.abi-pattern }}
+    name: build / ${{ matrix.abi-pattern }}
 
     # Use a Unix shell by default, even on Windows
     defaults:
@@ -368,10 +368,54 @@ jobs:
               ;;
           esac
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.dkml-host-abi }}
+          path: dist/
+      # BOILERPLATE END: setup-dkml
+
+  #--------
+  # Testing
+  #--------
+
+  # Direct testing is simply using GitHub virtual machine to run the setup.
+  # Because GitHub virtual machine already has Visual Studio and several other
+  # tools, it doesn't exercise all the paths that vagrant-testing covers.
+  # However, it is quicker and it can find issues with conflicting Cygwin
+  # (or any other of the many programs that are installed on a GitHub machine).
+  # In addition, windows-2019 (somewhat older Windows) and windows-latest (2022, or
+  # which is the latest) is tested ... Vagrant is closer to windows-latest
+  # as of Apr 2022.
+  direct-testing:
+    # Wait for build
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2019
+          - windows-latest
+        dkml-host-abi:
+          - windows_x86
+          - windows_x86_64
+
+    runs-on: ${{ matrix.os }}
+    name: direct / ${{ matrix.os }} ${{ matrix.dkml-host-abi }}
+
+    # For now we are trying to see why windows_x86 is having problems (1/2)
+    # Actually, we know it is because setup.exe uses auto-detected host ABI instead of hardcoded ABI.
+    continue-on-error: ${{ matrix.dkml-host-abi == 'windows_x86' }}
+
+    steps:
+      - name: Download and unpack ${{ matrix.dkml-host-abi }} artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.dkml-host-abi }}
+          path: dist
+
       - name: Test the installer (Windows)
-        if: startsWith(matrix.dkml-host-abi, 'windows_')
-        # For now we are trying to see why windows_x86 is having problems
-        continue-on-error: ${{ matrix.dkml-host-abi == 'windows_x86' }}
         env:
           # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
           PATH:
@@ -399,17 +443,94 @@ jobs:
             & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\usr\bin\ocamlopt.exe" -config
           }
 
-      - uses: actions/upload-artifact@v3
+  # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
+  # For example, found missing vcruntime140.dll with Vagrant testing.
+  vagrant-testing:
+    # Wait for build
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2019 ]
+        dkml-host-abi:
+          - windows_x86
+          - windows_x86_64
+
+    # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
+    runs-on: macos-10.15
+    name: vagrant / ${{ matrix.dkml-host-abi }}
+
+    # For now we are trying to see why windows_x86 is having problems (2/2)
+    # Actually, we know it is because setup.exe uses auto-detected host ABI instead of hardcoded ABI.
+    continue-on-error: ${{ matrix.dkml-host-abi == 'windows_x86' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download and unpack ${{ matrix.dkml-host-abi }} artifact
+        uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.dkml-host-abi }}
-          path: dist/
-      # BOILERPLATE END: setup-dkml
+          path: dist
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('vagrant/win32/Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+
+      - name: Sanitize
+        run: rm -rf ~/playground
+
+      # - name: vagrant up for latest tag
+      #   run: |
+      #     #!/bin/sh
+      #     set -eufx
+      #     git describe --abbrev=0 --tags | tee vagrant/win32/tagversion.txt
+      #     awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+
+      #     cd vagrant/win32
+      #     vagrant up
+
+      - name: vagrant up for ${{ matrix.dkml-host-abi }} build
+        run: |
+          #!/bin/sh
+          set -eufx
+
+          awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+
+          # Move artifact into the Vagrant filesystem as "setup.exe"
+          mv dist/setup-diskuv-ocaml-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+
+          cd vagrant/win32
+          vagrant up
+
+      - name: Check test_installation.t status
+        run: |
+          set -x ; EXITC=$(awk 'NF>0{print $1}' vagrant/win32/test_installation.t/exitcode.en-US.txt) ; if [ ! "$EXITC" = 0 ]; then echo "FATAL: Vagrant test_installation.t FAILED with exit code $EXITC"; exit 1; fi
+
+      - name: Check playground creation
+        run: |
+          set -x ; find vagrant/win32/playground ; if [ ! -e vagrant/win32/playground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant playground creation FAILED"; exit 1; fi
+
+  #--------
+  # Release
+  #--------
 
   release:
     runs-on: ubuntu-latest
-    # Wait until `build` complete
+    # Wait until `build` and `vagrant-testing` complete
     needs:
       - build
+      - direct-testing
+      - vagrant-testing
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -440,50 +561,3 @@ jobs:
           prerelease: true # becomes a real release after it is signed externally
           files: |
             _release/*
-
-  #----------------------------------------------
-  # Testing that requires a (pre)release download
-  #----------------------------------------------
-
-  vagrant-up:
-    # Wait for release
-    # needs:
-    #   - release
-
-    # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
-    runs-on: macos-10.15
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Cache Vagrant boxes
-      uses: actions/cache@v2
-      with:
-        path: ~/.vagrant.d/boxes
-        key: ${{ runner.os }}-vagrant-${{ hashFiles('vagrant/win32/Vagrantfile') }}
-        restore-keys: |
-          ${{ runner.os }}-vagrant-
-
-    - name: Sanitize
-      run: rm -rf ~/playground
-
-    - name: vagrant up for latest tag
-      run: |
-        #!/bin/sh
-        set -eufx
-        git describe --abbrev=0 --tags | tee vagrant/win32/tagversion.txt
-        awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
-
-        cd vagrant/win32
-        vagrant up
-
-    - name: Check test_installation.t status
-      run: |
-        set -x ; EXITC=$(awk 'NF>0{print $1}' vagrant/win32/test_installation.t/exitcode.en-US.txt) ; if [ ! "$EXITC" = 0 ]; then echo "FATAL: Vagrant test_installation.t FAILED with exit code $EXITC"; exit 1; fi
-
-    - name: Check playground creation
-      run: |
-        set -x ; find vagrant/win32/playground ; if [ ! -e vagrant/win32/playground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant playground creation FAILED"; exit 1; fi
