@@ -23,7 +23,7 @@ let copy_as_is file =
 let main () =
   let components = Common_installer_generator.ocamlfind () in
 
-  let copy_with_templates ~target_abi ~components filename =
+  let copy ~target_abi ~components filename =
     let content = Option.get (Code.read filename) in
     Ml_of_installer_generator_lib.copy_with_templates ~target_abi ~components
       ~output_file:(Fpath.v filename) content
@@ -36,18 +36,14 @@ let main () =
          (Dkml_install_runner.Ocaml_abi.create_v2 ())
      in
      let* () = copy_as_is "discover.ml" in
-     let* () = copy_as_is "entry_main.ml" in
      let* () = copy_as_is "entry-application.manifest" in
      let* () = copy_as_is "entry_assembly_manifest.ml" in
-     let* () =
-       copy_with_templates ~target_abi ~components "create_installers.ml"
-     in
-     let* () = copy_with_templates ~target_abi ~components "runner_admin.ml" in
-     let* () = copy_with_templates ~target_abi ~components "runner_user.ml" in
-     let* () = copy_with_templates ~target_abi ~components "package_setup.ml" in
-     let* () =
-       copy_with_templates ~target_abi ~components "package_uninstaller.ml"
-     in
+     let* () = copy ~target_abi ~components "entry_main.ml" in
+     let* () = copy ~target_abi ~components "create_installers.ml" in
+     let* () = copy ~target_abi ~components "runner_admin.ml" in
+     let* () = copy ~target_abi ~components "runner_user.ml" in
+     let* () = copy ~target_abi ~components "package_setup.ml" in
+     let* () = copy ~target_abi ~components "package_uninstaller.ml" in
      Ok ())
 
 let target_abi_t =
