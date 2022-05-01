@@ -360,7 +360,6 @@ jobs:
               opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- cat "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
               opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
