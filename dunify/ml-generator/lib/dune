@@ -1,0 +1,3 @@
+(library
+ (name ml_of_installer_generator_lib)
+ (libraries dkml-install.api bos fmt re))
