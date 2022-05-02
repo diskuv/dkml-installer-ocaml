@@ -1,3 +1,0 @@
-(test
- (name test_template)
- (libraries alcotest ml_of_installer_generator_lib))

@@ -11,8 +11,7 @@
   runner_user.ml)
  (action
   (progn
-   ; in real code: (run ml-of-installer-generator)
-   (run ../../dunify/ml-generator/main.exe))))
+   (run ml-of-installer-generator))))
 
 (rule
  (target dune.inc)
@@ -29,9 +28,8 @@
  (mode promote)
  (action
   (progn
-   ; in real code: (run dune-of-installer-generator)
    (run
-    ../../dunify/dune-generator/main.exe
+    dune-of-installer-generator
     --project-root
     %{project_root}
     %{target}))))
