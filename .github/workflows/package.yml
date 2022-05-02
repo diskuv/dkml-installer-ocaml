@@ -47,6 +47,16 @@ on:
       # Any push to a tag that starts with 'v'
       - v*
 
+env:
+  #=== ERROR while compiling alcotest.1.5.0 =====================================#
+  # context              2.0.10 | win32/x86_64 |  | https://opam.ocaml.org#173f1aaf
+  # ...
+  #           cl src/alcotest/alcotest_stubs.obj (exit 2)
+  # (cd _build/default/src/alcotest && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\cl.exe" -nologo -O2 -Gy- -MD -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -Gy- -MD -I D:/.opam/dkml/lib/ocaml -I D:\.opam\dkml\lib\astring -I D:\.opam\dkml\lib\fmt -I ../alcotest-engine /Foalcotest_stubs.obj -c alcotest_stubs.c)
+  # alcotest_stubs.c
+  # alcotest_stubs.c(4): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory  
+  PIN_ALCOTEST: 1.4.0
+
 jobs:
   setup-dkml:
     uses: 'diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@v0'
@@ -329,6 +339,11 @@ jobs:
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
 
+      # version pins
+      - name: Pins for packages to work on all OSes including Windows
+        run: |
+          opamrun pin add --yes --no-action -k version alcotest ${{ env.PIN_ALCOTEST }}
+
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
         # Because of the error on manylinux2014 (CentOS 7):
@@ -360,7 +375,6 @@ jobs:
               opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- cat "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh >&2
               opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)

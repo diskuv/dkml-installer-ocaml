@@ -1,5 +1,6 @@
 open Cmdliner
 open Bos
+open Dkml_install_api
 
 let copy_as_is file =
   let content =
@@ -19,55 +20,38 @@ let copy_as_is file =
   in
   z
 
-let pp_module_register fmt v =
-  let modulename =
-    (* staging-unixutils ==> Dkml_component_staging_unixutils *)
-    "dkml-component-" ^ v |> String.capitalize_ascii
-    |> String.map (function '-' -> '_' | c -> c)
-  in
-  Fmt.pf fmt "let () = %s.register ()" modulename
-
-(** [copy_with_templates ~components file] copies [file] into the current
-    directory with replacing the comment ["(* TEMPLATE: register () *)"]
-    with [component.register ()] invocations for all [components]. *)
-let copy_with_templates ~components file =
-  let content = Option.get (Code.read file) in
-  let registration_statements =
-    Fmt.str "%a" Fmt.(list ~sep:(any "@\n") pp_module_register) components
-  in
-  let templatized_content =
-    (Str.global_replace
-       (Str.regexp_string "(* TEMPLATE: register () *)")
-       registration_statements)
-      content
-  in
-  let ( let* ) = Rresult.R.bind in
-  let* z =
-    OS.File.with_oc (Fpath.v file)
-      (fun oc () ->
-        let fmt = Format.formatter_of_out_channel oc in
-        Fmt.pf fmt "%s" templatized_content;
-        Format.pp_print_flush fmt ();
-        Ok ())
-      ()
-  in
-  z
-
 let main () =
   let components = Common_installer_generator.ocamlfind () in
 
+  let copy ~target_abi ~components filename =
+    let content = Option.get (Code.read filename) in
+    Ml_of_installer_generator_lib.copy_with_templates ~target_abi ~components
+      ~output_file:(Fpath.v filename) content
+  in
+
   Rresult.R.error_msg_to_invalid_arg
     (let ( let* ) = Rresult.R.bind in
+     let* target_abi =
+       Rresult.R.error_to_msg ~pp_error:Fmt.string
+         (Dkml_install_runner.Ocaml_abi.create_v2 ())
+     in
      let* () = copy_as_is "discover.ml" in
-     let* () = copy_as_is "entry_main.ml" in
      let* () = copy_as_is "entry-application.manifest" in
      let* () = copy_as_is "entry_assembly_manifest.ml" in
-     let* () = copy_with_templates ~components "create_installers.ml" in
-     let* () = copy_with_templates ~components "runner_admin.ml" in
-     let* () = copy_with_templates ~components "runner_user.ml" in
-     let* () = copy_with_templates ~components "package_setup.ml" in
-     let* () = copy_with_templates ~components "package_uninstaller.ml" in
+     let* () = copy ~target_abi ~components "entry_main.ml" in
+     let* () = copy ~target_abi ~components "create_installers.ml" in
+     let* () = copy ~target_abi ~components "runner_admin.ml" in
+     let* () = copy ~target_abi ~components "runner_user.ml" in
+     let* () = copy ~target_abi ~components "package_setup.ml" in
+     let* () = copy ~target_abi ~components "package_uninstaller.ml" in
      Ok ())
+
+let target_abi_t =
+  let open Context.Abi_v2 in
+  let l =
+    List.map (fun v -> (to_canonical_string v, v)) Context.Abi_v2.values
+  in
+  Arg.(required & opt (some (enum l)) None & info [ "abi" ])
 
 let main_t = Term.(const main $ const ())
 

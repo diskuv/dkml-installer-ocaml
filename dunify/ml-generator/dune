@@ -9,4 +9,9 @@
 (executable
  (name main)
  (public_name ml-of-installer-generator)
- (libraries bos cmdliner common_installer_generator str))
+ (libraries
+  bos
+  cmdliner
+  common_installer_generator
+  dkml-install-runner
+  ml_of_installer_generator_lib))
