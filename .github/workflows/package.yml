@@ -49,7 +49,7 @@ on:
 
 env:
   OPAM_PACKAGE: dkml-installer-network-ocaml
-  PROGRAM_NAME: diskuv-ocaml
+  PROGRAM_NAME_KEBAB: diskuv-ocaml
   #=== ERROR while compiling alcotest.1.5.0 =====================================#
   # context              2.0.10 | win32/x86_64 |  | https://opam.ocaml.org#173f1aaf
   # ...
@@ -400,13 +400,13 @@ jobs:
           install -d dist
           case "${{ matrix.dkml-host-abi }}" in
             linux_*)
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-${PROGRAM_NAME}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
               ;;
           esac
 
@@ -539,7 +539,7 @@ jobs:
           awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
 
           # Move artifact into the Vagrant filesystem as "setup.exe"
-          mv dist/setup-${PROGRAM_NAME}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          mv dist/setup-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
 
           cd vagrant/win32
           vagrant up
