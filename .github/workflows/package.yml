@@ -48,6 +48,8 @@ on:
       - v*
 
 env:
+  OPAM_PACKAGE: dkml-installer-network-ocaml
+  PROGRAM_NAME: diskuv-ocaml
   #=== ERROR while compiling alcotest.1.5.0 =====================================#
   # context              2.0.10 | win32/x86_64 |  | https://opam.ocaml.org#173f1aaf
   # ...
@@ -122,6 +124,7 @@ jobs:
       # These are not independent of dkml-install-api; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_INSTALLER:           "${{ github.event.inputs.dkml-install-api }}"
       DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
       DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
       DKML_COMPONENT_XX_CONSOLE:        "${{ github.event.inputs.dkml-install-api }}"
@@ -240,6 +243,20 @@ jobs:
       - name: Pin dkml-install to checkout instead of Opam repository
         if: ${{ env.DKML_INSTALL != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-install .ci/g/dkml-install
+
+      #  dkml-install-installer
+
+      - name: Checkout dkml-install-installer
+        if: ${{ env.DKML_INSTALL_INSTALLER != '@repository@' }}
+        uses: actions/checkout@v3
+        with:
+          repository: diskuv/dkml-install-api
+          path: .ci/g/dkml-install-installer
+          ref: ${{ env.DKML_INSTALL_INSTALLER }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-install-installer to checkout instead of Opam repository
+        if: ${{ env.DKML_INSTALL_INSTALLER != '@repository@' }}
+        run: opamrun pin add --yes --no-action dkml-install-installer .ci/g/dkml-install-installer
 
       #  dkml-install-runner
 
@@ -370,12 +387,12 @@ jobs:
           #!/bin/sh
           set -euf
           case "${{ matrix.dkml-host-abi }}" in
-            linux_*) opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes --no-depexts ;;
-            *) opamrun install ./dkml-installer-network-ocaml.opam --with-test --yes ;;
+            linux_*) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes --no-depexts ;;
+            *) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes ;;
           esac
 
           # Examine the installer
-          _share=$(opamrun var dkml-installer-network-ocaml:share)
+          _share=$(opamrun var ${OPAM_PACKAGE}:share)
           opamrun install diskuvbox --yes
           opamrun exec -- diskuvbox tree -d 6 --encoding UTF-8 "$_share"
 
@@ -383,13 +400,13 @@ jobs:
           install -d dist
           case "${{ matrix.dkml-host-abi }}" in
             linux_*)
-              opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- "$_share"/t/bundle-diskuv-ocaml-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-diskuv-ocaml-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "setup-${PROGRAM_NAME}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
               ;;
           esac
 
@@ -514,25 +531,15 @@ jobs:
       - name: Sanitize
         run: rm -rf ~/playground
 
-      # - name: vagrant up for latest tag
-      #   run: |
-      #     #!/bin/sh
-      #     set -eufx
-      #     git describe --abbrev=0 --tags | tee vagrant/win32/tagversion.txt
-      #     awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
-
-      #     cd vagrant/win32
-      #     vagrant up
-
       - name: vagrant up for ${{ matrix.dkml-host-abi }} build
         run: |
           #!/bin/sh
           set -eufx
 
-          awk '$1=="version:"{print $2}' dkml-installer-network-ocaml.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+          awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
 
           # Move artifact into the Vagrant filesystem as "setup.exe"
-          mv dist/setup-diskuv-ocaml-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          mv dist/setup-${PROGRAM_NAME}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
 
           cd vagrant/win32
           vagrant up
