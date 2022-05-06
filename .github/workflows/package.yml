@@ -481,7 +481,19 @@ jobs:
           {
             Write-Host "Running $($setup.FullName) ..."
             & $setup.FullName -v -v --color=always
+            if ($LastExitCode -ne 0) { throw "setup failed! Exited with $LastExitCode" }
+
             & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\usr\bin\ocamlopt.exe" -config
+            if ($LastExitCode -ne 0) { throw "ocamlopt.exe -config failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\bin\opam.exe" --version
+            if ($LastExitCode -ne 0) { throw "opam.exe --version failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\bin\opam.exe" var
+            if ($LastExitCode -ne 0) { throw "opam.exe var failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\usr\bin\with-dkml.exe" pacman -Q
+            if ($LastExitCode -ne 0) { throw "pacman -Q failed! Exited with $LastExitCode" }
           }
 
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
