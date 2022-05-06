@@ -64,7 +64,6 @@ jobs:
     uses: 'diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@v0'
     with:
       ocaml-compiler: 4.12.1
-      fdopen-opamexe-bootstrap: true # true = Use opam.exe from fdopen's site on Windows. Temporary mitigation until a transient bug is fixed.
       dkml-compiler: ${{ github.event.inputs.dkml-compiler }}
       conf-dkml-cross-toolchain: ${{ github.event.inputs.conf-dkml-cross-toolchain }}
       diskuv-opam-repository: ${{ github.event.inputs.diskuv-opam-repository }}
