@@ -38,3 +38,15 @@ install: [
     "_build/install/$(dune-context)/bin/dkml-install-package-uninstaller.bc%{exe}%"
   ]
 ]
+extra-source "dl/dkml-runtime-common.tar.gz" {
+  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/v0.4.0-prerel27.tar.gz"
+  checksum: [
+    "sha256=d7ef494c36f693db81ab354f95faf07acdb7e48e7431bec37c1913aa80a262c0"
+  ]
+}
+extra-source "dl/dkml-runtime-distribution.tar.gz" {
+  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/v0.4.0-prerel27.tar.gz"
+  checksum: [
+    "sha256=99d3557d5914be64e2ff40ef6f180a3b6458ad1d02c14b0a8ff949cbf757b9eb"
+  ]
+}
