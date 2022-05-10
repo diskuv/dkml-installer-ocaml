@@ -83,11 +83,15 @@ jobs:
             dkml-host-abi: windows_x86
             opam-root: D:/.opam
             default_shell: msys2 {0}
+            msys2_system: CLANG32
+            msys2_packages: mingw-w64-clang-i686-pkg-config
           - os: windows-2019
             abi-pattern: win32-windows_x86_64
             dkml-host-abi: windows_x86_64
             opam-root: D:/.opam
             default_shell: msys2 {0}
+            msys2_system: UCRT64
+            msys2_packages: mingw-w64-ucrt-x86_64-pkg-config
           - os: macos-latest
             abi-pattern: macos-darwin_all
             dkml-host-abi: darwin_x86_64
@@ -145,19 +149,17 @@ jobs:
         if: startsWith(matrix.dkml-host-abi, 'windows')
         uses: msys2/setup-msys2@v2
         with:
-          msystem: UCRT64
+          msystem: ${{ matrix.msys2_system }}
           update: true
           install: >-
-            tree
+            ${{ matrix.msys2_packages }}
             wget
             make
-            pkg-config
             rsync
             diffutils
             patch
             unzip
             git
-            xz
             tar
 
       - name: Download setup-dkml artifacts
