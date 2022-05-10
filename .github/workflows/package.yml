@@ -90,8 +90,8 @@ jobs:
             dkml-host-abi: windows_x86_64
             opam-root: D:/.opam
             default_shell: msys2 {0}
-            msys2_system: UCRT64
-            msys2_packages: mingw-w64-ucrt-x86_64-pkg-config
+            msys2_system: CLANG64
+            msys2_packages: mingw-w64-clang-x86_64-pkg-config
           - os: macos-latest
             abi-pattern: macos-darwin_all
             dkml-host-abi: darwin_x86_64
