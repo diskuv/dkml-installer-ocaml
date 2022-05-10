@@ -39,14 +39,14 @@ install: [
   ]
 ]
 extra-source "dl/dkml-runtime-common.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/v0.4.0-prerel36.tar.gz"
+  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/v0.4.0-prerel37.tar.gz"
   checksum: [
-    "sha256=5b807a21be0bdd42926f44ec51d9a7183f2acb601845c72bb6de823764731204"
+    "sha256=4abec66e08422a640d1d4dae01f6d2aa0dcef7f1d840516663234199f606b2ba"
   ]
 }
 extra-source "dl/dkml-runtime-distribution.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/v0.4.0-prerel36.tar.gz"
+  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/v0.4.0-prerel37.tar.gz"
   checksum: [
-    "sha256=31f28bf8c123bfcf64a01cd9979c88218c52484497b0e002cda81740444e5e1f"
+    "sha256=b44833425f90612a0ceacd580ce5f68fa3e4027f315dfe5efcd33cd5f56d8afb"
   ]
 }
