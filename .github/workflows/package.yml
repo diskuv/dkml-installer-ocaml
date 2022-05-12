@@ -83,8 +83,8 @@ jobs:
             dkml-host-abi: windows_x86
             opam-root: D:/.opam
             default_shell: msys2 {0}
-            msys2_system: CLANG32
-            msys2_packages: mingw-w64-clang-i686-pkg-config
+            msys2_system: MINGW32
+            msys2_packages: mingw-w64-i686-pkg-config
           - os: windows-2019
             abi-pattern: win32-windows_x86_64
             dkml-host-abi: windows_x86_64
