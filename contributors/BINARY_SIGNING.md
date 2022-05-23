@@ -36,7 +36,10 @@ documents and files without revealing that private key.
 The PIV devices we considered are:
 
 * Yubikey 5. This is a mature and more expensive product, and there have been
-  very few CVEs issued against Yubikey given its widespread adoption.
+  very few CVEs issued against Yubikey given its widespread adoption. One
+  major drawback is that [YubiKey 5 accepted key sizes](https://developers.yubico.com/yubico-piv-tool/Actions/key_import.html)
+  only imports private RSA keys of 3049 bits or shorter; this conflicts with
+  the [US government recommendation of at least 3072 bits](https://cryptome.org/2016/01/CNSA-Suite-and-Quantum-Computing-FAQ.pdf).
 * [uTrust FIDO2 NFC+ Security Key](https://shop.identiv.com/collections/fido2-security-keys/products/utrust-fido2-nfc-security-key).
 
 Both the manufacturers above sell FIPS rated products (ie. they can sell it for
@@ -49,7 +52,19 @@ don't have any glaring defects in their non-FIPS products (if nothing else,
 a bad non-FIPS defect would reflect poorly on their FIPS government sales).
 
 Both PIV devices will work. However this document will only describe configuring
-the uTrust security key.
+the uTrust security key because it is less expensive and supports a stronger key.
+
+## Crypto Standards
+
+We choose ECC keys rather than RSA keys because the official PIV standard only
+supports 1024 and 2048 bit RSA keys. RSA 3072 is now the recommended minimum,
+and many PIV tools (libp11 in particular) and devices (YubiKey 5 only supports
+up to 3049 bits) will not deviate from the official PIV standard. ECC P-256 and
+P-384 keys are also recommended; however
+they are relatively recent for code signing so they may have new implementation
+bugs like [CVE-2020-0601](https://www.cve.org/CVERecord?id=CVE-2020-0601).
+
+ECC P-384 is roughly equivalent in strength to RSA 7680 bits.
 
 ## Instructions
 
@@ -79,8 +94,19 @@ In a UNIX prompt (ie. with Windows Diskuv OCaml run `with-dkml bash`)
 do the following:
 
 ```bash
-openssl req -new -newkey rsa:4096 -nodes -keyout server.key -out server.csr
+echo NO: openssl req -new -newkey rsa:4096 -nodes -keyout server-key.pem -out server.csr
+
+openssl ecparam -out server-key.pem -name secp384r1 -genkey
+openssl req -new -key server-key.pem -out server-key.csr
+
+echo SELFSIGN: openssl req -x509 -key server-key.pem -out cert.pem
 ```
+
+> If you use Yubico devices in your organization, you will need `rsa:3048` or
+> smaller to support [YubiKey 5 accepted key sizes](https://developers.yubico.com/yubico-piv-tool/Actions/key_import.html).
+
+> Unless you have physical restraints (see the above YubiKey 5 comment) you should never go
+> below [`rsa:3072` certificates](https://cryptome.org/2016/01/CNSA-Suite-and-Quantum-Computing-FAQ.pdf).
 
 For code signing certificates it is important that your "Common Name" is the
 same as the "Organization Name". Also the "Organizational Unit Name" should be
@@ -105,15 +131,15 @@ An optional company name []:
 
 SECOND,
 
-Keep the `server.key` secured for several years:
-* Store `server.key` on USB flash drives under a physical
+Keep the `server-key.pem` secured for several years:
+* Store `server-key.pem` on USB flash drives under a physical
   lock and key. Other storage devices are acceptable, but make sure the
   storage devices are disconnected from the Internet.
 * Keep the flash drives in different physical locations.
 * Print a label for the drives that includes a public identifier of the key
   (you can use the first N characters to make it shorter):
   ```bash
-  openssl rsa -in server.key -modulus -noout | awk 'BEGIN{FS="="} {print $NF}' | openssl sha3-256 -r
+  openssl rsa -in server-key.pem -modulus -noout | awk 'BEGIN{FS="="} {print $NF}' | openssl sha3-256 -r
   ```
 
   The complete label used for the Diskuv, Inc. code signing was:
@@ -122,7 +148,7 @@ Keep the `server.key` secured for several years:
   Diskuv, Inc. Code Signing Certificate
   6a48ecac5ef6e30613aa484895aab410edaccf897ca9d59fc33390dd40d76334
   ```
-* You will **never** give `server.key` to a third-party.
+* You will **never** give `server-key.pem` to a third-party.
 
 THIRD,
 
@@ -143,15 +169,17 @@ After your certificate has been generated and downloaded:
   ```bash
   openssl x509 -inform der -in user.crt -out cert.pem
   ```
-* **FIXME** combine the private key and the certificate into a "PKCS#12" file with:
+* **FIXME** combine the private key and the certificate ~~into a "PKCS#12" file~~ with:
   ```bash
-  openssl rsa -outform DER -in server.key -out server-key.der
+  echo NO: openssl rsa -outform DER -in server-key.pem -out server-key.der
 
-  openssl pkcs12 -inkey server.key -in cert.pem -export -out key-and-cert.p12
+  echo NO: openssl pkcs12 -inkey server-key.pem -in cert.pem -export -out key-and-cert.p12
+
+  cat server-key.pem cert.pem > key-and-cert.crt
   ```
 * you can delete the `server.csr` file
 
-FOURTH, (save private key and certificate in security device)
+FOURTH, we'll be saving the private key and certificate in the security device.
 
 Download and install [IDENTIV - uTrust Key Manager Software](https://go.identiv.com/software/utrust-key-manager)
 
@@ -180,10 +208,54 @@ Run the uTrust Key Manager Software and insert one of the security tokens. Then:
 * Go to `Applications > PIV`
   * Go to `Certificates - Configure Certificates`
     * Go to `Digital Signature - Slot 9c - Import`
-      * File: `cert.pem` **FIXME**
+      * File: `key-and-cert.crt` **FIXME**
       * Management key: ✓ Use default
 
 The PUK and PIN only need to be kept until the security token is distributed.
+
+FIFTH,
+
+Download and install "OpenSC-0.22.0_win64.msi" from
+https://github.com/OpenSC/OpenSC/releases/tag/0.22.0 using the default
+options.
+
+Download the OpenSSL OpenSC engine at
+https://github.com/OpenSC/libp11/releases/download/libp11-0.4.11/libp11-0.4.11-windows.zip
+. Unzip it to `C:\` so that you have `C:\libp11-0.4.11-windows\64bit\pkcs11.dll`
+available.
+
+Install `osslsigncode` and `p11tool` by getting a UNIX prompt with `with-dkml-bash` and then
+running:
+
+```bash
+pacman -S mingw-w64-clang-x86_64-osslsigncode mingw-w64-clang-x86_64-gnutls
+```
+
+SIXTH,
+
+Record the "Object *: URL" that is displaying in the following in a `with-dkml bash` shell:
+
+```console
+$ p11tool --provider "$(cygpath -F 38)/OpenSC Project/OpenSC/pkcs11/opensc-pkcs11.dll" --list-privkeys --login
+Token 'PIV_II' with URL 'pkcs11:model=PKCS%2315%20emulated;manufacturer=piv_II;serial=00000000;token=PIV_II' requires user PIN
+Enter PIN:
+Object 0:
+        URL: pkcs11:model=PKCS%2315%20emulated;manufacturer=piv_II;serial=00000000;token=PIV_II;id=%02;object=SIGN%20key;type=private
+        Type: Private key (EC/ECDSA)
+        Label: SIGN key
+        Flags: CKA_PRIVATE; CKA_ALWAYS_AUTH; CKA_NEVER_EXTRACTABLE; CKA_SENSITIVE;
+        ID: 02
+```
+
+And with that URL (the one that has `id=` inside it) enter your PIN twice to sign a test executable:
+
+```console
+$ osslsigncode sign -verbose -comm -h sha384 -pkcs11engine C:/libp11-0.4.11-windows/64bit/pkcs11.dll -pkcs11module "$(cygpath -F 38)/OpenSC Project/OpenSC/pkcs11/opensc-pkcs11.dll" -in ../x/setup-diskuv-ocaml-windows_x86_64-0.4.0.exe -out ../x/setup-resigned-diskuv-ocaml-windows_x86_64-0.4.0.exe -pkcs11cert 'pkcs11:model=PKCS%2315%20emulated;manufacturer=piv_II;serial=00000000;token=Admin;id=%02;object=SIGN%20key;type=private' -t http://timestamp.sectigo.com
+Engine "pkcs11" set.
+Enter PKCS#11 token PIN for Admin:
+Enter PKCS#11 key PIN for SIGN key:
+Succeeded
+```
 
 FIFTH, (**FIXME** test security key)
 
@@ -288,6 +360,14 @@ was inserted into your code):
   used. Your new certificate is not known to the bad actor, so they cannot sign
   new binaries.
 
+### SOP: Unblock PIN
+
+1. Download and install "OpenSC-0.22.0_win64.msi" from https://github.com/OpenSC/OpenSC/releases/tag/0.22.0
+2. In PowerShell run the following:
+   ```powershell
+   & "$env:ProgramFiles\OpenSC Project\OpenSC\tools\pkcs15-tool" --unblock-pin
+   ```
+
 ## Appendixes
 
 ### Alternative: Yubikey
@@ -304,6 +384,50 @@ instead.
 
 > You must change the PIN and PUK codes using the PIV software before you
 > distribute the PIV devices.
+
+### Unorganized
+
+In a ~~`with-dkml bash`~~ `& $env:DiskuvOCamlHome\..\tools\MSYS2\msys2_shell.cmd -mingw64` session:
+
+```bash
+echo NO: pacman -S autoconf automake libtool mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-openssl
+pacman -S autoconf2.69 automake libtool pkg-config openssl-devel
+git clone https://github.com/OpenSC/libp11.git
+
+cd libp11
+autoreconf-2.69 -fi
+./configure --disable-static
+make
+```
+
+---
+
+Create a file `sun_ykcs11.conf`:
+
+```conf
+name = OpenSC
+library = C:\Program Files\OpenSC Project\OpenSC\pkcs11\opensc-pkcs11.dll
+# You may need to change this slot to a higher number if you have multiple devices
+slot = 0
+```
+
+Make sure Java can access your smartcard:
+
+```session
+$ keytool -list -keystore NONE -storetype PKCS11 -providerClass sun.security.pkcs11.SunPKCS11 -providerArg sun_ykcs11.conf -v
+Enter keystore password: {enter your PIN}
+Keystore type: PKCS11
+Keystore provider: SunPKCS11-OpenSC
+...
+```
+
+We'll download a Java-based executable signer which supports ECC keys:
+
+```
+$ wget https://github.com/ebourg/jsign/releases/download/4.1/jsign-4.1.jar
+$ echo '4dddbc9e56bd6e15934122f16ce652f07d2110530418196898c31600e44109b6 *jsign-4.1.jar' | sha256sum -c
+```
+
 
 ### References
 
