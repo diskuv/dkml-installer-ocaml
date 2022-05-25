@@ -177,7 +177,7 @@ jobs:
       # that from happening.
       # TODO: Put into `import`
       - name: Stabilize local file pins
-        run: opamrun pin list | grep git+file | grep -v '(uninstalled)' | grep .ci/sd4/g | awk '{print $1}' | xargs --no-run-if-empty --max-args=1 opamrun pin --current
+        run: opamrun pin list | grep git+file | grep -v '(uninstalled)' | grep .ci/sd4/g | awk '{print "opamrun pin --current " $1}' | sh -x
 
       - name: Cache Opam downloads by host
         uses: actions/cache@v2
