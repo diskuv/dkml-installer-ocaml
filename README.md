@@ -1,4 +1,4 @@
-# DKML Installer for OCaml 0.4.0-prerel12
+# DKML Installer for OCaml
 
 The DKML Installer for OCaml generates and distributes installers for OCaml.
 
