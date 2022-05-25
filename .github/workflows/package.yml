@@ -172,6 +172,13 @@ jobs:
           ${{ needs.setup-dkml.outputs.import_func }}
           import ${{ matrix.abi-pattern }}
 
+      # The tar/untar procedure for the .ci/sd4/g sources of the local file pins
+      # can cause Opam to detect "upstream changes". Using --current will stop
+      # that from happening.
+      # TODO: Put into `import`
+      - name: Stabilize local file pins
+        run: opamrun pin list | grep git+file | grep -v '(uninstalled)' | grep .ci/sd4/g | awk '{print $1}' | xargs --no-run-if-empty --max-args=1 opam pin --current
+
       - name: Cache Opam downloads by host
         uses: actions/cache@v2
         with:

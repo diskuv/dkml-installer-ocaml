@@ -407,6 +407,7 @@ Create a file `sun_ykcs11.conf`:
 ```conf
 name = OpenSC
 library = C:\Program Files\OpenSC Project\OpenSC\pkcs11\opensc-pkcs11.dll
+showInfo = true
 # You may need to change this slot to a higher number if you have multiple devices
 slot = 0
 ```
