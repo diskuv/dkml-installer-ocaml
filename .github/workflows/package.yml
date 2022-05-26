@@ -10,7 +10,7 @@ on:
       dkml-compiler:
         description: "Git branch, tag or commit for dkml-base-compiler"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-ocamlcompiler:
         description: "Git branch, tag or commit for dkml-component-*-ocamlcompiler"
         required: false
@@ -34,7 +34,7 @@ on:
       conf-dkml-cross-toolchain:
         description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
       diskuv-opam-repository:
         # Used by all_setup_opam_repositories.sh
         description: "Git branch, tag or commit for the diskuv-opam-repository repository"
