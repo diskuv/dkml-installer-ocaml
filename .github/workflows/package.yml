@@ -2,41 +2,55 @@ name: Package OCaml Releases
 
 on:
   workflow_dispatch:
+    # BEWARE: The `workflow_dispatch/inputs/*/default` attribute does not behave like `workflow_call/inputs/*/default`.
+    # Specifically the defaults are not populated in github.event.inputs. It only
+    # influences the web UI.
+    # Either way, we use the idiom ${{ github.event.inputs.NAME || 'the default' }}
+    # to read a default **in addition** to the web UI default specified here.
     inputs:
       dkml-install-api:
+        type: string
         description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-compiler:
+        type: string
         description: "Git branch, tag or commit for dkml-base-compiler"
         required: false
-        default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-ocamlcompiler:
+        type: string
         description: "Git branch, tag or commit for dkml-component-*-ocamlcompiler"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-ocamlrun:
+        type: string
         description: "Git branch, tag or commit for dkml-component-*-ocamlrun"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-opam:
+        type: string
         description: "Git branch, tag or commit for dkml-component-*-opam"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-curl:
+        type: string
         description: "Git branch, tag or commit for dkml-component-*-curl package"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-component-unixutils:
+        type: string
         description: "Git branch, tag or commit for dkml-component-*-unixutils packages"
         required: false
-        default: "" # Change this to "@repository@" once published to Opam
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       conf-dkml-cross-toolchain:
+        type: string
         description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
         required: false
         default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
       diskuv-opam-repository:
         # Used by all_setup_opam_repositories.sh
+        type: string
         description: "Git branch, tag or commit for the diskuv-opam-repository repository"
         required: false
         default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG in setup-dkml is used as default for empty strings
@@ -65,7 +79,7 @@ jobs:
     with:
       ocaml-compiler: 4.12.1
       dkml-compiler: ${{ github.event.inputs.dkml-compiler }}
-      conf-dkml-cross-toolchain: ${{ github.event.inputs.conf-dkml-cross-toolchain }}
+      conf-dkml-cross-toolchain: ${{ github.event.inputs.conf-dkml-cross-toolchain || '@repository@' }}
       diskuv-opam-repository: ${{ github.event.inputs.diskuv-opam-repository }}
 
   build:
