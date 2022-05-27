@@ -187,7 +187,7 @@ jobs:
           import ${{ matrix.abi-pattern }}
 
       - name: Cache Opam downloads by host
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ matrix.opam-root }}/download-cache
           key: ${{ matrix.dkml-host-abi }}
@@ -196,7 +196,7 @@ jobs:
       # The action/checkout steps used for pinning will re-use existing Git objects
       # because of caching
       - name: Cache Git checkouts of Opam pins by OS
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .ci/g
           key: ${{ runner.os }}-gitpin
@@ -548,7 +548,7 @@ jobs:
           path: dist
 
       - name: Cache Vagrant boxes
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.vagrant.d/boxes
           key: ${{ runner.os }}-vagrant-${{ hashFiles('vagrant/win32/Vagrantfile') }}
