@@ -11,12 +11,18 @@ $HereDir = (get-item $HereScript).Directory
 # ========================
 # START Install instructions from https://diskuv.gitlab.io/diskuv-ocaml/index.html
 
+#   Test Case: Use a space in the installation prefix.
+#     Normally the prefix is C:\Users\<USER>\AppData\Local\Programs\DiskuvOCaml
+#     We'll use C:\Users\<USER>\AppData\Local\Programs\Diskuv WithSpace OCaml
+#     to force a space, regardless of the Vagrant <USER>.
+$prefix = "$env:LOCALAPPDATA\Programs\Diskuv WithSpace OCaml"
+
 #   --ci will skip confirmation question at end of setup.exe
-$opts = "--ci"
+$opts = @( "--ci", "--prefix", "$prefix" )
 
 if (Test-Path $HereDir\setup.exe) {
   Write-Host "Running supplied setup.exe ..."
-  & "$HereDir\setup.exe" $opts
+  & "$HereDir\setup.exe" @opts
 
 } else {
   # Get the versions which can't be embedded in this UTF-16 BE file
@@ -45,8 +51,8 @@ Write-Host "Done installation."
 
 # Refresh the PATH with newly installed User entries
 $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.Path]::PathSeparator + $env:Path
-# Mimic $DiskuvOCamlHome
-$env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
+# Mimic $DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
+$env:DiskuvOCamlHome = "$prefix\0"
 
 Write-Host "Testing installation ..."
 # Clean, run test for installation and save results
