@@ -1,0 +1,39 @@
+name: Manage GitHub Storage Space
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      # Any push to a tag that starts with 'v'
+      - v*
+
+  # We use a schedule since other workflows can trigger
+  # this workflow, which accumulates space.
+  schedule:
+    # Every day at 3:17am
+    - cron: '17 3 * * *'
+
+jobs:
+  # trim-prerelease-package-versions:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/delete-package-versions@v3
+  #       with:
+  #         min-versions-to-keep: 10
+  #         delete-only-pre-release-versions: "true"
+  #         package-name: 'test-package'
+
+  remove-old-artifacts:
+    permissions:
+      actions: write            
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '2 weeks'
+        skip-tags: true
+        skip-recent: 5
