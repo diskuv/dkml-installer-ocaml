@@ -53,3 +53,11 @@ component that you would like to get distributed.
 | Installer packages             |                | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml)                                          |
 | Installer syntax check         |                | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)                                                      |
 | gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel19 | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel19 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel19/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel19")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel19) |
+
+## Sponsor
+
+<a href="https://ocaml-sf.org">
+<img align="left" alt="OCSF logo" src="https://ocaml-sf.org/assets/ocsf_logo.svg"/>
+</a>
+Thanks to the <a href="https://ocaml-sf.org">OCaml Software Foundation</a>
+for economic support to the development of Diskuv OCaml.
