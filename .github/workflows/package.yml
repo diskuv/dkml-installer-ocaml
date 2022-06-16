@@ -436,13 +436,19 @@ jobs:
   #--------
 
   # Direct testing is simply using GitHub virtual machine to run the setup.
-  # Because GitHub virtual machine already has Visual Studio and several other
-  # tools, it doesn't exercise all the paths that vagrant-testing covers.
-  # However, it is quicker and it can find issues with conflicting Cygwin
-  # (or any other of the many programs that are installed on a GitHub machine).
-  # In addition, windows-2019 (somewhat older Windows) and windows-latest (2022, or
-  # which is the latest) is tested ... Vagrant is closer to windows-latest
-  # as of Apr 2022.
+  #
+  # Pros and Cons
+  #   Because GitHub virtual machine already has Visual Studio and several other
+  #   tools, it doesn't exercise all the paths that vagrant-testing covers.
+  #   However, it is quicker and it can find issues with conflicting Cygwin
+  #   (or any other of the many programs that are installed on a GitHub machine).
+  #   In addition, windows-2019 (somewhat older Windows) and windows-latest (2022, or
+  #   which is the latest) is tested ... Vagrant is closer to windows-latest
+  #   as of Apr 2022.
+  #
+  # Matrix
+  #   Instead of all 4 combinations of (2019,latest) x (32bit,64bit), we half
+  #   the matrix so save compute cycles.
   direct-testing:
     # Wait for build
     needs:
@@ -451,12 +457,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - windows-2019
-          - windows-latest
-        dkml-host-abi:
-          - windows_x86
-          - windows_x86_64
+        include:
+          - os: windows-2019
+            dkml-host-abi: windows_x86
+          - os: windows-latest
+            dkml-host-abi: windows_x86_64
 
     runs-on: ${{ matrix.os }}
     name: direct / ${{ matrix.os }} ${{ matrix.dkml-host-abi }}
