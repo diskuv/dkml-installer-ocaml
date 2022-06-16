@@ -83,6 +83,8 @@ jobs:
       diskuv-opam-repository: ${{ github.event.inputs.diskuv-opam-repository }}
 
   build:
+    timeout-minutes: 90 # 1.5 hours
+
     # Wait until `setup-dkml` is finished
     needs: setup-dkml
 
@@ -450,6 +452,8 @@ jobs:
   #   Instead of all 4 combinations of (2019,latest) x (32bit,64bit), we half
   #   the matrix so save compute cycles.
   direct-testing:
+    timeout-minutes: 90 # 1.5 hours
+
     # Wait for build
     needs:
       - build
@@ -516,6 +520,8 @@ jobs:
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
   # For example, found missing vcruntime140.dll with Vagrant testing.
   vagrant-testing:
+    timeout-minutes: 150 # 2.5 hours
+
     # Wait for build
     needs:
       - build
