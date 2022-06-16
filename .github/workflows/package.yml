@@ -466,10 +466,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: direct / ${{ matrix.os }} ${{ matrix.dkml-host-abi }}
 
-    # For now we are trying to see why windows_x86 is having problems (1/2)
-    # Actually, we know it is because setup.exe uses auto-detected host ABI instead of hardcoded ABI.
-    continue-on-error: ${{ matrix.dkml-host-abi == 'windows_x86' }}
-
     steps:
       - name: Download and unpack ${{ matrix.dkml-host-abi }} artifact
         uses: actions/download-artifact@v3
@@ -535,10 +531,6 @@ jobs:
     # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
     runs-on: macos-10.15
     name: vagrant / ${{ matrix.dkml-host-abi }}
-
-    # For now we are trying to see why windows_x86 is having problems (2/2)
-    # Actually, we know it is because setup.exe uses auto-detected host ABI instead of hardcoded ABI.
-    continue-on-error: ${{ matrix.dkml-host-abi == 'windows_x86' }}
 
     steps:
       - name: Checkout code
