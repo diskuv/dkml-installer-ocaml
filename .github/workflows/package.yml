@@ -451,6 +451,22 @@ jobs:
   # Matrix
   #   Instead of all 4 combinations of (2019,latest) x (32bit,64bit), we half
   #   the matrix so save compute cycles.
+  #
+  # Tricky Issues
+  #   [Git installer hangs]
+  #
+  #   The move for both windows-2019 and windows-latest from
+  #     Image Release: https://github.com/actions/virtual-environments/releases/tag/win19%2F20220606.1
+  #   to:
+  #     Image Release: https://github.com/actions/virtual-environments/releases/tag/win19%2F20220614.0
+  #   causes the Git for Windows 2.36.0 installer to hang.
+  #
+  #   Root cause? It is likely antivirus
+  #   (https://github.com/git-for-windows/msys2-runtime/pull/37) or a slightly
+  #   different UAC environment.
+  #
+  #   Mitigation: Pre-install Git for Windows from Chocolatey. Also Vagrant still
+  #   tests the Git installer successfully.
   direct-testing:
     timeout-minutes: 90 # 1.5 hours
 
@@ -482,6 +498,7 @@ jobs:
           # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
           PATH:
             "C:\\Program Files\\PowerShell\\7;\
+            C:\\ProgramData\\chocolatey\\bin;\
             C:\\Program Files (x86)\\NSIS\\;\
             C:\\tools\\zstd;\
             C:\\Program Files\\dotnet;\
@@ -497,6 +514,10 @@ jobs:
         #   This problem is probably due to using incompatible versions of the cygwin DLL.
         shell: pwsh
         run: |
+          # Avoid Git installer hanging by pre-installing Git.
+          # (Choco best practices: https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide)
+          choco upgrade git -y --no-progress --version="'2.36.1'"
+
           $setups = Get-ChildItem -Path dist -Filter "setup-*.exe"
           foreach ($setup in $setups)
           {
