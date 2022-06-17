@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
   #     "#{dkml_host_abi}"
   #     "#{dkml_host_abi}-#{ocaml_version}"
 
-  ["windows_86", "windows_x86_64"].each do |dkml_host_abi|
+  ["windows_x86", "windows_x86_64"].each do |dkml_host_abi|
     config.vm.define "#{dkml_host_abi}", autostart: false do |machine|
       machine.vm.provision "shell", inline: <<-SHELL
         C:\\vagrant\\test-language.ps1
