@@ -644,3 +644,14 @@ jobs:
           prerelease: true # becomes a real release after it is signed externally
           files: |
             _release/*
+
+      - name: Remove unneeded artifacts from GitHub Storage
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          failOnError: false
+          name: |
+            setup-dkml-macos-darwin_all
+            setup-dkml-manylinux2014-linux_x86
+            setup-dkml-manylinux2014-linux_x86_64
+            setup-dkml-win32-windows_x86
+            setup-dkml-win32-windows_x86_64
