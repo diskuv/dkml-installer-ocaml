@@ -593,7 +593,7 @@ jobs:
           mv dist/setup-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
 
           cd vagrant/win32
-          vagrant up
+          vagrant up "${{ matrix.dkml-host-abi }}""
 
       - name: Check test_installation.t status
         run: |
