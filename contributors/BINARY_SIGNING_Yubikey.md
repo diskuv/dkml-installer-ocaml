@@ -73,13 +73,9 @@ The PUK and PIN only need to be kept until the security token is distributed.
 
 FOURTH,
 
-Download and install "OpenSC-0.22.0_win64.msi" from
-https://github.com/OpenSC/OpenSC/releases/tag/0.22.0 using the default
-options.
-
 Download the OpenSSL OpenSC engine at
-https://github.com/OpenSC/libp11/releases/download/libp11-0.4.11/libp11-0.4.11-windows.zip
-. Unzip it to `C:\` so that you have `C:\libp11-0.4.11-windows\64bit\pkcs11.dll`
+[https://github.com/OpenSC/libp11/releases/download/libp11-0.4.11/libp11-0.4.11-windows.zip](https://github.com/OpenSC/libp11/releases/download/libp11-0.4.11/libp11-0.4.11-windows.zip)
+Unzip it to `C:\` so that you have `C:\libp11-0.4.11-windows\64bit\pkcs11.dll`
 available.
 
 Install `osslsigncode` and `p11tool` by getting a UNIX prompt with `with-dkml-bash` and then
@@ -91,27 +87,35 @@ pacman -S mingw-w64-clang-x86_64-osslsigncode mingw-w64-clang-x86_64-gnutls
 
 FIFTH,
 
-Import the server key and the CA-signed certificate into the device with:
+Import the server key and your certificate into the device with:
 
 ```bash
 # On Windows you need:
 export PATH="$(cygpath -F 38)/Yubico/Yubico PIV Tool/bin:$PATH"
 
-# Enter PIN when prompted
-# We use compression for RSA 4096 keys: https://developers.yubico.com/yubico-piv-tool/Actions/key_import.html
+# Enter Management Key when prompted. Imports your server key
 yubico-piv-tool -s 9c -a import-key -i server-key.pem -k
-yubico-piv-tool -s 9c -a import-key -a import-certificate -i key-and-cert.crt.gz -K GZIP -k
+
+# Enter Management Key when prompted. Imports both the CA root certificate and your CA-signed certificate
+yubico-piv-tool -s 9c -a import-certificate -i full-chain.pem -k
 ```
 
 SIXTH,
 
-Record the "Object *: URL" that is displaying in the following in a `with-dkml bash` shell:
+Record the `Object XX: URL: pkcs11:...` that is displayed for **ID: 02** from the following in a `with-dkml bash` shell:
 
 ```console
 $ p11tool --provider "$(cygpath -wF 38)"'\Yubico\Yubico PIV Tool\bin\libykcs11.dll' --list-privkeys --login
 Token 'YubiKey PIV #12345678' with URL 'pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678' requires user PIN
 Enter PIN:
 Object 0:
+        URL: pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private
+        Type: Private key (EC/ECDSA)
+        Label: Private key for Digital Signature
+        Flags: CKA_PRIVATE; CKA_ALWAYS_AUTH; CKA_NEVER_EXTRACTABLE; CKA_SENSITIVE;
+        ID: 02
+
+Object 1:
         URL: pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678;id=%19;object=Private%20key%20for%20PIV%20Attestation;type=private
         Type: Private key (RSA-2048)
         Label: Private key for PIV Attestation
@@ -119,13 +123,27 @@ Object 0:
         ID: 19
 ```
 
-And with that URL (the one that has `id=` inside it) enter your PIN twice to sign a test executable:
+> The `ID` numbers are the hexadecimal versions of the Key Mapping table's "ykcs11 id" in
+> https://developers.yubico.com/yubico-piv-tool/YKCS11/.
+> * ID 02 (ykcs11 id 2) is PIV slot 9c, which is [reserved for Digital Signatures](https://developers.yubico.com/PIV/Introduction/Certificate_slots.html)
+> * ID 19 (ykcs11 id 25) is preloaded by Yubico.
+
+Double-check that you have the URL that has the format `pkcs11:...;id=%02;...Signature;type=private`.
+Use that URL to sign a test executable:
 
 ```console
-$ osslsigncode sign -verbose -comm -h sha384 -pkcs11engine C:/libp11-0.4.11-windows/64bit/pkcs11.dll -pkcs11module "$(cygpath -wF 38)"'\Yubico\Yubico PIV Tool\bin\libykcs11.dll' -in ../x/setup-diskuv-ocaml-windows_x86_64-0.4.0.exe -out ../x/setup-resigned-diskuv-ocaml-windows_x86_64-0.4.0.exe -pkcs11cert 'pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678;id=%19;object=Private%20key%20for%20PIV%20Attestation;type=private' -t http://timestamp.sectigo.com
+# Use the URL you just double-checked
+$ DIGITALSIGNCERT='pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private'
+
+$ YUBICOBIN_W32="$(cygpath -wF 38)"'\Yubico\Yubico PIV Tool\bin'
+$ YUBICOBIN_UNIX=$(cygpath -a "$YUBICOBIN_W32")
+
+# You will need to enter the same PIN three times
+$ env PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign -verbose -comm -h sha384 -pkcs11engine C:/libp11-0.4.11-windows/64bit/pkcs11.dll -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" -in "$(cygpath -aw /usr/bin/true)" -out signed-true.exe -pkcs11cert "$DIGITALSIGNCERT" -t http://timestamp.sectigo.com
 Engine "pkcs11" set.
-Enter PKCS#11 token PIN for Admin:
-Enter PKCS#11 key PIN for SIGN key:
+Enter PKCS#11 token PIN for YubiKey PIV #12345678:
+Enter PKCS#11 key PIN for Private key for Digital Signature:
+Enter PKCS#11 key PIN for Private key for Digital Signature:
 Succeeded
 ```
 

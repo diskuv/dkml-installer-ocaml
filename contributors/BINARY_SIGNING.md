@@ -168,15 +168,13 @@ After your certificate has been generated and downloaded:
 * download the latest Code Signing CA certificate from https://help.comodosslstore.com/support/solutions/articles/22000218266-comodo-intermediate-certificates-and-ca-bundle-
   (ex. Standard Sectigo Public Code Signing CA R36) and save it
   (ex. `SectigoPublicCodeSigningCAR36.crt`)
-* create a certificate chain into a "PKCS#7" file with:
+* create a certificate chain in a X509 and "PKCS#7" file with:
   ```bash
   
+  openssl x509 -in SectigoPublicCodeSigningCAR36.crt -out SectigoPublicCodeSigningCAR36.pem
+  cat cert.pem SectigoPublicCodeSigningCAR36.pem > full-chain.pem
 
-  openssl crl2pkcs7 -nocrl -out full-chain.p7.pem --certfile cert.pem -certfile SectigoPublicCodeSigningCAR36.crt
-
-  #cat server-key.pem cert.pem > key-and-cert.crt
-  #openssl rsa -outform DER -in server-key.pem -out server-key.der
-  #openssl pkcs12 -inkey server-key.pem -in cert.pem -export -out key-and-cert.p12
+  openssl crl2pkcs7 -nocrl --certfile cert.pem -certfile SectigoPublicCodeSigningCAR36.crt -out full-chain.p7.pem
   ```
 * you can delete the `server-key.csr` file
 
