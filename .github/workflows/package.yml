@@ -434,7 +434,7 @@ jobs:
               ;;
             windows_*)
               opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
-              opamrun exec -- install "$_share/t/${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-7zS2.sfx" dist/
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.sfx" -exec install {} dist/ \;
               ;;
           esac
 
