@@ -128,24 +128,43 @@ Object 1:
 > * ID 02 (ykcs11 id 2) is PIV slot 9c, which is [reserved for Digital Signatures](https://developers.yubico.com/PIV/Introduction/Certificate_slots.html)
 > * ID 19 (ykcs11 id 25) is preloaded by Yubico.
 
-Double-check that you have the URL that has the format `pkcs11:...;id=%02;...Signature;type=private`.
+Double-check:
+1. You have the URL that has the format `pkcs11:...;id=%02;...Signature;type=private`.
+2. The key has the four (4) flags `Flags: CKA_PRIVATE; CKA_ALWAYS_AUTH; CKA_NEVER_EXTRACTABLE; CKA_SENSITIVE;`.
+   It can have more than those flags, but none of those flags can be missing. **Stop if you don't see those flags!**
+
 Use that URL to sign a test executable:
 
 ```console
 # Use the URL you just double-checked
 $ DIGITALSIGNCERT='pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=12345678;token=YubiKey%20PIV%20%2312345678;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private'
 
+# We need a test executable to sign. /clang64/bin/zstd.exe will have only standard Win32 DLL dependencies so it can run from anywhere.
+$ pacman -S --needed --noconfirm mingw-w64-clang-x86_64-zstd
+
 $ YUBICOBIN_W32="$(cygpath -wF 38)"'\Yubico\Yubico PIV Tool\bin'
 $ YUBICOBIN_UNIX=$(cygpath -a "$YUBICOBIN_W32")
 
 # You will need to enter the same PIN three times
-$ env PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign -verbose -comm -h sha384 -pkcs11engine C:/libp11-0.4.11-windows/64bit/pkcs11.dll -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" -in "$(cygpath -aw /usr/bin/true)" -out signed-true.exe -pkcs11cert "$DIGITALSIGNCERT" -t http://timestamp.sectigo.com
+$ env PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign -verbose -comm -h sha384 -pkcs11engine C:/libp11-0.4.11-windows/64bit/pkcs11.dll -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" -in "$(cygpath -aw /clang64/bin/zstd.exe)" -out signed-zstd.exe -pkcs11cert "$DIGITALSIGNCERT" -t http://timestamp.sectigo.com
 Engine "pkcs11" set.
 Enter PKCS#11 token PIN for YubiKey PIV #12345678:
 Enter PKCS#11 key PIN for Private key for Digital Signature:
 Enter PKCS#11 key PIN for Private key for Digital Signature:
 Succeeded
 ```
+
+Verify `signed-zstd.exe`:
+* Right-click on `signed-zstd.exe` in the File Explorer, go to its Properties
+  and check its Digital Signatures.
+* Run `signed-zstd.exe --help` from a Command Prompt. You should get a help
+  screen and no any anti-virus or Windows operating system errors.
+
+Congratulations!
+
+Now you can check in the public certificate chain `full-chain.p7.pem`
+into the `contributors/` directory. That will be used by the signing script
+[`contributors/sign.sh`](./sign.sh).
 
 ### Signing an Executable
 
