@@ -49,7 +49,7 @@ a bad non-FIPS defect would reflect poorly on their FIPS government sales).
 
 ## Crypto Standards
 
-[Minimum Key Length](https://cryptome.org/2016/01/CNSA-Suite-and-Quantum-Computing-FAQ.pd):
+[Minimum Key Length](https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs_20210804.PDF):
 RSA 3072 is the recommended minimum for RSA keys, and ECC P-256 and
 P-384 keys are recommended for ECC keys.
 

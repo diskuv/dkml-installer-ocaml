@@ -11,7 +11,7 @@ drawback is that [YubiKey 5 accepted key sizes](https://developers.yubico.com/yu
 imports private RSA keys of 3049 bits or shorter; anything bigger requires
 non-standard compression options. However we'll be using these non-standard
 options so as not to conflict with the
-[US government recommendation of at least 3072 bits](https://cryptome.org/2016/01/CNSA-Suite-and-Quantum-Computing-FAQ.pdf).
+[US government recommendation of at least 3072 bits](https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs_20210804.PDF).
 
 Yubikey's are managed with the command line
 [Yubico PIV Tool](https://developers.yubico.com/yubico-piv-tool/) or the
