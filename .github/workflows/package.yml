@@ -8,6 +8,14 @@ on:
     # Either way, we use the idiom ${{ github.event.inputs.NAME || 'the default' }}
     # to read a default **in addition** to the web UI default specified here.
     inputs:
+      test-filter:
+        type: choice
+        description: "Which tests are used"
+        required: false
+        options:
+          - "no-tests"
+          - "no-direct-tests"
+          - "no-vagrant-tests"
       dkml-install-api:
         type: string
         description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
@@ -469,6 +477,9 @@ jobs:
   #   Mitigation: Pre-install Git for Windows from Chocolatey. Also Vagrant still
   #   tests the Git installer successfully.
   direct-testing:
+    if: |
+      github.event.inputs.test-filter != 'no-tests' &&
+      github.event.inputs.test-filter != 'no-direct-tests'
     timeout-minutes: 90 # 1.5 hours
 
     # Wait for build
@@ -543,6 +554,9 @@ jobs:
   # For example, found missing vcruntime140.dll with Vagrant testing.
   vagrant-testing:
     timeout-minutes: 180 # 3.0 hours
+    if: |
+      github.event.inputs.test-filter != 'no-tests' &&
+      github.event.inputs.test-filter != 'no-vagrant-tests'
 
     # Wait for build
     needs:
