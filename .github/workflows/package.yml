@@ -12,7 +12,9 @@ on:
         type: choice
         description: "Which tests are used"
         required: false
+        default: all-tests
         options:
+          - "all-tests"
           - "no-tests"
           - "no-direct-tests"
           - "no-vagrant-tests"
