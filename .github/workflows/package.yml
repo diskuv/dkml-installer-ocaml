@@ -481,7 +481,8 @@ jobs:
   direct-testing:
     if: |
       github.event.inputs.test-filter != 'no-tests' &&
-      github.event.inputs.test-filter != 'no-direct-tests'
+      github.event.inputs.test-filter != 'no-direct-tests' &&
+      !endsWith(github.ref_name, '_no_test')
     timeout-minutes: 90 # 1.5 hours
 
     # Wait for build
@@ -558,7 +559,8 @@ jobs:
     timeout-minutes: 180 # 3.0 hours
     if: |
       github.event.inputs.test-filter != 'no-tests' &&
-      github.event.inputs.test-filter != 'no-vagrant-tests'
+      github.event.inputs.test-filter != 'no-vagrant-tests' &&
+      !endsWith(github.ref_name, '_no_test')
 
     # Wait for build
     needs:
