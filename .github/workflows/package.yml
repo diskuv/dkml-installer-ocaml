@@ -542,7 +542,7 @@ jobs:
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
   # For example, found missing vcruntime140.dll with Vagrant testing.
   vagrant-testing:
-    timeout-minutes: 150 # 2.5 hours
+    timeout-minutes: 180 # 3.0 hours
 
     # Wait for build
     needs:
