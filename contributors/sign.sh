@@ -17,8 +17,12 @@
 #         already have Diskuv OCaml installed (see
 #         https://github.com/diskuv/dkml-installer-ocaml/releases).
 #       * On Windows you should also be able to use Git Bash, MSYS2 or Cygwin.
-#         But Git Bash and Cygwin will require that you install `osslsigncode`
-#         and GnuTLS' `p11tool` and place them in the PATH
+#         But Git Bash and Cygwin will require that you install:
+#         - `osslsigncode`
+#         - `7z` (from p7zip)
+#         - `p11tool` (from GnuTLS)
+#         - `gh` (from GitHub CLI)
+#         and place them in the PATH
 set -euf
 
 # Signing tool
@@ -129,8 +133,108 @@ git -C drc -c advice.detachedHead=false checkout FETCH_HEAD
 #   shellcheck disable=1091
 . drc/unix/crossplatform-functions.sh
 
-# Sign the release
-progress "Signing the release"
+# Install github CLI
+progress "Installing GitHub CLI"
+if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
+    pacman -S --needed --noconfirm mingw-w64-clang-x86_64-github-cli
+fi
+
+# Download latest unsigned release
+progress "Authenticating with GitHub"
+if ! gh auth status; then
+    gh auth login
+fi
+
+# Find Pre-release
+progress "Finding latest release marked as Pre-release"
+gh release list -R diskuv/dkml-installer-ocaml --exclude-drafts | tee releases.txt
+echo
+RELEASE=$(awk '$2=="Pre-release"{print $1; exit}' releases.txt)
+if [ -z "$RELEASE" ]; then
+    printf "FATAL: No release found that has been marked as Pre-release.\n" >&2
+    exit 117
+fi
+#   Ask for confirmation
+read -r -s -n 1 -p "Do you want to sign release $RELEASE? (y/N) " YESNO
+case "$YESNO" in
+    y | Y ) printf "YES\n\nLet's continue.\n" ;;
+    *) printf "\nOK! Stopping the signing process.\n"; exit 0 ;;
+esac
+
+# Download
+progress "Downloading $RELEASE"
+install -d rel-orig
+gh release download "$RELEASE" \
+    --repo diskuv/dkml-installer-ocaml \
+    --dir rel-orig \
+    --pattern 'setup-*.exe' \
+    --pattern 'unsigned-*.exe'
+set +u # workaround bash bug with empty arrays in for loops
+EXECUTABLES=()
+while IFS='' read -r line; do
+    EXECUTABLES+=("$line")
+    printf "Found executable to sign: %s\n" "$line"
+done < <(cd rel-orig && ls -1)
+set -u
+
+# Install 7z
+progress "Installing p7zip"
+if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
+    pacman -S --needed --noconfirm p7zip
+fi
+
+for EXEC in "${EXECUTABLES[@]}"; do
+    progress "Unpacking $EXEC"
+    install -d "rel-unpack/$EXEC"
+    # Use 7zr (light-version, standalone) instead of 7z or 7za since
+    # same executable used by dkml-install-api:installer_sfx.ml.
+    #
+    # 7za <command> [<switches>...] <archive_name> [<file_names>...]
+    #   x : eXtract files with full paths
+    #   -r[-|0] : Recurse subdirectories
+    #   -y : assume Yes on all queries
+    #   -o{Directory} : set Output directory
+    7zr x -r -y -o"rel-unpack/$EXEC" "rel-orig/$EXEC"
+done
+
+# Get which embedded exes to sign
+progress "Locating embedded .exe files to sign"
+TO_SIGN=()
+TO_SKIP=()
+while IFS='' read -r line; do
+    EXECBASENAME=$(basename "$line")
+    case "$EXECBASENAME" in
+        vc_redist*.exe)
+            # Microsoft already signed these Visual Studio redistributables
+            TO_SKIP+=("$line")
+            ;;
+        curl.exe)
+            # Signed by https://curl.se/
+            TO_SKIP+=("$line")
+            ;;
+        gsudo.exe)
+            # This is signed by https://github.com/gerardog/gsudo.
+            # We _could_ re-sign it but it would be better if we customized
+            # it first (ex. let gsudo.exe elevate
+            # `dkml-install-admin-runner.exe` only, or only executables that
+            # have been signed by Diskuv, etc.)
+            TO_SKIP+=("$line")
+            ;;
+        *)
+            TO_SIGN+=("$line")
+            ;;
+    esac
+done < <(cd rel-unpack && find . -name "*.exe" -type f | sed 's#^[.]/##')
+set +u # workaround bash bug with empty arrays in for loops
+for EXEC in "${TO_SIGN[@]}"; do
+    printf "Will sign: [%s\n" "$EXEC" | sed 's#/#] #' >&2
+done
+for EXEC in "${TO_SKIP[@]}"; do
+    printf "Will skip: [%s\n" "$EXEC" | sed 's#/#] #' >&2
+done
+set -u
+
+# Sign the release ...
 askpin() { # only used by sign_with_jsign()
     read -rsp 'Yubikey PIN: ' PINCODE
     printf "%s" "$PINCODE" > "$pinfile"
@@ -165,9 +269,6 @@ runjava() { # only used by sign_with_jsign()
     fi
 }
 sign_with_jsign() {
-    sign_with_jsign_INFILE=$1
-    shift
-
     # Get jsign
     progress "Getting jsign"
     install -d jsign
@@ -176,9 +277,8 @@ sign_with_jsign() {
         jsign/jsign.jar \
         4dddbc9e56bd6e15934122f16ce652f07d2110530418196898c31600e44109b6
 
-    # Copy input locally because file will be mutated
-    sign_with_jsign_BASENAME=$(basename "$sign_with_jsign_INFILE")
-    install "$sign_with_jsign_INFILE" "$sign_with_jsign_BASENAME"
+    # Signing ...
+    progress "Signing the release"
 
     #   Create pkcs11 configuration.
     #       Confer: https://docs.oracle.com/javase/8/docs/technotes/guides/security/p11guide.html#Config
@@ -196,28 +296,23 @@ slot = 2
 showInfo = true
 EOF
 
-    # Ask for Yubikey PIN. Place in $pinfile_native
+    #   Ask for Yubikey PIN. Place in $pinfile_native
     askpin
 
-    PATH="$YUBICOBIN_UNIX:$PATH" runjava -Djava.security.debug=sunpkcs11 -Djava.security.debug=pkcs11keystore \
-        -jar jsign/jsign.jar \
-        --keystore "$pkcs11cfg_native" \
-        --storetype YUBIKEY \
-        --storepass "file:$pinfile_native" \
-        --certfile "${HERE_NATIVE}${DIRSEP}full-chain-ec.p7.pem" \
-        "$sign_with_jsign_BASENAME"
+    #   Sign each embedded .exe
+    for sign_with_jsign_INFILE in "${TO_SIGN[@]}"; do
+        #   The actual signing. The file will be mutated
+        PATH="$YUBICOBIN_UNIX:$PATH" runjava -Djava.security.debug=sunpkcs11 -Djava.security.debug=pkcs11keystore \
+            -jar jsign/jsign.jar \
+            --keystore "$pkcs11cfg_native" \
+            --storetype YUBIKEY \
+            --storepass "file:$pinfile_native" \
+            --certfile "${HERE_NATIVE}${DIRSEP}full-chain.p7.pem" \
+            "$sign_with_jsign_INFILE"
+        rm -f "$pinfile"
+    done
 }
 sign_with_osslsigncode() {
-    sign_with_osslsigncode_INFILE=$1
-    shift
-
-    if [ -x /usr/bin/cygpath ]; then
-        sign_with_osslsigncode_INFILE_NATIVE=$(/usr/bin/cygpath -aw "$sign_with_osslsigncode_INFILE")
-    else
-        sign_with_osslsigncode_INFILE_NATIVE="$sign_with_osslsigncode_INFILE"
-    fi
-    sign_with_osslsigncode_BASENAME=$(basename "$sign_with_osslsigncode_INFILE")
-
     # Get libp11 DLLs
     progress "Getting libp11 DLLs"
     install -d libp11
@@ -225,8 +320,7 @@ sign_with_osslsigncode() {
         https://github.com/OpenSC/libp11/releases/download/libp11-0.4.11/libp11-0.4.11-windows.zip \
         libp11/libp11.zip \
         ae69d155c689de3b98b581036c9bb44e9e7f9033432d6d70a972da649ade4cd2
-    unzip libp11/libp11.zip -d libp11
-    ls -l libp11/libp11-0.4.11-windows/64bit/pkcs11.dll
+    unzip -q libp11/libp11.zip -d libp11
     pkcs11dll=libp11/libp11-0.4.11-windows/64bit/pkcs11.dll
     if [ -x /usr/bin/cygpath ]; then
         pkcs11dll_mixed=$(/usr/bin/cygpath -am "$pkcs11dll")
@@ -266,31 +360,82 @@ sign_with_osslsigncode() {
     #   Theoretically we could scrape the following instead of the brittle formulation of the URL:
     #       p11tool --provider "$(cygpath -wF 38)"'\Yubico\Yubico PIV Tool\bin\libykcs11.dll' --list-privkeys --login
     #   But for now the URL matches the specific Yubikey model used by Diskuv
-    DIGITALSIGNCERT="pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=$SERIALNUM;token=YubiKey%20PIV%20%23$SERIALNUM;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private"
-    printf "PKCS url:\n\t%s\n" "$DIGITALSIGNCERT" >&2
+    DIGITALSIGN_URI="pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=$SERIALNUM;token=YubiKey%20PIV%20%23$SERIALNUM;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private"
+    printf "PKCS url:\n\t%s\n" "$DIGITALSIGN_URI" >&2
 
-    # Actually sign
-    progress "Sign executable"
-    PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign \
-        -verbose \
-        -comm \
-        -h sha384 \
-        -pkcs11engine "$pkcs11dll_mixed" \
-        -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" \
-        -pkcs11cert "$DIGITALSIGNCERT" \
-        -in "$sign_with_osslsigncode_INFILE_NATIVE" \
-        -out "$sign_with_osslsigncode_BASENAME" \
-        -t http://timestamp.sectigo.com
+    # Sign each embedded executable
+    progress "Sign embedded executables"
+    #   Ask for Yubikey PIN. Place in $pinfile_native.
+    #   * We should be able to use `pin-source=FILE` to say what the PIN
+    #     is ... so we don't get prompted for the PIN each time we sign
+    #     a single executable. However, it is up to the PKCS11 module
+    #     to recognize it.
+    #   * Yubikey avoids the first prompt but not the others with `pin-source=`
+    #        Enter PKCS#11 token PIN for YubiKey PIV #12345678:
+    #        Enter PKCS#11 key PIN for Private key for Digital Signature:
+    #        Enter PKCS#11 key PIN for Private key for Digital Signature:
+    #     Yubikey can use `osslsigncode -readpass PINFILE` to avoid the
+    #     last two prompts.
+    #   * However OpenSC has closed w/o resolving 4+ year old issues where the
+    #     same PIN has to be entered multiple times (same as above).
+    #     https://github.com/OpenSC/OpenSC/issues/2039 and
+    #     https://github.com/OpenSC/libp11/issues/101 :(
+    askpin
+    echo
+    signfile() {
+        signfile_IN=$1
+        shift
+        signfile_OUT=$1
+        shift
+
+        # -comm                   = set commercial purpose (default: individual purpose)
+        # -pass                   = the private key password
+        # -readpass               = the private key password source
+        # -t                      = specifies that the digital signature will be timestamped
+        #                           by the Time-Stamp Authority (TSA) indicated by the URL
+        # -pkcs11cert             = PKCS#11 URI identifies a certificate in the token
+        # -pkcs11engine           = PKCS11 engine
+        # -pkcs11module           = PKCS11 module       
+        PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign \
+            -comm \
+            -h sha384 \
+            -pkcs11engine "$pkcs11dll_mixed" \
+            -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" \
+            -pkcs11cert "$DIGITALSIGN_URI?pin-source=$pinfile_native" \
+            -in "$signfile_IN" \
+            -out "$signfile_OUT" \
+            -t http://timestamp.sectigo.com
+    }
+    install -d rel-repack
+    for sign_with_osslsigncode_SFILE in "${TO_SIGN[@]}"; do
+        # Form path to embedded .exe
+        sign_with_osslsigncode_INFILE="rel-unpack/${sign_with_osslsigncode_SFILE}"
+        if [ -x /usr/bin/cygpath ]; then
+            sign_with_osslsigncode_INFILE_NATIVE=$(/usr/bin/cygpath -aw "$sign_with_osslsigncode_INFILE")
+        else
+            sign_with_osslsigncode_INFILE_NATIVE="$sign_with_osslsigncode_INFILE"
+        fi
+        sign_with_osslsigncode_BASENAME=$(basename "$sign_with_osslsigncode_INFILE")
+
+        # Sign .exe inside rel-repack/
+        printf "Signing %s ...\n" "$sign_with_osslsigncode_INFILE" >&2
+        signfile \
+            "$sign_with_osslsigncode_INFILE_NATIVE" \
+            "rel-repack/$sign_with_osslsigncode_BASENAME"
+
+        # Move the signed .exe back to rel-unpack/
+        rm -f "$sign_with_osslsigncode_INFILE_NATIVE" # avoids any read-only mode
+        mv "rel-repack/$sign_with_osslsigncode_BASENAME" "$sign_with_osslsigncode_INFILE_NATIVE"
+        chmod 555 "$sign_with_osslsigncode_INFILE_NATIVE" # make sure it is read-only; we did sign it!
+    done
 }
 
 #   Sign!
 #       TODO: Get real binary from GitHub
 case "$signingtool" in
-    jsign) sign_with_jsign               /clang64/bin/zstd.exe ;;
-    osslsigncode) sign_with_osslsigncode /clang64/bin/zstd.exe ;;
+    jsign)          sign_with_jsign ;;
+    osslsigncode)   sign_with_osslsigncode ;;
 esac
-
-rm -f "$pinfile"
 
 # Done
 finish_progress
