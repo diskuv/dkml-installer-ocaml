@@ -103,8 +103,8 @@ jobs:
           MAJMINPAT=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#-.*##; s#+.*##')
           echo "MAJMINPAT=$MAJMINPAT" >> $GITHUB_ENV
 
-          blue=$(tput setaf 4)
-          normal=$(tput sgr0)
+          blue='\033[0;34m'
+          normal='\033[0m'
           printf "%40s\n" "Semver Major.Minor.Patch = ${blue}${MAJMINPAT}${normal}"
       - name: Checkout diskuv-ocaml
         run: |
