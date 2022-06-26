@@ -66,7 +66,7 @@ on:
         default: "" # DEFAULT_DISKUV_OPAM_REPOSITORY_TAG in setup-dkml is used as default for empty strings
   push:
     branches:
-      - 'main'
+      - "main"
     tags:
       # Any push to a tag that starts with 'v'
       - v*
@@ -85,7 +85,7 @@ env:
 
 jobs:
   setup-dkml:
-    uses: 'diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@main'
+    uses: "diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@main"
     with:
       ocaml-compiler: 4.12.1
       dkml-compiler: ${{ github.event.inputs.dkml-compiler }}
@@ -103,13 +103,12 @@ jobs:
           MAJMINPAT=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#-.*##; s#+.*##')
           echo "MAJMINPAT=$MAJMINPAT" >> $GITHUB_ENV
 
-          blue='\033[0;34m'
-          normal='\033[0m'
-          printf "%40s\n" "Semver Major.Minor.Patch = ${blue}${MAJMINPAT}${normal}"
+          printf 'Semver Major.Minor.Patch = \e[1;34m%s\e[0m\n' "$MAJMINPAT"
       - name: Checkout diskuv-ocaml
         run: |
           # Shallow clone of tag
-          git clone --depth 1 https://gitlab.com/diskuv/diskuv-ocaml.git --branch v${MAJMINPAT} --single-branch || true
+          git clone https://gitlab.com/diskuv/diskuv-ocaml.git
+          git checkout "v${MAJMINPAT}" || true
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
@@ -119,13 +118,13 @@ jobs:
           | --------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
           | setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe    | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
           | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe       | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems. |
+          | unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
           | diskuv-ocaml-darwin_x86_64-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution.                                        |
           | diskuv-ocaml-linux_x86_64-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
           | diskuv-ocaml-linux_x86-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux.         |
-          | unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
-          | unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
-          | diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed executables from ...    |
-          | diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned executables                                 |
+          | diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed installers from ...     |
+          | diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
           EOF
           echo > emptyline
           if [ -e "$notes" ]; then
@@ -193,17 +192,17 @@ jobs:
       # When non-empty, instead of building the standard components from the
       # central Opam repository, use the github/gitlab development repositories
       # directly.
-      DKML_COMPONENT_STAGING_CURL:          "${{ github.event.inputs.dkml-component-curl }}"
+      DKML_COMPONENT_STAGING_CURL: "${{ github.event.inputs.dkml-component-curl }}"
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
-      DKML_COMPONENT_STAGING_OCAMLRUN:      "${{ github.event.inputs.dkml-component-ocamlrun }}"
-      DKML_COMPONENT_STAGING_OPAM:          "${{ github.event.inputs.dkml-component-opam }}"
+      DKML_COMPONENT_STAGING_OCAMLRUN: "${{ github.event.inputs.dkml-component-ocamlrun }}"
+      DKML_COMPONENT_STAGING_OPAM: "${{ github.event.inputs.dkml-component-opam }}"
       # These are not independent of dkml-install-api; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
-      DKML_INSTALL:                     "${{ github.event.inputs.dkml-install-api }}"
-      DKML_INSTALL_INSTALLER:           "${{ github.event.inputs.dkml-install-api }}"
-      DKML_INSTALL_RUNNER:              "${{ github.event.inputs.dkml-install-api }}"
-      DKML_PACKAGE_CONSOLE:             "${{ github.event.inputs.dkml-install-api }}"
-      DKML_COMPONENT_XX_CONSOLE:        "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL: "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_INSTALLER: "${{ github.event.inputs.dkml-install-api }}"
+      DKML_INSTALL_RUNNER: "${{ github.event.inputs.dkml-install-api }}"
+      DKML_PACKAGE_CONSOLE: "${{ github.event.inputs.dkml-install-api }}"
+      DKML_COMPONENT_XX_CONSOLE: "${{ github.event.inputs.dkml-install-api }}"
       # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
@@ -531,7 +530,6 @@ jobs:
       github.event.inputs.test-filter != 'no-direct-tests' &&
       !endsWith(github.ref_name, '_no_test')
     timeout-minutes: 90 # 1.5 hours
-
     # Wait for build
     needs:
       - build
@@ -558,8 +556,7 @@ jobs:
       - name: Test the installer (Windows)
         env:
           # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
-          PATH:
-            "C:\\Program Files\\PowerShell\\7;\
+          PATH: "C:\\Program Files\\PowerShell\\7;\
             C:\\ProgramData\\chocolatey\\bin;\
             C:\\Program Files (x86)\\NSIS\\;\
             C:\\tools\\zstd;\
@@ -616,7 +613,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019 ]
+        os: [windows-2019]
         dkml-host-abi:
           - windows_x86
           - windows_x86_64
