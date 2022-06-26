@@ -113,7 +113,7 @@ jobs:
         run: |
           # Shallow clone of tag
           git clone https://gitlab.com/diskuv/diskuv-ocaml.git
-          git -C diskuv-ocaml checkout "v${MAJMINPATPRE}" || true
+          git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPATPRE}" || true
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
@@ -703,8 +703,10 @@ jobs:
           _release="$(pwd)/_release"
           install -d "$_release"
 
+          # Special case: Release notes are not part of multi-ABI
+          mv dist/release-notes release-notes
+
           cd dist
-          find . -mindepth 1 -maxdepth 1 -type f # print for troubleshooting
           find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
             rsync -av $distname/ "$_release"
           done
@@ -718,7 +720,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true # becomes a real release after it is signed externally
-          body_path: dist/notes.md
+          body_path: release-notes/notes.md
           files: |
             _release/*
 
