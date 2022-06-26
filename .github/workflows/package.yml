@@ -96,19 +96,24 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Semver major.minor.patch
+      - name: Semver versions
         run: |
           # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0
           # From refs/tags/v0.4.0+something -> 0.4.0
           MAJMINPAT=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#-.*##; s#+.*##')
+          # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0-prerel91
+          # From refs/tags/v0.4.0+something -> 0.4.0
+          MAJMINPATPRE=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#\(-prerel[0-9]*\).*#\1#; s#+.*##')
           echo "MAJMINPAT=$MAJMINPAT" >> $GITHUB_ENV
+          echo "MAJMINPATPRE=$MAJMINPATPRE" >> $GITHUB_ENV
 
-          printf 'Semver Major.Minor.Patch = \e[1;34m%s\e[0m\n' "$MAJMINPAT"
+          printf 'Major.Minor.Patch = \e[1;34m%s\e[0m\n' "$MAJMINPAT"
+          printf 'Major.Minor.Patch[-Prerelease] = \e[1;34m%s\e[0m\n' "$MAJMINPATPRE"
       - name: Checkout diskuv-ocaml
         run: |
           # Shallow clone of tag
           git clone https://gitlab.com/diskuv/diskuv-ocaml.git
-          git -C diskuv-ocaml checkout "v${MAJMINPAT}" || true
+          git -C diskuv-ocaml checkout "v${MAJMINPATPRE}" || true
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
