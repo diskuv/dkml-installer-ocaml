@@ -109,11 +109,16 @@ jobs:
 
           printf 'Major.Minor.Patch = \e[1;34m%s\e[0m\n' "$MAJMINPAT"
           printf 'Major.Minor.Patch[-Prerelease] = \e[1;34m%s\e[0m\n' "$MAJMINPATPRE"
-      - name: Checkout diskuv-ocaml
+      - name: Checkout diskuv-ocaml at semver tags
         run: |
-          # Shallow clone of tag
           git clone https://gitlab.com/diskuv/diskuv-ocaml.git
-          git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPATPRE}" || true
+          if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPATPRE}"; then
+            # If there is no prerelease tag, perhaps there is a maj/min/patch tag?
+            if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPAT}"; then
+              # If there is a maj/min/patch tag, don't let next step grab notes from HEAD
+              rm -rf diskuv-ocaml
+            fi
+          fi
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
