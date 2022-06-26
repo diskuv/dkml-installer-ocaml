@@ -108,7 +108,7 @@ jobs:
         run: |
           # Shallow clone of tag
           git clone https://gitlab.com/diskuv/diskuv-ocaml.git
-          git checkout "v${MAJMINPAT}" || true
+          git -C diskuv-ocaml checkout "v${MAJMINPAT}" || true
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
