@@ -92,6 +92,53 @@ jobs:
       conf-dkml-cross-toolchain: ${{ github.event.inputs.conf-dkml-cross-toolchain || '@repository@' }}
       diskuv-opam-repository: ${{ github.event.inputs.diskuv-opam-repository }}
 
+  release-notes:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Semver major.minor.patch
+        run: |
+          # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0
+          # From refs/tags/v0.4.0+something -> 0.4.0
+          MAJMINPAT=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#-.*##; s#+.*##')
+          echo "MAJMINPAT=$MAJMINPAT" >> $GITHUB_ENV
+
+          blue=$(tput setaf 4)
+          normal=$(tput sgr0)
+          printf "%40s\n" "Semver Major.Minor.Patch = ${blue}${MAJMINPAT}${normal}"
+      - name: Checkout diskuv-ocaml
+        run: |
+          # Shallow clone of tag
+          git clone --depth 1 https://gitlab.com/diskuv/diskuv-ocaml.git --branch v${MAJMINPAT} --single-branch || true
+      - name: View release notes
+        run: |
+          notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
+          cat > footer.md <<EOF
+          ## Asset Listing
+          | Syntax                                              | Supported? | Description                                                                         |
+          | --------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
+          | setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe    | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
+          | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe       | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems. |
+          | diskuv-ocaml-darwin_x86_64-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution.                                        |
+          | diskuv-ocaml-linux_x86_64-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
+          | diskuv-ocaml-linux_x86-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux.         |
+          | unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          | diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed executables from ...    |
+          | diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned executables                                 |
+          EOF
+          echo > emptyline
+          if [ -e "$notes" ]; then
+            cat "$notes" emptyline footer.md > notes.md
+          else
+            cp footer.md notes.md
+          fi
+          cat notes.md # Just for troubleshooting
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-notes
+          path: notes.md
+
   build:
     timeout-minutes: 90 # 1.5 hours
 
@@ -636,9 +683,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # Needed for softprops/action-gh-release@v1
-    # Wait until `build` complete
+    # Wait until `build` and `release-notes` complete
     needs:
       - build
+      - release-notes
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -654,6 +702,7 @@ jobs:
           install -d "$_release"
 
           cd dist
+          find . -mindepth 1 -maxdepth 1 -type f # print for troubleshooting
           find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
             rsync -av $distname/ "$_release"
           done
@@ -667,6 +716,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true # becomes a real release after it is signed externally
+          body_path: dist/notes.md
           files: |
             _release/*
 
