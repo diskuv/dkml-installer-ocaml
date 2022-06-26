@@ -25,6 +25,10 @@
 #         and place them in the PATH
 set -euf
 
+# Testing flags
+TEST_QUICK=OFF
+TEST_BASH_ON_EXIT=OFF
+
 # Signing tool
 #   1. `osslsigncode`
 #       * This is the current tool.
@@ -44,6 +48,9 @@ set -euf
 #                    at jdk.crypto.cryptoki/sun.security.pkcs11.P11KeyStore.loadPkey(P11KeyStore.java:1374)
 #                    ... 6 more
 signingtool=osslsigncode
+
+# GitHub repository to download/upload
+GHREPO=diskuv/dkml-installer-ocaml
 
 # Set HERE to this contributors/ directory, and DIRSEP to platform dir separator
 HERE=$(dirname "$0")
@@ -145,36 +152,67 @@ if ! gh auth status; then
     gh auth login
 fi
 
+# Install unbuffer (optional)
+progress "Installing unbuffer"
+if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
+    pacman -S --needed --noconfirm expect
+fi
+
 # Find Pre-release
 progress "Finding latest release marked as Pre-release"
-gh release list -R diskuv/dkml-installer-ocaml --exclude-drafts | tee releases.txt
-echo
-RELEASE=$(awk '$2=="Pre-release"{print $1; exit}' releases.txt)
-if [ -z "$RELEASE" ]; then
+unbuffer_exe=$(command -v unbuffer || true)
+if [ -n "$unbuffer_exe" ]; then
+    # Unbuffering keeps the nice colors. Completely optional of course.
+    # But it keeps escape codes in its output, so we have to do listing twice.
+    "$unbuffer_exe" gh release list --repo "$GHREPO" --exclude-drafts
+    gh release list --repo "$GHREPO" --exclude-drafts > releases.txt
+else
+    gh release list --repo "$GHREPO" --exclude-drafts | tee releases.txt
+fi
+printf "\n" >&2
+#   Sample output:
+#       v0.4.0-prerel67                Pre-release  (v0.4.0-prerel67)  about 18 days ago
+#       v0.4.0-prerel11                Latest       (v0.4.0-prerel11)  about 1 month ago
+#   Field $1 (version)
+#   Field $2 (Pre-release, Latest, etc.)
+RELEASE_TAG=$(awk '$2="Pre-release"{print $1; exit}' releases.txt)
+if [ -z "$RELEASE_TAG" ]; then
     printf "FATAL: No release found that has been marked as Pre-release.\n" >&2
     exit 117
 fi
 #   Ask for confirmation
-read -r -s -n 1 -p "Do you want to sign release $RELEASE? (y/N) " YESNO
+read -r -s -n 1 -p "Do you want to sign release $RELEASE_TAG? (y/N) " YESNO
 case "$YESNO" in
     y | Y ) printf "YES\n\nLet's continue.\n" ;;
     *) printf "\nOK! Stopping the signing process.\n"; exit 0 ;;
 esac
 
 # Download
-progress "Downloading $RELEASE"
-install -d rel-orig
-gh release download "$RELEASE" \
-    --repo diskuv/dkml-installer-ocaml \
-    --dir rel-orig \
+progress "Downloading $RELEASE_TAG"
+install -d dl-unsigned
+
+gh release download "$RELEASE_TAG" \
+    --repo "$GHREPO" \
+    --dir dl-unsigned \
     --pattern 'setup-*.exe' \
     --pattern 'unsigned-*.exe'
 set +u # workaround bash bug with empty arrays in for loops
-EXECUTABLES=()
+UNSIGNED_EXE_NAMES=()
 while IFS='' read -r line; do
-    EXECUTABLES+=("$line")
-    printf "Found executable to sign: %s\n" "$line"
-done < <(cd rel-orig && ls -1)
+    UNSIGNED_EXE_NAMES+=("$line")
+    printf "Found executable to sign: %s\n" "$line" >&2
+done < <(cd dl-unsigned && ls -1)
+set -u
+printf "\n" >&2
+
+gh release download "$RELEASE_TAG" \
+    --repo "$GHREPO" \
+    --dir dl-sfx \
+    --pattern '*.sfx'
+set +u # workaround bash bug with empty arrays in for loops
+while IFS='' read -r line; do
+    printf "Found self-extracting executable header: %s\n" "$line" >&2
+done < <(cd dl-sfx && ls -1)
 set -u
 
 # Install 7z
@@ -183,9 +221,9 @@ if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
     pacman -S --needed --noconfirm p7zip
 fi
 
-for EXEC in "${EXECUTABLES[@]}"; do
-    progress "Unpacking $EXEC"
-    install -d "rel-unpack/$EXEC"
+for unsigned_exe_name in "${UNSIGNED_EXE_NAMES[@]}"; do
+    progress "Unpacking $unsigned_exe_name"
+    install -d "rel-unpack/$unsigned_exe_name"
     # Use 7zr (light-version, standalone) instead of 7z or 7za since
     # same executable used by dkml-install-api:installer_sfx.ml.
     #
@@ -194,7 +232,7 @@ for EXEC in "${EXECUTABLES[@]}"; do
     #   -r[-|0] : Recurse subdirectories
     #   -y : assume Yes on all queries
     #   -o{Directory} : set Output directory
-    7zr x -r -y -o"rel-unpack/$EXEC" "rel-orig/$EXEC"
+    7zr x -r -y -o"rel-unpack/$unsigned_exe_name" "dl-unsigned/$unsigned_exe_name"
 done
 
 # Get which embedded exes to sign
@@ -226,11 +264,18 @@ while IFS='' read -r line; do
     esac
 done < <(cd rel-unpack && find . -name "*.exe" -type f | sed 's#^[.]/##')
 set +u # workaround bash bug with empty arrays in for loops
-for EXEC in "${TO_SIGN[@]}"; do
-    printf "Will sign: [%s\n" "$EXEC" | sed 's#/#] #' >&2
+printf "Will sign\n" >&2
+printf "=========\n" >&2
+printf "\n" >&2
+for embedded_exe_name in "${TO_SIGN[@]}"; do
+    printf "[%s\n" "$embedded_exe_name" | sed 's#/#] #' >&2
 done
-for EXEC in "${TO_SKIP[@]}"; do
-    printf "Will skip: [%s\n" "$EXEC" | sed 's#/#] #' >&2
+printf "\n" >&2
+printf "Will skip\n" >&2
+printf "=========\n" >&2
+printf "\n" >&2
+for embedded_exe_name in "${TO_SKIP[@]}"; do
+    printf "[%s\n" "$embedded_exe_name" | sed 's#/#] #' >&2
 done
 set -u
 
@@ -238,6 +283,7 @@ set -u
 askpin() { # only used by sign_with_jsign()
     read -rsp 'Yubikey PIN: ' PINCODE
     printf "%s" "$PINCODE" > "$pinfile"
+    printf "\n" >&2
 }
 runjava() { # only used by sign_with_jsign()
     if ! java --version 2>/dev/null >/dev/null; then
@@ -268,7 +314,7 @@ runjava() { # only used by sign_with_jsign()
         java "$@"
     fi
 }
-sign_with_jsign() {
+configure_sign_with_jsign() {
     # Get jsign
     progress "Getting jsign"
     install -d jsign
@@ -277,8 +323,8 @@ sign_with_jsign() {
         jsign/jsign.jar \
         4dddbc9e56bd6e15934122f16ce652f07d2110530418196898c31600e44109b6
 
-    # Signing ...
-    progress "Signing the release"
+    # Setup signing function which needs PIN
+    progress "Setup signing procedure"
 
     #   Create pkcs11 configuration.
     #       Confer: https://docs.oracle.com/javase/8/docs/technotes/guides/security/p11guide.html#Config
@@ -299,20 +345,22 @@ EOF
     #   Ask for Yubikey PIN. Place in $pinfile_native
     askpin
 
-    #   Sign each embedded .exe
-    for sign_with_jsign_INFILE in "${TO_SIGN[@]}"; do
-        #   The actual signing. The file will be mutated
+    #   Make signing function to be used later
+    signfile() {
+        signfile_IN_NATIVE=$1
+        shift
+
+        # Sign. The file will be mutated
         PATH="$YUBICOBIN_UNIX:$PATH" runjava -Djava.security.debug=sunpkcs11 -Djava.security.debug=pkcs11keystore \
             -jar jsign/jsign.jar \
             --keystore "$pkcs11cfg_native" \
             --storetype YUBIKEY \
             --storepass "file:$pinfile_native" \
             --certfile "${HERE_NATIVE}${DIRSEP}full-chain.p7.pem" \
-            "$sign_with_jsign_INFILE"
-        rm -f "$pinfile"
-    done
+            "$signfile_IN_NATIVE"
+    }
 }
-sign_with_osslsigncode() {
+configure_sign_with_osslsigncode() {
     # Get libp11 DLLs
     progress "Getting libp11 DLLs"
     install -d libp11
@@ -363,8 +411,9 @@ sign_with_osslsigncode() {
     DIGITALSIGN_URI="pkcs11:model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=$SERIALNUM;token=YubiKey%20PIV%20%23$SERIALNUM;id=%02;object=Private%20key%20for%20Digital%20Signature;type=private"
     printf "PKCS url:\n\t%s\n" "$DIGITALSIGN_URI" >&2
 
-    # Sign each embedded executable
-    progress "Sign embedded executables"
+    # Setup signing function which needs PIN
+    progress "Setup signing procedure"
+
     #   Ask for Yubikey PIN. Place in $pinfile_native.
     #   * We should be able to use `pin-source=FILE` to say what the PIN
     #     is ... so we don't get prompted for the PIN each time we sign
@@ -381,12 +430,18 @@ sign_with_osslsigncode() {
     #     https://github.com/OpenSC/OpenSC/issues/2039 and
     #     https://github.com/OpenSC/libp11/issues/101 :(
     askpin
-    echo
+
+    #   Make signing function to be used later
     signfile() {
-        signfile_IN=$1
+        signfile_IN_NATIVE=$1
         shift
-        signfile_OUT=$1
-        shift
+
+        # osslsigncode does not mutate in-place so we use rel-unpack/ as
+        # a temporary staging area.
+        # * When signing we keep the basename of the original file in case the
+        #   basename is embedded as part of the signing.
+        signfile_BASENAME=$(basename "$signfile_IN_NATIVE")
+        signfile_TEMP="rel-repack/$signfile_BASENAME"
 
         # -comm                   = set commercial purpose (default: individual purpose)
         # -pass                   = the private key password
@@ -402,40 +457,130 @@ sign_with_osslsigncode() {
             -pkcs11engine "$pkcs11dll_mixed" \
             -pkcs11module "$YUBICOBIN_W32\\libykcs11.dll" \
             -pkcs11cert "$DIGITALSIGN_URI?pin-source=$pinfile_native" \
-            -in "$signfile_IN" \
-            -out "$signfile_OUT" \
+            -in "$signfile_IN_NATIVE" \
+            -out "$signfile_TEMP" \
             -t http://timestamp.sectigo.com
-    }
-    install -d rel-repack
-    for sign_with_osslsigncode_SFILE in "${TO_SIGN[@]}"; do
-        # Form path to embedded .exe
-        sign_with_osslsigncode_INFILE="rel-unpack/${sign_with_osslsigncode_SFILE}"
-        if [ -x /usr/bin/cygpath ]; then
-            sign_with_osslsigncode_INFILE_NATIVE=$(/usr/bin/cygpath -aw "$sign_with_osslsigncode_INFILE")
-        else
-            sign_with_osslsigncode_INFILE_NATIVE="$sign_with_osslsigncode_INFILE"
-        fi
-        sign_with_osslsigncode_BASENAME=$(basename "$sign_with_osslsigncode_INFILE")
-
-        # Sign .exe inside rel-repack/
-        printf "Signing %s ...\n" "$sign_with_osslsigncode_INFILE" >&2
-        signfile \
-            "$sign_with_osslsigncode_INFILE_NATIVE" \
-            "rel-repack/$sign_with_osslsigncode_BASENAME"
 
         # Move the signed .exe back to rel-unpack/
-        rm -f "$sign_with_osslsigncode_INFILE_NATIVE" # avoids any read-only mode
-        mv "rel-repack/$sign_with_osslsigncode_BASENAME" "$sign_with_osslsigncode_INFILE_NATIVE"
-        chmod 555 "$sign_with_osslsigncode_INFILE_NATIVE" # make sure it is read-only; we did sign it!
-    done
+        rm -f "$signfile_IN_NATIVE" # avoids any read-only mode
+        mv "$signfile_TEMP" "$signfile_IN_NATIVE"
+    }
+
+    printf "\nNOTICE:\n" >&2
+    printf "  Because of a multi-year improperly closed bug with OpenSC PIN\n" >&2
+    printf "  handling (https://github.com/OpenSC/OpenSC/issues/2039) you will\n" >&2
+    printf "  be asked for your PIN. The PIN you just entered will reduce the\n" >&2
+    printf "  amount of PIN prompts by 1/3, but 2/3 of prompts you will have\n" >&2
+    printf "  to enter manually.\n" >&2
+    printf "  We suggest:\n" >&2
+    printf "    1. Put your PIN into a text editor without auto-save like\n" >&2
+    printf "       Notepad (not Notepad++) on Windows or 'vi' on Unix.\n" >&2
+    printf "    2. Place a newline after your PIN so that the first line is\n" >&2
+    printf "       your PIN and the second line is empty.\n" >&2
+    printf "    3. Copy with Ctrl-C on Windows, Cmd-C on mac, Ctrl-Ins on Unix\n" >&2
+    printf "       the entire file (which includes the newline).\n" >&2
+    printf "    4. Paste whenever you are prompted for the PIN; it will go fast!\n" >&2
 }
 
-#   Sign!
-#       TODO: Get real binary from GitHub
+# Configure signing
+install -d rel-repack
 case "$signingtool" in
-    jsign)          sign_with_jsign ;;
-    osslsigncode)   sign_with_osslsigncode ;;
+    jsign)          configure_sign_with_jsign ;;
+    osslsigncode)   configure_sign_with_osslsigncode ;;
 esac
+
+# Sign each embedded .exe in rel-unpack/
+progress "Signing all embedded .exe files"
+for EMBEDEXE in "${TO_SIGN[@]}"; do
+    # Form path to embedded .exe
+    EMBEDEXE_INFILE="rel-unpack/${EMBEDEXE}"
+    if [ -x /usr/bin/cygpath ]; then
+        EMBEDEXE_INFILE_NATIVE=$(/usr/bin/cygpath -aw "$EMBEDEXE_INFILE")
+    else
+        EMBEDEXE_INFILE_NATIVE="$EMBEDEXE_INFILE"
+    fi
+
+    # Sign
+    printf "Signing %s ...\n" "$EMBEDEXE" >&2
+    signfile "$EMBEDEXE_INFILE_NATIVE"
+    #   make sure it is read-only; we did sign it!
+    chmod 555 "$EMBEDEXE_INFILE"
+
+    if [ "$TEST_QUICK" = ON ]; then
+        break
+    fi
+done
+
+# Re-pack contents into setup-*.exe
+#   Same process as dkml-install-api:installer_sfx.ml
+install -d dist dist7z
+SETUP_EXE_FILES=()
+set +u # workaround bash bug with empty arrays in for loops
+for unsigned_exe_name in "${UNSIGNED_EXE_NAMES[@]}"; do
+    # From unsigned-XXX-VER.exe we want:
+    # * setup-XXX-VER.exe
+    # * setup-XXX-VER.7z
+    # * XXX-7zS2.sfx
+    setup_exe_name=$(printf "%s" "$unsigned_exe_name" | sed 's/^unsigned-/setup-/')
+    setup_7z_name=$(printf "%s" "$setup_exe_name" | sed 's/.exe$/.7z/')
+    sfx_name=$(printf "%s" "$unsigned_exe_name" | sed 's/^unsigned-//; s/.exe$/.sfx/')
+
+    sfx_file=dl-sfx/"$sfx_name"
+
+    progress "Packaging $setup_exe_name"
+    # Use 7zr (light-version, standalone) instead of 7z or 7za since
+    # same executable used by dkml-install-api:installer_sfx.ml.
+    #
+    # 7za <command> [<switches>...] <archive_name> [<file_names>...]
+    #   a : Add files to archive
+    #   -bb[0-3] : set output log level
+    #   -bs{o|e|p}{0|1|2} : set output stream for output/error/progress line
+    #   -m{Parameters} : set compression Method
+    #     -mmt[N] : set number of CPU threads
+    #     -mx[N] : set compression level: -mx1 (fastest) ... -mx9 (ultra)
+    #   -y : assume Yes on all queries
+    # Clarifications:
+    #   * -bs0 is disable stdout
+    #   * DIR/* is 7z's syntax for the contents of DIR, but only with native Windows 7z.exe (not MSYS2)
+    cd "rel-unpack/$unsigned_exe_name"
+    7zr a -bb0 -bso0 -mx9 -y "$WORK/dist7z/$setup_7z_name"
+    cd "$WORK"
+    # Place .sfx in front of the body
+    setup_exe_file="dist/$setup_exe_name"
+    cat "$sfx_file" "dist7z/$setup_7z_name" > "$setup_exe_file"
+
+    # Capture for signing later
+    SETUP_EXE_FILES+=("$setup_exe_file")
+done
+set -u
+
+# Signing self-extracting setup.exe
+progress "Signing self-extracting setup.exe"
+set +u # workaround bash bug with empty arrays in for loops
+for setup_exe_file in "${SETUP_EXE_FILES[@]}"; do
+    setup_exe_file_BASENAME=$(basename "$setup_exe_file")
+    printf "Signing %s ...\n" "$setup_exe_file_BASENAME" >&2
+    signfile "$setup_exe_file"
+    #   make sure it is read-only; we did sign it!
+    chmod 555 "$setup_exe_file"
+done
+set -u
+
+# TODO: REMOVE
+if [ "$TEST_BASH_ON_EXIT" = ON ]; then
+    bash
+fi
+
+# gh release upload
+progress "Uploading release to GitHub"
+gh release upload "$RELEASE_TAG" \
+    --repo "$GHREPO" \
+    "${SETUP_EXE_FILES[@]}"
 
 # Done
 finish_progress
+
+printf "\n\n\nCongratulations!\n" >&2
+printf "Go to https://github.com/diskuv/dkml-installer-ocaml/releases/edit/%s\n" "$RELEASE_TAG" >&2
+printf "to turn off the Pre-Release flag. The release now contains signed" >&2
+printf "setup.exe binaries\n\n" >&2
