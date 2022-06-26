@@ -625,16 +625,20 @@ jobs:
   #--------
   # Release
   #--------
+  #
+  # We need Release to run even if the tests are disabled with _no_test tag
+  # or through a test-filter. That means we cannot put a dependency on
+  # the tests.
+  # With no dependency on tests, we can create a Release even if tests fail.
+  # But that is OK because the Release is just a Pre-release.
 
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: write # Needed for softprops/action-gh-release@v1
-    # Wait until `build` and `vagrant-testing` complete
+    # Wait until `build` complete
     needs:
       - build
-      - direct-testing
-      - vagrant-testing
     steps:
       - uses: actions/download-artifact@v3
         with:
