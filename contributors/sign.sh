@@ -194,7 +194,6 @@ install -d dl-unsigned
 gh release download "$RELEASE_TAG" \
     --repo "$GHREPO" \
     --dir dl-unsigned \
-    --pattern 'setup-*.exe' \
     --pattern 'unsigned-*.exe'
 set +u # workaround bash bug with empty arrays in for loops
 UNSIGNED_EXE_NAMES=()
