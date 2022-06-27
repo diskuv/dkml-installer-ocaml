@@ -246,6 +246,11 @@ while IFS='' read -r line; do
             # Microsoft already signed these Visual Studio redistributables
             TO_SKIP+=("$line")
             ;;
+        *.bc.exe)
+            # Signing corrupts the OCaml magic number (Caml1999X029) that is
+            # validated by ocamlrun.exe
+            TO_SKIP+=("$line")
+            ;;
         curl.exe)
             # Signed by https://curl.se/
             TO_SKIP+=("$line")
