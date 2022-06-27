@@ -138,7 +138,8 @@ jobs:
           EOF
           echo > emptyline
           if [ -e "$notes" ]; then
-            cat "$notes" emptyline footer.md > notes.md
+            RELEASEDATE=$(date -u +%Y-%m-%d)
+            cat "$notes" emptyline footer.md | sed "s/@@YYYYMMDD@@/$RELEASEDATE/" > notes.md
           else
             cp footer.md notes.md
           fi

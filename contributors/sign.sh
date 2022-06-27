@@ -582,5 +582,5 @@ finish_progress
 
 printf "\n\n\nCongratulations!\n" >&2
 printf "Go to https://github.com/diskuv/dkml-installer-ocaml/releases/edit/%s\n" "$RELEASE_TAG" >&2
-printf "to turn off the Pre-Release flag. The release now contains signed" >&2
+printf "to turn off the Pre-Release flag. The release now contains signed\n" >&2
 printf "setup.exe binaries\n\n" >&2
