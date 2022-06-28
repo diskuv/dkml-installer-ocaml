@@ -32,7 +32,15 @@ Briefly review the following:
 
 > You need to **stay at your computer** and press "Yes" for any Windows security popups;
 > after the installer finishes with two programs (``Visual Studio Installer``
-> and ``Git for Windows``) you can leave your computer for the remaining hour.
+> and ``Git for Windows``) you can leave your computer for the remaining one (1) hour.
+
+> First time installations may get a error printed in red. If you see it, you will have
+> to reboot your computer and then restart your installation so that Visual Studio
+> may complete. The error will say:
+> 
+> ```text
+> FIRST you should reboot and try again
+> ```
 
 > You will be asked to accept a certificate from
 > `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
