@@ -30,16 +30,15 @@ For news about Diskuv OCaml,
 
 Briefly review the following:
 
+> You need to **stay at your computer** and press "Yes" for any Windows security popups;
+> after the installer finishes with two programs (``Visual Studio Installer``
+> and ``Git for Windows``) you can leave your computer for the remaining hour.
+
 > You will be asked to accept a certificate from
 > `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
 > that was issued by
 > `Certum Code Signing CA SHA2` if your machine does not already have a
 > Visual Studio compatible with DKML.
-
-> Depending on your Windows "User Account Control" settings your machine may prompt to click "Yes"
-> to install ``Visual Studio Installer`` and ``Git for Windows``; you will only be prompted if you or an
-> Administator has not installed those two programs already. The rest of the installation is completely
-> click-free but will take **about one (1) hour**.
 
 Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.3.3/setup-diskuv-ocaml-windows_x86_64-0.3.3.exe).
 
