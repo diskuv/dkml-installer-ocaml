@@ -1,18 +1,53 @@
-# DKML Installer for OCaml
+# DKML Installer for Diskuv OCaml
 
-The DKML Installer for OCaml generates and distributes installers for OCaml.
+The Diskuv OCaml distribution is an open-source set of software
+that supports software development in pure OCaml. The distribution's
+strengths are its:
+* full compatibility with OCaml standards like Opam, Dune and ocamlfind
+* laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
+  and Xcode
+* ease-of-use through simplified installers and simple productivity commands; high school students should be able to use it
+* security through reproducibility, versioning and from-source builds
 
-## Releases
+These alternatives may be better depending on your use case:
+* Developing in a Javascript first environment? Have a look at [Esy and Reason](https://esy.sh/)
+* Developing operating system kernels? Have a look at [Mirage OS](https://mirage.io/)
+* Developing Linux server software like web servers? Plain old [OCaml on Debian, etc.](https://ocaml.org/docs/up-and-running) works well
+* Writing compilers or proofs? Plain old OCaml works really well
+* Wanting quick installations? *Use anything but Diskuv OCaml!* Diskuv OCaml will conduct
+  from-source builds unless it can guarantee (and code sign) the binaries are
+  reproducible. Today that means a lot of compiling.
 
-*When ready, this paragraph will be changed to a link to the latest installer.*
+The DKML Installer for OCaml generates and distributes installers for 
+the Diskuv OCaml distribution. Windows is ready today; macOS will be available soon.
+
+For news about Diskuv OCaml, 
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/diskuv.svg?style=social&label=Follow%20%40diskuv)](https://twitter.com/diskuv) on Twitter.
+
+## Installing
+
+**Windows user?**
+
+Run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.3.3/setup-diskuv-ocaml-windows_x86_64-0.3.3.exe).
 
 > You will be asked to accept a certificate from
 > `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
 > that was issued by
 > `Certum Code Signing CA SHA2` if your machine does not already have a
-> compatible Visual Studio.
+> Visual Studio compatible with DKML.
 
-## How it works
+The full set of releases is at https://github.com/diskuv/dkml-installer-ocaml/releases
+
+## Sponsor
+
+<a href="https://ocaml-sf.org">
+<img align="left" alt="OCSF logo" src="https://ocaml-sf.org/assets/ocsf_logo.svg"/>
+</a>
+Thanks to the <a href="https://ocaml-sf.org">OCaml Software Foundation</a>
+for economic support to the development of Diskuv OCaml.
+<p/>
+
+## How the installer is built
 
 We use the [dkml-install-api](https://diskuv.github.io/dkml-install-api/index.html)
 to generate installers from the following Opam packages:
@@ -53,11 +88,3 @@ component that you would like to get distributed.
 | Installer packages             |                | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml)                                          |
 | Installer syntax check         |                | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)                                                      |
 | gitlab.com/diskuv/diskuv-ocaml | v0.4.0-prerel19 | [![gitlab.com/diskuv/diskuv-ocaml v0.4.0-prerel19 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.0-prerel19/pipeline.svg "legacy diskuv-ocaml v0.4.0-prerel19")](https://gitlab.com/diskuv/diskuv-ocaml/-/commits/v0.4.0-prerel19) |
-
-## Sponsor
-
-<a href="https://ocaml-sf.org">
-<img align="left" alt="OCSF logo" src="https://ocaml-sf.org/assets/ocsf_logo.svg"/>
-</a>
-Thanks to the <a href="https://ocaml-sf.org">OCaml Software Foundation</a>
-for economic support to the development of Diskuv OCaml.
