@@ -39,7 +39,7 @@ Briefly review the following:
 > Depending on your Windows "User Account Control" settings your machine may prompt to click "Yes"
 > to install ``Visual Studio Installer`` and ``Git for Windows``; you will only be prompted if you or an
 > Administator has not installed those two programs already. The rest of the installation is completely
-> click-free.
+> click-free but will take **about one (1) hour**.
 
 Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.3.3/setup-diskuv-ocaml-windows_x86_64-0.3.3.exe).
 
