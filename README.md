@@ -31,8 +31,8 @@ For news about Diskuv OCaml,
 Briefly review the following:
 
 > You need to **stay at your computer** and press "Yes" for any Windows security popups;
-> after the DKML installer finishes with two programs (``Visual Studio Installer``
-> and ``Git for Windows``) you can leave your computer for the remaining one (1) hour.
+> after the DKML installer finishes with two programs (`Visual Studio Installer`
+> and `Git for Windows`) you can leave your computer for the remaining one (1) hour.
 
 > First time installations may get a notification printed in red. If you see it, reboot your
 > computer and then restart your installation so that Visual Studio Installer
