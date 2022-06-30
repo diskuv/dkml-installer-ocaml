@@ -31,22 +31,23 @@ For news about Diskuv OCaml,
 Briefly review the following:
 
 > You need to **stay at your computer** and press "Yes" for any Windows security popups;
-> after the installer finishes with two programs (``Visual Studio Installer``
+> after the DKML installer finishes with two programs (``Visual Studio Installer``
 > and ``Git for Windows``) you can leave your computer for the remaining one (1) hour.
 
-> First time installations may get a error printed in red. If you see it, you will have
-> to reboot your computer and then restart your installation so that Visual Studio
-> may complete. The error will say:
+> First time installations may get a notification printed in red. If you see it, reboot your
+> computer and then restart your installation so that Visual Studio Installer
+> can complete. The notification looks like:
 > 
-> ```text
-> FATAL [118acf2a]. The machine needs rebooting.
+> ```diff
+> - FATAL [118acf2a]. The machine needs rebooting.
+> - ...
+> - >>> The machine needs rebooting. <<<
 > ```
 
-> You will be asked to accept a certificate from
+> You may be asked to accept a certificate from
 > `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
 > that was issued by
-> `Certum Code Signing CA SHA2` if your machine does not already have a
-> Visual Studio compatible with DKML.
+> `Certum Code Signing CA SHA2`.
 
 Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.3.3/setup-diskuv-ocaml-windows_x86_64-0.3.3.exe).
 
