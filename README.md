@@ -51,7 +51,15 @@ Briefly review the following:
 
 Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.3.3/setup-diskuv-ocaml-windows_x86_64-0.3.3.exe).
 
+Now that your install is completed, you can read the
+[Install is done! What next?](https://diskuv.gitlab.io/diskuv-ocaml/#install-is-done-what-next)
+documentation.
+
+---
+
 The full set of releases is at https://github.com/diskuv/dkml-installer-ocaml/releases
+
+The full documentation is at https://diskuv.gitlab.io/diskuv-ocaml
 
 ## Sponsor
 
