@@ -39,7 +39,7 @@ Briefly review the following:
 > may complete. The error will say:
 > 
 > ```text
-> FIRST you should reboot and try again
+> FATAL [118acf2a]. The machine needs rebooting.
 > ```
 
 > You will be asked to accept a certificate from
