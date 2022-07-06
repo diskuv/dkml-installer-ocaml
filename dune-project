@@ -47,5 +47,5 @@
   (ocaml                                  (= 4.12.1))
   (dkml-component-network-ocamlcompiler   (= 4.12.1))
   (dkml-install-installer                 (>= 0.1.0))
-  (dkml-package-console                   (>= 0.1.0))
+  (dkml-package-console                   (and (>= 0.1.0) (= :os win32)))
   (alcotest                               (and (>= 1.4.0) :with-test))))
