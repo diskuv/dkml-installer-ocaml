@@ -213,7 +213,6 @@ jobs:
       DKML_INSTALL_INSTALLER: "${{ github.event.inputs.dkml-install-api }}"
       DKML_INSTALL_RUNNER: "${{ github.event.inputs.dkml-install-api }}"
       DKML_PACKAGE_CONSOLE: "${{ github.event.inputs.dkml-install-api }}"
-      DKML_COMPONENT_XX_CONSOLE: "${{ github.event.inputs.dkml-install-api }}"
       # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
@@ -369,20 +368,6 @@ jobs:
       - name: Pin dkml-package-console to checkout instead of Opam repository
         if: ${{ env.DKML_PACKAGE_CONSOLE != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-package-console .ci/g/dkml-package-console
-
-      #  dkml-component-xx-console
-
-      - name: Checkout dkml-component-xx-console
-        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/dkml-install-api
-          path: .ci/g/dkml-component-xx-console
-          ref: ${{ env.DKML_COMPONENT_XX_CONSOLE }} # empty is no `ref`, which is default branch
-
-      - name: Pin dkml-component-xx-console to checkout instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
-        run: opamrun pin add --yes --no-action dkml-component-xx-console .ci/g/dkml-component-xx-console
 
       # dkml-component-staging-curl
 
