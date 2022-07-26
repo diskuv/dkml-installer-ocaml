@@ -45,7 +45,7 @@
   ; Only patch in Diskuv repository is for v0.14.1. Need to upstream fix the problem.
   (ppx_expect                             (= v0.14.1))  
   (ocaml                                  (= 4.12.1))
-  (dkml-component-network-ocamlcompiler   (= 4.12.1))
+  (dkml-component-network-ocamlcompiler   (and (>= 4.12.1~) (< 4.12.2~)))
   (dkml-install-installer                 (>= 0.1.0))
   (dkml-package-console                   (and (>= 0.1.0) (= :os win32)))
   (alcotest                               (and (>= 1.4.0) :with-test))))
