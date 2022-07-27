@@ -22,7 +22,7 @@ on:
         type: string
         description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
         required: false
-        default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       dkml-compiler:
         type: string
         description: "Git branch, tag or commit for dkml-base-compiler"
@@ -57,7 +57,7 @@ on:
         type: string
         description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
         required: false
-        default: "@repository@" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
       diskuv-opam-repository:
         # Used by all_setup_opam_repositories.sh
         type: string
