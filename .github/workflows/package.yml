@@ -207,6 +207,7 @@ jobs:
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
       DKML_COMPONENT_STAGING_OCAMLRUN: "${{ github.event.inputs.dkml-component-ocamlrun }}"
       DKML_COMPONENT_STAGING_OPAM: "${{ github.event.inputs.dkml-component-opam }}"
+      DKML_COMPONENT_XX_CONSOLE: ""
       # These are not independent of dkml-install-api; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_INSTALL: "${{ github.event.inputs.dkml-install-api }}"
@@ -424,6 +425,20 @@ jobs:
       - name: Pin dkml-component-offline-unixutils to checkout instead of Opam repository
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
+
+      # dkml-component-xx-console
+
+      - name: Checkout dkml-component-xx-console
+        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
+        uses: actions/checkout@v3
+        with:
+          repository: diskuv/dkml-component-console
+          path: .ci/g/dkml-component-xx-console
+          ref: ${{ env.DKML_COMPONENT_XX_CONSOLE }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-xx-console to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
+        run: opamrun pin add --yes --no-action dkml-component-xx-console .ci/g/dkml-component-xx-console
 
       # dkml-option-vcpkg (always checkout until in repository)
 
