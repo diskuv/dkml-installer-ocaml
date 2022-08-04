@@ -502,14 +502,18 @@ jobs:
           install -d dist
           case "${{ matrix.dkml-host-abi }}" in
             linux_*)
-              opamrun exec -- "$_share/t/i/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist/i -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/i-bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
+              opamrun exec -- "$_share"/t/u-bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- "$_share/t/i/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist/i -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/i-bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/u-bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}".sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.sfx" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "i-unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "u-unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "i-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.sfx" -exec install {} dist/ \;
+              opamrun exec -- find "$_share"/t -maxdepth 1 -name "u-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.sfx" -exec install {} dist/ \;
               ;;
           esac
 
@@ -608,7 +612,7 @@ jobs:
           # (Choco best practices: https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide)
           choco upgrade git -y --no-progress --version="'2.36.1'"
 
-          $setups = Get-ChildItem -Path dist -Filter "unsigned-*.exe"
+          $setups = Get-ChildItem -Path dist -Filter "i-unsigned-*.exe"
           foreach ($setup in $setups)
           {
             Write-Host "Running $($setup.FullName) ..."
@@ -626,6 +630,14 @@ jobs:
 
             & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0\usr\bin\with-dkml.exe" pacman -Q
             if ($LastExitCode -ne 0) { throw "pacman -Q failed! Exited with $LastExitCode" }
+          }
+
+          $uninstalls = Get-ChildItem -Path dist -Filter "u-unsigned-*.exe"
+          foreach ($uninstall in $uninstalls)
+          {
+            Write-Host "Running $($uninstall.FullName) ..."
+            & $uninstall.FullName -v -v --color=always
+            if ($LastExitCode -ne 0) { throw "uninstall failed! Exited with $LastExitCode" }
           }
 
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
@@ -683,8 +695,9 @@ jobs:
 
           awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
 
-          # Move artifact into the Vagrant filesystem as "setup.exe"
-          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          # Move artifacts into the Vagrant filesystem as "setup.exe" and "uninstall.exe"
+          mv dist/i-unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          mv dist/u-unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
 
           cd vagrant/win32
           vagrant up "${{ matrix.dkml-host-abi }}"

@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Check Markdown links
+    - name: Check Markdown links but expect setup.exe to be missing until contributors/sign.sh run
       uses: gaurav-nelson/github-action-markdown-link-check@v1
       with:
         config-file: '.github/workflows/syntax/mlc_config.json'
