@@ -5,13 +5,14 @@
 (executable (name discover) (libraries dune.configurator bos fpath)
  (modules discover))
 
-(rule (targets admin-link-flags.sexp console-link-flags.sexp)
+(rule
+ (targets admin-link-flags.sexp user-link-flags.sexp console-link-flags.sexp)
  (deps (:discover discover.exe) entry-application.manifest
   entry.assembly.manifest)
  (action (run %{discover})))
 
 (executable (public_name dkml-install-user-runner) (name runner_user)
- (modules runner_user)
+ (modules runner_user) (ocamlopt_flags (:include user-link-flags.sexp))
  (libraries dkml-install-runner.user dkml-component-network-ocamlcompiler
   dkml-component-network-unixutils dkml-component-staging-curl
   dkml-component-staging-ocamlrun dkml-component-staging-opam32

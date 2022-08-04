@@ -16,7 +16,7 @@ $windowskit = with-dkml sh -c 'command -v mt | cygpath -aw -f -' | Split-Path
 
 # Create installer for 64-bit Windows
 $old = $env:PATH ; $env:PATH += ";$windowskit" ; with-dkml rm -rf _build/t _build/w ; with-dkml install -d _build/t _build/w ; _build/install/default/bin/dkml-install-create-installers.exe `
-    --program-version 0.4.0 --abi=windows_x86_64 `
+    --program-version 0.4.0 --abi=windows_x86_64 --component network-ocamlcompiler`
     --work-dir _build/w --target-dir _build/t `
     --runner-admin-exe _build/install/default/bin/dkml-install-admin-runner.exe `
     --runner-user-exe _build/install/default/bin/dkml-install-user-runner.exe `

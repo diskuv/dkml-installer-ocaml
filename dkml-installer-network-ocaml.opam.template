@@ -11,6 +11,8 @@ install: [
     "_build/install/default/bin/dkml-install-create-installers%{exe}%"
     "--program-version"
     version
+    "--component"
+    "network-ocamlcompiler"
 
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
     # corresponds to the build environments of GitHub workflow setup-dkml.yml.

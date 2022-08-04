@@ -124,17 +124,20 @@ jobs:
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
           cat > footer.md <<EOF
           ## Asset Listing
-          | Syntax                                              | Supported? | Description                                                                         |
-          | --------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
-          | setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe    | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
-          | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe       | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems. |
-          | unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
-          | unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
-          | diskuv-ocaml-darwin_x86_64-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution.                                        |
-          | diskuv-ocaml-linux_x86_64-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
-          | diskuv-ocaml-linux_x86-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux.         |
-          | diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed installers from ...     |
-          | diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
+          | Syntax                                                | Supported? | Description                                                                         |
+          | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
+          | setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
+          | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems. |
+          | uninstall-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you.              |
+          | uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe     | Partial    | 32-bit OCaml distribution uninstaller.                                              |
+          | i-unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | i-unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          | i-diskuv-ocaml-darwin_x86_64-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution.                                        |
+          | i-diskuv-ocaml-linux_x86_64-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
+          | i-diskuv-ocaml-linux_x86-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux.         |
+          | i-diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed installers from ...     |
+          | i-diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
+          | u-*                                                   | Yes        | Uninstallers for all the above                                                      |
           EOF
           echo > emptyline
           if [ -e "$notes" ]; then
@@ -216,6 +219,7 @@ jobs:
       DKML_PACKAGE_CONSOLE: "${{ github.event.inputs.dkml-install-api }}"
       # These are not independent of dkml-component-enduser-ocamlcompiler; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
+      DKML_COMPONENT_COMMON_UNIXUTILS:  "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       DKML_COMPONENT_STAGING_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       DKML_COMPONENT_NETWORK_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
       DKML_COMPONENT_OFFLINE_UNIXUTILS: "${{ github.event.inputs.dkml-component-enduser-unixutils }}"
@@ -384,6 +388,20 @@ jobs:
         if: ${{ env.DKML_COMPONENT_STAGING_CURL != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-component-staging-curl .ci/g/dkml-component-staging-curl
 
+      # dkml-component-common-unixutils
+
+      - name: Checkout dkml-component-common-unixutils
+        if: ${{ env.DKML_COMPONENT_COMMON_UNIXUTILS != '@repository@' }}
+        uses: actions/checkout@v3
+        with:
+          repository: diskuv/dkml-component-unixutils
+          path: .ci/g/dkml-component-common-unixutils
+          ref: ${{ env.DKML_COMPONENT_COMMON_UNIXUTILS }} # empty is no `ref`, which is default branch
+
+      - name: Pin dkml-component-common-unixutils to checkout instead of Opam repository
+        if: ${{ env.DKML_COMPONENT_COMMON_UNIXUTILS != '@repository@' }}
+        run: opamrun pin add --yes --no-action dkml-component-common-unixutils .ci/g/dkml-component-common-unixutils
+
       # dkml-component-staging-unixutils
 
       - name: Checkout dkml-component-staging-unixutils
@@ -484,10 +502,10 @@ jobs:
           install -d dist
           case "${{ matrix.dkml-host-abi }}" in
             linux_*)
-              opamrun exec -- "$_share/t/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist -e .tar.gz tar --gzip
+              opamrun exec -- "$_share/t/i/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist/i -e .tar.gz tar --gzip
               ;;
             darwin*)
-              opamrun exec -- "$_share/t/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share/t/i/bundle-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}.sh" -o dist/i -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
               opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-*.exe" -exec install {} dist/ \;
@@ -536,10 +554,12 @@ jobs:
   #   Mitigation: Pre-install Git for Windows from Chocolatey. Also Vagrant still
   #   tests the Git installer successfully.
   direct-testing:
-    if: |
-      github.event.inputs.test-filter != 'no-tests' &&
-      github.event.inputs.test-filter != 'no-direct-tests' &&
-      !endsWith(github.ref_name, '_no_test')
+    # Disabled until "Tricky Issues" is fixed
+    if: false
+    # if: |
+    #   github.event.inputs.test-filter != 'no-tests' &&
+    #   github.event.inputs.test-filter != 'no-direct-tests' &&
+    #   !endsWith(github.ref_name, '_no_test')
     timeout-minutes: 90 # 1.5 hours
     # Wait for build
     needs:
