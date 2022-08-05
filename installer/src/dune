@@ -1,3 +1,9 @@
+(rule
+ (deps assets/32x32-win32-icon.ico)
+ (target assets.ml)
+ (action
+  (run ocaml-crunch -m plain -o %{target} assets/)))
+
 (library
  (name private_common)
  (libraries dkml-package-console.common))

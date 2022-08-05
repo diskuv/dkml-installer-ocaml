@@ -48,4 +48,5 @@
   (dkml-component-network-ocamlcompiler   (and (>= 4.12.1~) (< 4.12.2~)))
   (dkml-install-installer                 (>= 0.2.0))
   (dkml-package-console                   (>= 0.2.0))
+  (crunch                                 (>= 3.2.0))
   (alcotest                               (and (>= 1.4.0) :with-test))))

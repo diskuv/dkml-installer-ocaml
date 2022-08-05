@@ -73,13 +73,19 @@ Write-Host "Done tests."
 # ========================
 # START stats
 
+#   ex. 1463802570
+$EstimatedSizeB = (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
 #   ex. 1429494.69726563 (1.4 GB)
-$EstimatedSizeKb = (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1KB
+$EstimatedSizeKb = $EstimatedSizeB / 1KB
+#   ex. estimated_byte_size_opt=Some 1463802570
+Write-Host ("estimated_byte_size_opt=Some {0}L" -f $EstimatedSizeB)
 #   ex. EstimatedSize=1,429,494.70 KB
 Write-Host ("EstimatedSize={0:N2} KB" -f $EstimatedSizeKb)
 #   ex. 0015cff6
 $EstimatedSizeDwordKb = ("{0:x}" -f [int]$EstimatedSizeKb).PadLeft(8, "0")
-Set-Content -Path "C:\vagrant\test_installation.t\estimatedsize.$SystemLocale.txt" -Value "`"EstimatedSize`"=dword:$EstimatedSizeDwordKb" -NoNewline -Encoding Ascii
+Set-Content -Path "C:\vagrant\test_installation.t\estimatedsize.$SystemLocale.txt" `
+  -Value "estimated_byte_size_opt=Some ${EstimatedSizeB}L`n`"EstimatedSize`"=dword:$EstimatedSizeDwordKb" `
+  -NoNewline -Encoding Ascii
 
 # END stats
 # ========================
