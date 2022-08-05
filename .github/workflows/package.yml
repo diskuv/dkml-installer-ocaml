@@ -706,6 +706,10 @@ jobs:
         run: |
           set -x ; EXITC=$(awk 'NF>0{print $1}' vagrant/win32/test_installation.t/exitcode.en-US.txt) ; if [ ! "$EXITC" = 0 ]; then echo "FATAL: Vagrant test_installation.t FAILED with exit code $EXITC"; exit 1; fi
 
+      - name: Get EstimatedSize= for Windows registry
+        run: |
+          cat vagrant/win32/test_installation.t/estimatedsize.en-US.txt
+
       - name: Check playground creation
         run: |
           set -x ; find vagrant/win32/playground ; if [ ! -e vagrant/win32/playground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant playground creation FAILED"; exit 1; fi

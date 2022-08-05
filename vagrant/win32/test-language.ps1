@@ -71,6 +71,20 @@ Write-Host "Done tests."
 # ========================
 
 # ========================
+# START stats
+
+#   ex. 1429494.69726563 (1.4 GB)
+$EstimatedSizeKb = (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum / 1KB
+#   ex. EstimatedSize=1,429,494.70 KB
+Write-Host ("EstimatedSize={0:N2} KB" -f $EstimatedSizeKb)
+#   ex. 0015cff6
+$EstimatedSizeDwordKb = ("{0:x}" -f [int]$EstimatedSizeKb).PadLeft(8, "0")
+Set-Content -Path "C:\vagrant\test_installation.t\estimatedsize.$SystemLocale.txt" -Value "`"EstimatedSize`"=dword:$EstimatedSizeDwordKb" -NoNewline -Encoding Ascii
+
+# END stats
+# ========================
+
+# ========================
 # START uninstaller
 
 if (Test-Path $HereDir\uninstall.exe) {
