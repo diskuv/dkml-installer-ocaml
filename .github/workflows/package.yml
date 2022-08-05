@@ -127,17 +127,17 @@ jobs:
           | Syntax                                                | Supported? | Description                                                                         |
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
           | setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
-          | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems. |
-          | uninstall-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you.              |
-          | uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe     | Partial    | 32-bit OCaml distribution uninstaller.                                              |
-          | i-unsigned-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
-          | i-unsigned-diskuv-ocaml-windows_x86-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
-          | i-diskuv-ocaml-darwin_x86_64-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution.                                        |
-          | i-diskuv-ocaml-linux_x86_64-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
-          | i-diskuv-ocaml-linux_x86-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux.         |
-          | i-diskuv-ocaml-windows_x86-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed installers from ...     |
-          | i-diskuv-ocaml-windows_x86_64-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
-          | u-*                                                   | Yes        | Uninstallers for all the above                                                      |
+          | setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
+          | uninstall-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
+          | uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe     | Partial    | 32-bit OCaml distribution uninstaller                                               |
+          | unsigned-diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.exe | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | unsigned-diskuv-ocaml-windows_x86-i-$MAJMINPAT.exe    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          | diskuv-ocaml-darwin_x86_64-i-$MAJMINPAT.tar.gz        | No         | Unsigned macOS on Intel binary distribution                                         |
+          | diskuv-ocaml-linux_x86_64-i-$MAJMINPAT.tar.gz         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
+          | diskuv-ocaml-linux_x86-i-$MAJMINPAT.tar.gz            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux          |
+          | diskuv-ocaml-windows_x86-i-$MAJMINPAT.sfx             | No         | Self-extracting executable header used when creating signed installers from ...     |
+          | diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.sfx          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
+          | *-u-$MAJMINPAT.*                                      | No         | Uninstallers for all the above                                                      |
           EOF
           echo > emptyline
           if [ -e "$notes" ]; then
