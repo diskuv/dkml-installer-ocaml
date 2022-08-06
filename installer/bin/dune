@@ -3,7 +3,8 @@
   create_installers.ml
   discover.ml
   entry_assembly_manifest.ml
-  entry_main.ml
+  entry_install.ml
+  entry_uninstall.ml
   entry-application.manifest
   package_setup.ml
   package_uninstaller.ml
@@ -19,7 +20,8 @@
   create_installers.ml
   discover.ml
   entry_assembly_manifest.ml
-  entry_main.ml
+  entry_install.ml
+  entry_uninstall.ml
   entry-application.manifest
   package_setup.ml
   package_uninstaller.ml

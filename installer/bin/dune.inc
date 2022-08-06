@@ -37,13 +37,23 @@
   dkml-component-staging-unixutils)
  (modules create_installers))
 
-(executable (public_name dkml-install-package-entry) (name entry_main)
+(executable (public_name dkml-install-package-install) (name entry_install)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
   dkml-component-staging-curl dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils)
- (modules entry_main) (ocamlopt_flags (:include console-link-flags.sexp)))
+ (modules entry_install) (ocamlopt_flags (:include console-link-flags.sexp)))
+
+(executable (public_name dkml-install-package-uninstall)
+ (name entry_uninstall)
+ (libraries dkml-package-console.entry cmdliner private_common
+  dkml-component-network-ocamlcompiler dkml-component-network-unixutils
+  dkml-component-staging-curl dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils)
+ (modules entry_uninstall)
+ (ocamlopt_flags (:include console-link-flags.sexp)))
 
 (executable (name entry_assembly_manifest)
  (libraries dkml-package-console.common dune-build-info fmt)

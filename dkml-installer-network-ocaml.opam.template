@@ -33,8 +33,10 @@ install: [
     "--runner-user-exe"
     "_build/install/$(dune-context)/bin/dkml-install-user-runner%{exe}%"
 
-    "--packager-entry-exe"
-    "_build/install/$(dune-context)/bin/dkml-install-package-entry%{exe}%"
+    "--packager-install-exe"
+    "_build/install/$(dune-context)/bin/dkml-install-package-install%{exe}%"
+    "--packager-uninstall-exe"
+    "_build/install/$(dune-context)/bin/dkml-install-package-uninstall%{exe}%"
     "--packager-setup-bytecode"
     "_build/install/$(dune-context)/bin/dkml-install-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"
