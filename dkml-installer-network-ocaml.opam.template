@@ -9,6 +9,8 @@ install: [
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
     "_build/install/default/bin/dkml-install-create-installers%{exe}%"
+    #   Debug logs
+    "-vv"
     "--program-version"
     version
     "--component"
