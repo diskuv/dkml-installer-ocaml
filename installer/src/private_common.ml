@@ -38,4 +38,7 @@ let program_info =
      *)
     estimated_byte_size_opt = Some 1429494_000L;
     windows_language_code_id_opt = Some 0x00000409;
+    (* 32bit is false until https://github.com/diskuv/dkml-installer-ocaml/issues/5 resolved *)
+    embeds_32bit_uninstaller = false;
+    embeds_64bit_uninstaller = true;
   }

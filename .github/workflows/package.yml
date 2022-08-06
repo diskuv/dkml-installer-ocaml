@@ -123,6 +123,16 @@ jobs:
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
           cat > footer.md <<EOF
+          ## Other Known Issues
+
+          * The 32-bit installer does not contain a uninstaller (it is currently
+            too big to fit inside), so the 32-bit installer can only be uninstalled by
+            downloading and running
+            `uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe`. You will not
+            see "Diskuv OCaml" in the 'Add or remove programs' section
+            (Apps > Installed Apps on newer Windows machines) of the
+            Control Panel.
+
           ## Asset Listing
           | Syntax                                                | Supported? | Description                                                                         |
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
