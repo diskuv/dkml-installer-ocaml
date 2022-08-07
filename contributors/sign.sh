@@ -351,8 +351,15 @@ EOF
 
     #   Make signing function to be used later
     signfile() {
-        signfile_IN_NATIVE=$1
+        signfile_IN=$1
         shift
+
+        # Make absolute Windows path
+        if [ -x /usr/bin/cygpath ]; then
+            signfile_IN_NATIVE=$(/usr/bin/cygpath -aw "$signfile_IN")
+        else
+            signfile_IN_NATIVE=$signfile_IN
+        fi
 
         # Sign. The file will be mutated
         PATH="$YUBICOBIN_UNIX:$PATH" runjava -Djava.security.debug=sunpkcs11 -Djava.security.debug=pkcs11keystore \
@@ -437,8 +444,15 @@ configure_sign_with_osslsigncode() {
 
     #   Make signing function to be used later
     signfile() {
-        signfile_IN_NATIVE=$1
+        signfile_IN=$1
         shift
+
+        # Make absolute Windows path
+        if [ -x /usr/bin/cygpath ]; then
+            signfile_IN_NATIVE=$(/usr/bin/cygpath -aw "$signfile_IN")
+        else
+            signfile_IN_NATIVE=$signfile_IN
+        fi
 
         # osslsigncode does not mutate in-place so we use rel-unpack/ as
         # a temporary staging area.
@@ -484,6 +498,11 @@ configure_sign_with_osslsigncode() {
     printf "    3. Copy with Ctrl-C on Windows, Cmd-C on mac, Ctrl-Ins on Unix\n" >&2
     printf "       the entire file (which includes the newline).\n" >&2
     printf "    4. Paste whenever you are prompted for the PIN; it will go fast!\n" >&2
+    printf "\n" >&2
+    #   shellcheck disable=SC2034
+    read -r -s -n 1 -p "Continue by pressing any key ... " ANYKEY
+    echo
+    printf "\n" >&2
 }
 
 # Configure signing
@@ -515,23 +534,42 @@ for EMBEDEXE in "${TO_SIGN[@]}"; do
     fi
 done
 
-# Re-pack contents into setup-*.exe
-#   Same process as dkml-install-api:installer_sfx.ml
+# Make directories
 install -d dist dist7z
+
+# Re-pack contents into setup-*.exe and uninstall-*.exe
+#   Same process as dkml-install-api:installer_sfx.ml
 SETUP_EXE_FILES=()
+UNINSTALL_EXE_FILES=()
 set +u # workaround bash bug with empty arrays in for loops
 for unsigned_exe_name in "${UNSIGNED_EXE_NAMES[@]}"; do
-    # From unsigned-XXX-VER.exe we want:
-    # * setup-XXX-VER.exe
-    # * setup-XXX-VER.7z
-    # * XXX-7zS2.sfx
-    setup_exe_name=$(printf "%s" "$unsigned_exe_name" | sed 's/^unsigned-/setup-/')
-    setup_7z_name=$(printf "%s" "$setup_exe_name" | sed 's/.exe$/.7z/')
+    # From names of unsigned-XXX-i-VER.exe and unsigned-XXX-u-VER.exe we want:
+    # * setup-XXX-VER.exe and uninstall-XXX-VER.exe
+    # * setup-XXX-VER.7z and uninstall-XXX-VER.7z
+    # * XXX-i-7zS2.sfx and XXX-u-7zS2.sfx
+    case $unsigned_exe_name in
+        unsigned-*-windows_x86-i-*|unsigned-*-windows_x86_64-i-*|unsigned-*-windows_arm64-i-*)
+            packaged_exe_name=$(printf "%s" "$unsigned_exe_name" | sed -E 's/^unsigned-/setup-/; s/windows_(x86|x86_64|arm64)-i/windows_\1/')
+            packaged_exe_absfile="$WORK/dist/$packaged_exe_name"
+            # Capture for signing later
+            SETUP_EXE_FILES+=("$packaged_exe_absfile")
+            ;;
+        unsigned-*-windows_x86-u-*|unsigned-*-windows_x86_64-u-*|unsigned-*-windows_arm64-u-*)
+            packaged_exe_name=$(printf "%s" "$unsigned_exe_name" | sed -E 's/^unsigned-/uninstall-/; s/windows_(x86|x86_64|arm64)-u/windows_\1/')
+            packaged_exe_absfile="$WORK/dist/$packaged_exe_name"
+            # Capture for signing later
+            UNINSTALL_EXE_FILES+=("$packaged_exe_absfile")
+            ;;
+        *)
+            printf "FATAL: Unsupported unsigned executable named %s\n" "$unsigned_exe_name"
+            exit 106
+    esac
+    packaged_7z_name=$(printf "%s" "$packaged_exe_name" | sed 's/.exe$/.7z/')
     sfx_name=$(printf "%s" "$unsigned_exe_name" | sed 's/^unsigned-//; s/.exe$/.sfx/')
 
     sfx_file=dl-sfx/"$sfx_name"
 
-    progress "Packaging $setup_exe_name"
+    progress "Packaging $packaged_exe_name"
     # Use 7zr (light-version, standalone) instead of 7z or 7za since
     # same executable used by dkml-install-api:installer_sfx.ml.
     #
@@ -547,26 +585,63 @@ for unsigned_exe_name in "${UNSIGNED_EXE_NAMES[@]}"; do
     #   * -bs0 is disable stdout
     #   * DIR/* is 7z's syntax for the contents of DIR, but only with native Windows 7z.exe (not MSYS2)
     cd "rel-unpack/$unsigned_exe_name"
-    7zr a -bb0 -bso0 -mx9 -y "$WORK/dist7z/$setup_7z_name"
+    7zr a -bb0 -bso0 -mx9 -y "$WORK/dist7z/$packaged_7z_name"
     cd "$WORK"
     # Place .sfx in front of the body
-    setup_exe_file="dist/$setup_exe_name"
-    cat "$sfx_file" "dist7z/$setup_7z_name" > "$setup_exe_file"
+    cat "$sfx_file" "dist7z/$packaged_7z_name" > "$packaged_exe_absfile"
+done
+set -u
 
-    # Capture for signing later
-    SETUP_EXE_FILES+=("$setup_exe_file")
+# Signing self-extracting uninstall.exe
+progress "Signing self-extracting uninstall.exe"
+set +u # workaround bash bug with empty arrays in for loops
+for packaged_exe_absfile in "${UNINSTALL_EXE_FILES[@]}"; do
+    packaged_exe_absfile_BASENAME=$(basename "$packaged_exe_absfile")
+    printf "Signing %s ...\n" "$packaged_exe_absfile_BASENAME" >&2
+    signfile "$packaged_exe_absfile"
+    #   make sure it is read-only; we did sign it!
+    chmod 555 "$packaged_exe_absfile"
+
+    # Embed signed uninstall-*.exe into upcoming setup-*.exe as
+    # bin/dkml-package-uninstall.exe
+    setup_exe_file_BASENAME=$(printf '%s' "$packaged_exe_absfile_BASENAME" | sed 's/^uninstall-/setup-/')
+    setup_exe_absfile="$WORK/dist/$setup_exe_file_BASENAME"
+    printf "\nEmbedding %s into upcoming %s ...\n" "$packaged_exe_absfile_BASENAME" "$setup_exe_file_BASENAME" >&2
+    install -d re-embed/"$setup_exe_file_BASENAME"/bin
+    install "$packaged_exe_absfile" re-embed/"$setup_exe_file_BASENAME"/bin/dkml-package-uninstall.exe
+    # We can use 7z to add to a <sfx>.exe, not just .7z files. It knows to skip
+    # over the SFX header.
+    #
+    # Use 7zr (light-version, standalone) instead of 7z or 7za since
+    # same executable used by dkml-install-api:installer_sfx.ml.
+    #
+    # 7za <command> [<switches>...] <archive_name> [<file_names>...]
+    #   u : Update files to archive
+    #   -bb[0-3] : set output log level
+    #   -bs{o|e|p}{0|1|2} : set output stream for output/error/progress line
+    #   -m{Parameters} : set compression Method
+    #     -mmt[N] : set number of CPU threads
+    #     -mx[N] : set compression level: -mx1 (fastest) ... -mx9 (ultra)
+    #   -y : assume Yes on all queries
+    # Clarifications:
+    #   * -bs0 is disable stdout
+    #   * DIR/* is 7z's syntax for the contents of DIR, but only with native Windows 7z.exe (not MSYS2)
+    cd re-embed/"$setup_exe_file_BASENAME"
+    7zr u -bb0 -bso0 -mx9 -y "$setup_exe_absfile"
+    cd "$WORK"
+    echo >&2
 done
 set -u
 
 # Signing self-extracting setup.exe
 progress "Signing self-extracting setup.exe"
 set +u # workaround bash bug with empty arrays in for loops
-for setup_exe_file in "${SETUP_EXE_FILES[@]}"; do
-    setup_exe_file_BASENAME=$(basename "$setup_exe_file")
-    printf "Signing %s ...\n" "$setup_exe_file_BASENAME" >&2
-    signfile "$setup_exe_file"
+for packaged_exe_absfile in "${SETUP_EXE_FILES[@]}"; do
+    packaged_exe_absfile_BASENAME=$(basename "$packaged_exe_absfile")
+    printf "Signing %s ...\n" "$packaged_exe_absfile_BASENAME" >&2
+    signfile "$packaged_exe_absfile"
     #   make sure it is read-only; we did sign it!
-    chmod 555 "$setup_exe_file"
+    chmod 555 "$packaged_exe_absfile"
 done
 set -u
 
@@ -579,12 +654,13 @@ fi
 progress "Uploading release to GitHub"
 gh release upload "$RELEASE_TAG" \
     --repo "$GHREPO" \
-    "${SETUP_EXE_FILES[@]}"
+    "${SETUP_EXE_FILES[@]}" \
+    "${UNINSTALL_EXE_FILES[@]}"
 
 # Done
 finish_progress
 
 printf "\n\n\nCongratulations!\n" >&2
 printf "Go to https://github.com/diskuv/dkml-installer-ocaml/releases/edit/%s\n" "$RELEASE_TAG" >&2
-printf "to turn off the Pre-Release flag. The release now contains signed\n" >&2
-printf "setup.exe binaries\n\n" >&2
+printf "  to turn off the Pre-Release flag. The release now contains signed\n" >&2
+printf "  setup.exe and uninstall.exe binaries\n\n" >&2
