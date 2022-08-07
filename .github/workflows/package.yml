@@ -484,6 +484,10 @@ jobs:
         run: |
           opamrun pin add --yes --no-action -k version alcotest ${{ env.PIN_ALCOTEST }}
 
+      - name: Pins for bugfix of diskuvbox
+        run: |
+          opamrun pin add --yes --no-action diskuvbox git://github.com/diskuv/diskuvbox.git#main
+
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
         # Because of the error on manylinux2014 (CentOS 7):
