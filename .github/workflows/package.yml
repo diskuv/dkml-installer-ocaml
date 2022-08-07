@@ -479,14 +479,21 @@ jobs:
       - name: Pin dkml-option-vcpkg to checkout instead of Opam repository
         run: opamrun pin add --yes --no-action dkml-option-vcpkg .ci/g/dkml-option-vcpkg
 
+      # diskuvbox bug fix
+
+      - name: Checkout diskuvbox
+        uses: actions/checkout@v3
+        with:
+          repository: diskuv/diskuvbox
+          path: .ci/g/diskuvbox
+
+      - name: Pins for bugfix of diskuvbox
+        run: opamrun pin add --yes --no-action diskuvbox .ci/g/diskuvbox
+
       # version pins
       - name: Pins for packages to work on all OSes including Windows
         run: |
           opamrun pin add --yes --no-action -k version alcotest ${{ env.PIN_ALCOTEST }}
-
-      - name: Pins for bugfix of diskuvbox
-        run: |
-          opamrun pin add --yes --no-action diskuvbox git://github.com/diskuv/diskuvbox.git#main
 
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
