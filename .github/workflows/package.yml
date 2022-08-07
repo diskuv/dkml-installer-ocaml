@@ -717,8 +717,8 @@ jobs:
           awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
 
           # Move artifacts into the Vagrant filesystem as "setup.exe" and "uninstall.exe"
-          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-i-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
-          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-u-${{matrix.dkml-host-abi}}-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-i-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-u-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
 
           cd vagrant/win32
           vagrant up "${{ matrix.dkml-host-abi }}"
