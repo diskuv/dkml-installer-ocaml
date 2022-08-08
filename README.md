@@ -54,7 +54,7 @@ Briefly review the following:
 > that was issued by
 > `Certum Code Signing CA SHA2`.
 
-Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v0.4.1/setup-diskuv-ocaml-windows_x86_64-0.4.1.exe).
+Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.0.0/setup-diskuv-ocaml-windows_x86_64-1.0.0.exe).
 
 Now that your install is completed, you can read the
 [Install is done! What next?](https://diskuv.gitlab.io/diskuv-ocaml/#install-is-done-what-next)
@@ -115,4 +115,4 @@ component that you would like to get distributed.
 | ------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Installer packages             |            | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml)       |
 | Installer syntax check         |            | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)                   |
-| gitlab.com/diskuv/diskuv-ocaml | v0.4.1     | [![gitlab.com/diskuv/diskuv-ocaml v0.4.1 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v0.4.1/pipeline.svg "legacy diskuv-ocaml v0.4.1")](https://gitlab.com/diskuv/diskuv-ocaml/-/tags/v0.4.1) |
+| gitlab.com/diskuv/diskuv-ocaml | v1.0.0     | [![gitlab.com/diskuv/diskuv-ocaml v1.0.0 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v1.0.0/pipeline.svg "legacy diskuv-ocaml v1.0.0")](https://gitlab.com/diskuv/diskuv-ocaml/-/tags/v1.0.0) |
