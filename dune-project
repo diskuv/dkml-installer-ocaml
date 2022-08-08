@@ -1,7 +1,7 @@
 (lang dune 2.9)
 
 (name dkml-installer-network-ocaml)
-(version 1.0.0-prerel1)
+(version 0.4.1)
 
 (generate_opam_files true)
 
