@@ -64,7 +64,7 @@ documentation.
 
 The full set of releases is at https://github.com/diskuv/dkml-installer-ocaml/releases
 
-The full documentation is at https://diskuv.gitlab.io/diskuv-ocaml
+The full documentation is at https://diskuv.gitlab.io/diskuv-ocaml/#introduction
 
 ## Sponsor
 
