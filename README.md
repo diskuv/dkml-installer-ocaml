@@ -101,6 +101,7 @@ dune build
 
 ## Contributing
 
+The installer makes heavy use of the dkml-install-api.
 See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkml-install-api/blob/main/contributors/README.md).
 
 Any new dkml-components used by this installer will need an access token
@@ -109,6 +110,11 @@ to automatically trigger builds, which you'll save as a repository secret
 in your component. Create an issue to get access if you have a new
 component that you would like to get distributed.
 
+In addition, there are
+
+* [code signing documents](/contributors/BINARY_SIGNING.md)
+* [winget package submission documents](/installer/winget/README.md)
+ 
 ## Status
 
 | What                           | Branch/Tag | Status                                                                                                                                                                                                  |
