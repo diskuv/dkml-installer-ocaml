@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.1.0.schema.json
 # Follow: https://docs.microsoft.com/en-us/windows/package-manager/package/manifest?tabs=minschema%2Cversion-example#tips-and-best-practices
+# Reference: https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.1.0/installer.md
 PackageIdentifier: "Diskuv.OCaml"
 PackageVersion: "1.0.0.0"
 Scope: user

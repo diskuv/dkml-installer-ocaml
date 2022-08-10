@@ -12,11 +12,15 @@ You will need *once* as Administrator to run the following:
 
 ```powershell
 winget settings --enable LocalManifestFiles
+
+Enable-WindowsOptionalFeature -Online -FeatureName 'Containers-DisposableClientVM'
 ```
 
-to avoid the error:
+to avoid the errors:
 
 > This feature needs to be enabled by administrators. To enable it, run 'winget settings --enable LocalManifestFiles' as administrator
+>
+> Windows Sandbox does not seem to be available.
 
 ### Actual Testing
 
