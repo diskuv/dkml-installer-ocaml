@@ -36,6 +36,53 @@ Test a change with:
 winget install --manifest installer/winget/manifest
 ```
 
-See https://github.com/microsoft/winget-pkgs for how to install it in
-a Window Sandbox. But ... if you don't want to install it on your local machine
-... why would you be comfortable asking other Windows users to install it?
+### Troubleshooting with Windows Sandbox
+
+> Never use Windows Sandbox as your final test before releasing to end-users.
+> Instead run the installer on your own machine.
+> 
+> And if you don't want to install it on your local machine:
+> why would you be comfortable asking other Windows users to install it?
+
+The instructions below are from https://github.com/microsoft/winget-pkgs and
+include some suggestions from https://github.com/microsoft/winget-pkgs/pull/69112:
+
+FIRST clone the `winget-pkgs` repository alongside the `dkml-installer-ocaml`
+directory with:
+
+```powershell
+cd dkml-installer-ocaml
+cd ..
+git clone https://github.com/microsoft/winget-pkgs.git
+```
+
+SECOND, run the manifest in the sandbox:
+
+```powershell
+.\Tools\SandboxTest.ps1 ..\dkml-installer-ocaml\installer\winget\manifest
+```
+
+If the installer fails with:
+
+![Search for app in the Store](https://user-images.githubusercontent.com/71855677/184410812-08ba2ab8-8c3d-490d-8c38-b6b3a6df41a4.png)
+
+then you will need to do the following inside the Windows Sandbox:
+
+```powershell
+# Disable the Smart Screen especially on Windows 11
+if (($env:USERNAME -eq "WDAGUtilityAccount") -or ($PWD.Path -eq "C:\Users\WDAGUtilityAccount\Desktop\winget-pkgs")) {
+    foreach ($drive in @("HKLM", "HKCU")) {
+        $path = "SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer"
+        $key = Get-Item -LiteralPath ${drive}:\${path}
+        if (($key.GetValue("SmartScreenEnabled", $null) -eq $null) -or
+            -not(Get-ItemProperty -Path ${drive}:\${path} -Name SmartScreenEnabled))
+        {
+            Set-ItemProperty -Path ${drive}:\${path} -Name SmartScreenEnabled -Value Off -Force
+            Write-Host "${drive}:\${path} SmartScreenEnabled=Off"
+        }
+    }
+}
+
+# Rerun the installer; if you are prompted for security now you'll be able to click through it
+winget install --manifest ..\SandboxTest\manifest
+```
