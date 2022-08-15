@@ -6,7 +6,8 @@ strengths are its:
 * full compatibility with OCaml standards like Opam, Dune and ocamlfind
 * laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
   and Xcode
-* ease-of-use through simplified installers and simple productivity commands; high school students should be able to use it
+* ease-of-use through simplified installers and simple productivity commands; high school, college and university students should be
+  able to use it
 * security through reproducibility, versioning and from-source builds
 
 These alternatives may be better depending on your use case:
