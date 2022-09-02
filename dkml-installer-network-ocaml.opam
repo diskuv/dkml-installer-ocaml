@@ -10,7 +10,7 @@ homepage: "https://github.com/diskuv/dkml-installer-ocaml"
 bug-reports: "https://github.com/diskuv/dkml-installer-ocaml/issues"
 depends: [
   "odoc" {>= "1.5.3" & with-doc}
-  "dune" {>= "2.9" & = "2.9.3" | = "2.9.3+shim"}
+  "dune" {>= "2.9" & = "2.9.3" | = "2.9.3+shim.1.0.1"}
   "dune-configurator" {= "2.9.3"}
   "ppx_expect" {= "v0.14.1"}
   "ocaml" {= "4.12.1"}

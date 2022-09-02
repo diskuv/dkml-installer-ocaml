@@ -40,7 +40,7 @@
   ;
   ; The actual problem is dune-configurator ... we only have patches in Diskuv
   ; repository up until 2.9.3. Need to upstream fix the problem.
-  (dune                                   (or (= 2.9.3) (= 2.9.3+shim)))
+  (dune                                   (or (= 2.9.3) (= 2.9.3+shim.1.0.1)))
   (dune-configurator                      (= 2.9.3))
   ; Only patch in Diskuv repository is for v0.14.1. Need to upstream fix the problem.
   (ppx_expect                             (= v0.14.1))  
