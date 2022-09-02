@@ -87,7 +87,7 @@ jobs:
   setup-dkml:
     # Use `dkml-workflows` or `dkml-workflows-prerelease`
     #uses: "diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@v0"
-    uses: "diskuv/dkml-workflows-prelease/.github/workflows/setup-dkml.yml@v0"
+    uses: "diskuv/dkml-workflows-prerelease/.github/workflows/setup-dkml.yml@v0"
 
     with:
       ocaml-compiler: 4.12.1
