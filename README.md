@@ -113,8 +113,8 @@ component that you would like to get distributed.
 
 In addition, there are
 
-* [code signing documents](/contributors/BINARY_SIGNING.md)
-* [winget package submission documents](/installer/winget/README.md)
+* [code signing documents](contributors/BINARY_SIGNING.md)
+* [winget package submission documents](installer/winget/README.md)
  
 ## Status
 
