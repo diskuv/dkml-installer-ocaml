@@ -675,8 +675,11 @@ jobs:
           - windows_x86
           - windows_x86_64
 
-    # macOS is only GitHub CI runner that supports VirtualBox; https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
-    runs-on: macos-10.15
+    # macOS-12 is only GitHub CI runner that supports VirtualBox
+    # - the suggested 10.15 from https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
+    #   is deprecated (https://github.com/actions/runner-images/issues/5583)
+    # - virtualbox added to macOS-12 in https://github.com/actions/runner-images/pull/5594
+    runs-on: macos-12
     name: vagrant / ${{ matrix.dkml-host-abi }}
 
     steps:
