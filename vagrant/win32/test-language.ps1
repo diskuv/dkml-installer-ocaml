@@ -52,9 +52,12 @@ $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.P
 $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
 
 Write-Host "Testing installation ..."
+# Auditing
+Write-Host "  PATH = $env:PATH"
+Get-ChildItem -Recurse -Depth 2 "$env:DiskuvOCamlHome"
 # Clean, run test for installation and save results
 dune clean --root C:\vagrant\test_installation.t
-with-dkml dune runtest --root C:\vagrant\test_installation.t
+dune runtest --root C:\vagrant\test_installation.t
 Set-Content -Path "C:\vagrant\test_installation.t\exitcode.$SystemLocale.txt" -Value $LastExitCode -NoNewline -Encoding Ascii
 
 Write-Host "Testing playground ..."
@@ -62,9 +65,9 @@ Write-Host "Testing playground ..."
 (Test-Path -Path C:\vagrant\playground) -or $(New-Item C:\vagrant\playground -ItemType Directory)
 Set-Location C:\vagrant\playground          # aka. cd playground
 $env:OPAMYES = "1"                          # aka. OPAMYES=1 opam dkml init ...
-with-dkml "OPAMSWITCH=$env:DiskuvOCamlHome\dkml" opam dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of opam dkml init
-with-dkml opam install graphics --yes       # install something with a low number of dependencies, that sufficienly exercises Opam
-with-dkml opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
+opam dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of opam dkml init
+opam install graphics --yes       # install something with a low number of dependencies, that sufficienly exercises Opam
+opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
 
 Write-Host "Done tests."
 
