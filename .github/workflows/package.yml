@@ -727,9 +727,9 @@ jobs:
         run: |
           cat vagrant/win32/test_installation.t/estimatedsize.en-US.txt
 
-      - name: Check playground creation
+      - name: Check otherplayground creation
         run: |
-          set -x ; find vagrant/win32/playground ; if [ ! -e vagrant/win32/playground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant playground creation FAILED"; exit 1; fi
+          set -x ; find vagrant/win32/otherplayground ; if [ ! -e vagrant/win32/otherplayground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant otherplayground creation FAILED"; exit 1; fi
 
   #--------
   # Release

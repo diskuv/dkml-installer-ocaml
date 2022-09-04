@@ -52,20 +52,18 @@ $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.P
 $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
 
 Write-Host "Testing installation ..."
-# Auditing
-Write-Host "  PATH = $env:PATH"
-Get-ChildItem -Recurse -Depth 2 "$env:DiskuvOCamlHome"
 # Clean, run test for installation and save results
 dune clean --root C:\vagrant\test_installation.t
 if ($lastexitcode -ne 0) { throw ("FATAL: dune clean failed") }
-dune runtest --root C:\vagrant\test_installation.t
+dune runtest --root C:\vagrant\test_installation.t --display=short
 if ($lastexitcode -ne 0) { throw ("FATAL: dune runtest failed") }
 Set-Content -Path "C:\vagrant\test_installation.t\exitcode.$SystemLocale.txt" -Value $LastExitCode -NoNewline -Encoding Ascii
 
-Write-Host "Testing playground ..."
-# Run through a simple playground
-(Test-Path -Path C:\vagrant\playground) -or $(New-Item C:\vagrant\playground -ItemType Directory)
-Set-Location C:\vagrant\playground          # aka. cd playground
+Write-Host "Testing otherplayground ..."
+# Run through a simple playground ... different from the auto-installed 'playground' switch ...
+# where we can test a new switch being created
+(Test-Path -Path C:\vagrant\otherplayground) -or $(New-Item C:\vagrant\otherplayground -ItemType Directory)
+Set-Location C:\vagrant\otherplayground     # aka. cd playground
 $env:OPAMYES = "1"                          # aka. OPAMYES=1 opam dkml init ...
 opam dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of opam dkml init
 if ($lastexitcode -ne 0) { throw ("FATAL: opam dkml init failed") }
