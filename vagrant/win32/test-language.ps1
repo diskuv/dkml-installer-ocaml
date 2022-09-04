@@ -51,6 +51,10 @@ $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.P
 # Mimic $DiskuvOCamlHome
 $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
 
+Write-Host "Printing installation ..."
+opam var
+$opamroot = opam var root
+
 Write-Host "Testing installation ..."
 # Clean, run test for installation and save results
 dune clean --root C:\vagrant\test_installation.t
@@ -68,7 +72,11 @@ $env:OPAMYES = "1"                          # aka. OPAMYES=1 opam dkml init ...
 opam dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of opam dkml init
 if ($lastexitcode -ne 0) { throw ("FATAL: opam dkml init failed") }
 opam install graphics --yes       # install something with a low number of dependencies, that sufficienly exercises Opam
-if ($lastexitcode -ne 0) { throw ("FATAL: opam install graphics failed") }
+if ($lastexitcode -ne 0) {
+  Write-Host "----- TROUBLESHOOTING: dune-*-*.out ----"
+  Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Host "[BEGIN $_]" ; Get-Content $_; Write-Host "[END $_]`n" }
+  throw ("FATAL: opam install graphics failed")
+}
 opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
 if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
 
