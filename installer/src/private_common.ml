@@ -17,6 +17,8 @@ let program_name =
     installation_prefix_kebab_lower_case_opt = None;
   }
 
+let program_version = Version.program_version
+
 (* From ocaml-crunch defined in ./dune.
 
    Which comes from https://github.com/ocaml/ocaml-logo/tree/master/Colour/Favicon

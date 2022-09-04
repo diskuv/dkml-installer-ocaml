@@ -14,7 +14,7 @@
 
 (executable (public_name dkml-install-user-runner) (name runner_user)
  (modules runner_user) (ocamlopt_flags (:include user-link-flags.sexp))
- (libraries dkml-install-runner.user dune-build-info
+ (libraries dkml-install-runner.user private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
   dkml-component-staging-curl dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
@@ -22,7 +22,7 @@
 
 (executable (public_name dkml-install-admin-runner) (name runner_admin)
  (modules runner_admin) (ocamlopt_flags (:include admin-link-flags.sexp))
- (libraries dkml-install-runner.admin dune-build-info
+ (libraries dkml-install-runner.admin private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
   dkml-component-staging-curl dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
@@ -56,26 +56,26 @@
  (ocamlopt_flags (:include console-link-flags.sexp)))
 
 (executable (name entry_assembly_manifest)
- (libraries dkml-package-console.common dune-build-info fmt)
+ (libraries dkml-package-console.common private_common fmt)
  (modules entry_assembly_manifest))
 
 (rule (target entry.assembly.manifest)
  (action (with-stdout-to %{target} (run %{exe:entry_assembly_manifest.exe}))))
 
 (executable (name package_setup) (modes (byte exe))
- (libraries dkml-package-console.setup dune-build-info cmdliner
-  private_common dkml-component-network-ocamlcompiler
-  dkml-component-network-unixutils dkml-component-staging-curl
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils)
+ (libraries dkml-package-console.setup cmdliner private_common
+  dkml-component-network-ocamlcompiler dkml-component-network-unixutils
+  dkml-component-staging-curl dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils)
  (modules package_setup))
 
 (executable (name package_uninstaller) (modes (byte exe))
- (libraries dkml-package-console.uninstaller dune-build-info cmdliner
-  private_common dkml-component-network-ocamlcompiler
-  dkml-component-network-unixutils dkml-component-staging-curl
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils)
+ (libraries dkml-package-console.uninstaller cmdliner private_common
+  dkml-component-network-ocamlcompiler dkml-component-network-unixutils
+  dkml-component-staging-curl dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils)
  (modules package_uninstaller))
 
 (install (section bin)
