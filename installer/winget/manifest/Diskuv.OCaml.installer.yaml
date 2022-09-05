@@ -63,10 +63,10 @@ Installers:
   - Architecture: x64
 
     # TODO: InstallerUrl/InstallerSha256/ReleaseDate needs to be updated by contributors/sign.sh!
-    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.0.0/setup-diskuv-ocaml-windows_x86_64-1.0.0.exe
+    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.0.1/setup-diskuv-ocaml-windows_x86_64-1.0.1.exe
     InstallerType: exe
-    InstallerSha256: 32f010577a791d5595760cbb5136bd60049ffd37c8d44e68e7a8729319670a48
-    ReleaseDate: 2022-08-08
+    InstallerSha256: 129641cb609b50feb3fefbec1c435d99c7908d7523a3683bed34b166594628ee
+    ReleaseDate: 2022-09-05
 
     InstallerSwitches:
       Silent: --ci --quiet --color=never
@@ -79,6 +79,7 @@ Installers:
       # https://github.com/diskuv/dkml-install-api/blob/main/package/console/common/Windows_registry.ml
       - Publisher: Diskuv, Inc.
         DisplayName: Diskuv OCaml
-        DisplayVersion: 1.0.0.0
+        # Auto-updated by diskuv-ocaml/contributors/release.sh
+        DisplayVersion: 1.0.1
 ManifestType: "installer"
 ManifestVersion: "1.1.0"
