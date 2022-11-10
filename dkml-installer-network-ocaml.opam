@@ -15,6 +15,8 @@ depends: [
   "ppx_expect" {= "v0.14.1"}
   "ocaml" {= "4.12.1"}
   "dkml-component-network-ocamlcompiler" {>= "4.12.1~" & < "4.12.2~"}
+  "dkml-component-offline-desktop-full" {>= "0.1.0"}
+  "dkml-component-offline-opam" {>= "2.2.0~alpha0~20221104"}
   "dkml-install-installer" {>= "0.2.0"}
   "dkml-package-console" {>= "0.2.0"}
   "crunch" {>= "3.2.0"}
@@ -54,6 +56,10 @@ install: [
     version
     "--component"
     "network-ocamlcompiler"
+    "--component"
+    "offline-opam"
+    "--component"
+    "offline-desktop-full"
 
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
     # corresponds to the build environments of GitHub workflow setup-dkml.yml.
@@ -96,3 +102,82 @@ extra-source "dl/dkml-runtime-distribution.tar.gz" {
     "sha256=ffbdf2624e1fee38be7a218f497be9f660a4758e1ed5abf2ce937e0100e8d004"
   ]
 }
+pin-depends: [
+  [
+    "dkml-component-offline-opam.2.2.0~alpha0~20221104"
+    "git+https://github.com/diskuv/dkml-component-opam.git"
+  ]
+  [
+    "dkml-component-staging-opam32.2.2.0~alpha0~20221104"
+    "git+https://github.com/diskuv/dkml-component-opam.git"
+  ]
+  [
+    "dkml-component-staging-opam64.2.2.0~alpha0~20221104"
+    "git+https://github.com/diskuv/dkml-component-opam.git"
+  ]
+  [
+    "dkml-component-staging-ocamlrun.4.12.1~v1.0.2"
+    "git+https://github.com/diskuv/dkml-component-ocamlrun.git"
+  ]
+  [
+    "dkml-component-common-desktop.0.1.0"
+    "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
+  ]
+  [
+    "dkml-component-staging-desktop-full.0.1.0"
+    "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
+  ]
+  [
+    "dkml-component-offline-desktop-full.0.1.0"
+    "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
+  ]
+  [
+    # TODO: This version does not look right!
+    "dkml-component-network-ocamlcompiler.4.12.1~v0.4.1~prerel6"
+    "git+https://github.com/diskuv/dkml-component-ocamlcompiler.git"
+  ]
+  [
+    "dkml-component-staging-curl.0.2.0"
+    "git+https://github.com/diskuv/dkml-component-curl.git"
+  ]
+  [
+    "dkml-component-common-unixutils.0.2.0"
+    "git+https://github.com/diskuv/dkml-component-unixutils.git"
+  ]
+  [
+    "dkml-component-staging-unixutils.0.2.0"
+    "git+https://github.com/diskuv/dkml-component-unixutils.git"
+  ]
+  [
+    "dkml-component-network-unixutils.0.2.0"
+    "git+https://github.com/diskuv/dkml-component-unixutils.git"
+  ]
+  [
+    "dkml-component-xx-console.0.1.1"
+    "git+https://github.com/diskuv/dkml-component-console.git"
+  ]
+  [
+    "dkml-option-vcpkg.0.1.0"
+    "git+https://github.com/diskuv/dkml-option-vcpkg.git"
+  ]
+  [
+    "diskuvbox.0.1.1"
+    "git+https://github.com/diskuv/diskuvbox.git"
+  ]
+  [
+    "dkml-install.0.2.0"
+    "git+https://github.com/diskuv/dkml-install-api.git"
+  ]
+  [
+    "dkml-install-installer.0.2.0"
+    "git+https://github.com/diskuv/dkml-install-api.git"
+  ]
+  [
+    "dkml-install-runner.0.2.0"
+    "git+https://github.com/diskuv/dkml-install-api.git"
+  ]
+  [
+    "dkml-package-console.0.2.0"
+    "git+https://github.com/diskuv/dkml-install-api.git"
+  ]
+]

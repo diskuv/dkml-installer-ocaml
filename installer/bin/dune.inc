@@ -16,42 +16,47 @@
  (modules runner_user) (ocamlopt_flags (:include user-link-flags.sexp))
  (libraries dkml-install-runner.user private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils))
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils))
 
 (executable (public_name dkml-install-admin-runner) (name runner_admin)
  (modules runner_admin) (ocamlopt_flags (:include admin-link-flags.sexp))
  (libraries dkml-install-runner.admin private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils))
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils))
 
 (executable (public_name dkml-install-create-installers)
  (name create_installers)
  (libraries dkml-package-console.create cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils)
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils)
  (modules create_installers))
 
 (executable (public_name dkml-install-package-install) (name entry_install)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils)
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils)
  (modules entry_install) (ocamlopt_flags (:include console-link-flags.sexp)))
 
 (executable (public_name dkml-install-package-uninstall)
  (name entry_uninstall)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils)
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils)
  (modules entry_uninstall)
  (ocamlopt_flags (:include console-link-flags.sexp)))
 
@@ -65,17 +70,19 @@
 (executable (name package_setup) (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils)
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils)
  (modules package_setup))
 
 (executable (name package_uninstaller) (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-network-unixutils
-  dkml-component-staging-curl dkml-component-staging-ocamlrun
-  dkml-component-staging-opam32 dkml-component-staging-opam64
-  dkml-component-staging-unixutils)
+  dkml-component-offline-desktop-full dkml-component-offline-opam
+  dkml-component-staging-curl dkml-component-staging-desktop-full
+  dkml-component-staging-ocamlrun dkml-component-staging-opam32
+  dkml-component-staging-opam64 dkml-component-staging-unixutils)
  (modules package_uninstaller))
 
 (install (section bin)

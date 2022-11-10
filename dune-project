@@ -46,6 +46,8 @@
   (ppx_expect                             (= v0.14.1))  
   (ocaml                                  (= 4.12.1))
   (dkml-component-network-ocamlcompiler   (and (>= 4.12.1~) (< 4.12.2~)))
+  (dkml-component-offline-desktop-full    (>= 0.1.0))
+  (dkml-component-offline-opam            (>= 2.2.0~alpha0~20221104))
   (dkml-install-installer                 (>= 0.2.0))
   (dkml-package-console                   (>= 0.2.0))
   (crunch                                 (>= 3.2.0))
