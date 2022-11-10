@@ -63,10 +63,6 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
-    "dkml-component-staging-ocamlrun.4.12.1~v1.0.2"
-    "git+https://github.com/diskuv/dkml-component-ocamlrun.git"
-  ]
-  [
     "dkml-component-common-desktop.0.1.0"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
