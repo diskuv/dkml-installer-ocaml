@@ -148,22 +148,6 @@ pin-depends: [
     "diskuvbox.0.1.1"
     "git+https://github.com/diskuv/diskuvbox.git"
   ]
-  [
-    "dkml-install.0.2.0"
-    "git+https://github.com/diskuv/dkml-install-api.git"
-  ]
-  [
-    "dkml-install-installer.0.2.0"
-    "git+https://github.com/diskuv/dkml-install-api.git"
-  ]
-  [
-    "dkml-install-runner.0.2.0"
-    "git+https://github.com/diskuv/dkml-install-api.git"
-  ]
-  [
-    "dkml-package-console.0.2.0"
-    "git+https://github.com/diskuv/dkml-install-api.git"
-  ]
 ]
 extra-source "dl/dkml-runtime-common.tar.gz" {
   src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel6.tar.gz"
