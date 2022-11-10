@@ -144,10 +144,6 @@ pin-depends: [
     "dkml-option-vcpkg.0.1.0"
     "git+https://github.com/diskuv/dkml-option-vcpkg.git"
   ]
-  [
-    "diskuvbox.0.1.1"
-    "git+https://github.com/diskuv/diskuvbox.git"
-  ]
 ]
 extra-source "dl/dkml-runtime-common.tar.gz" {
   src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel6.tar.gz"
