@@ -402,6 +402,9 @@ jobs:
         run: |
           #!/bin/sh
           set -euf
+
+          opamrun update
+
           case "${{ matrix.dkml-host-abi }}" in
             linux_*) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes --no-depexts ;;
             *) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes ;;
