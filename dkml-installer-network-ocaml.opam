@@ -170,14 +170,14 @@ pin-depends: [
   ]
 ]
 extra-source "dl/dkml-runtime-common.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel5.tar.gz"
+  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel6.tar.gz"
   checksum: [
-    "sha256=367a4ab0058a68de3fd0c734f881a08159df6367ef51d78468a8263c16edbd86"
+    "sha256=e863cc9d0d93fb8f5bb8c1d7ec7602bea5e3dca9d0bf756f46cbc2071e80ca66"
   ]
 }
 extra-source "dl/dkml-runtime-distribution.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/1.0.2-prerel5.tar.gz"
+  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/1.0.2-prerel6.tar.gz"
   checksum: [
-    "sha256=db0f1b4eca252a7d7185e8357aefc947bac2075e4f617d4d099b81be52ee6db6"
+    "sha256=23de1e56dc3a445320127b33d673338d1c6fa9b167ecaef1363ce2bc541eae6e"
   ]
 }
