@@ -390,7 +390,18 @@ configure_sign_with_osslsigncode() {
     # Install osslsigncode
     progress "Installing osslsigncode"
     if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
+        # bug in 2.5.1+: https://github.com/mtrojnar/osslsigncode/issues/180
+        # so we install the buggy version to get the dependencies, and then
+        # "-U" to a prior version (downgrade).
+        # 1. install buggy version
         pacman -S --needed --noconfirm mingw-w64-clang-x86_64-osslsigncode
+        # 2. downgrade
+        install -d osslsigncode
+        downloadfile \
+            https://repo.msys2.org/mingw/clang64/mingw-w64-clang-x86_64-osslsigncode-2.3-1-any.pkg.tar.zst \
+            osslsigncode/mingw-w64-clang-x86_64-osslsigncode-any.pkg.tar.zst \
+            81f85a5d1014593c10d540d747db2ee5205b5d844d2d097ee3ad424751fbcff1
+        pacman -U --noconfirm osslsigncode/mingw-w64-clang-x86_64-osslsigncode-any.pkg.tar.zst
     fi
 
     # Install p11tool
@@ -468,7 +479,7 @@ configure_sign_with_osslsigncode() {
         #                           by the Time-Stamp Authority (TSA) indicated by the URL
         # -pkcs11cert             = PKCS#11 URI identifies a certificate in the token
         # -pkcs11engine           = PKCS11 engine
-        # -pkcs11module           = PKCS11 module       
+        # -pkcs11module           = PKCS11 module
         PATH="$YUBICOBIN_UNIX:$PATH" osslsigncode sign \
             -comm \
             -h sha384 \
