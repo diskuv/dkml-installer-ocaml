@@ -82,6 +82,8 @@ env:
   # alcotest_stubs.c
   # alcotest_stubs.c(4): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory
   PIN_ALCOTEST: 1.4.0
+  # Needed for crunch.3.3.1+
+  PIN_CMDLINER: 1.1.1
 
 jobs:
   setup-dkml:
@@ -387,6 +389,7 @@ jobs:
       - name: Pins for packages to work on all OSes including Windows
         run: |
           opamrun pin add --yes --no-action -k version alcotest ${{ env.PIN_ALCOTEST }}
+          opamrun pin add --yes --no-action -k version cmdliner ${{ env.PIN_CMDLINER }}
 
       # BOILERPLATE START: setup-dkml
       - name: Package up the installer
@@ -405,6 +408,7 @@ jobs:
 
           opamrun update
 
+          # Build the installer
           case "${{ matrix.dkml-host-abi }}" in
             linux_*) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes --no-depexts ;;
             *) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes ;;
