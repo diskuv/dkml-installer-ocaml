@@ -75,8 +75,7 @@ pin-depends: [
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    # TODO: This version does not look right!
-    "dkml-component-network-ocamlcompiler.4.12.1~v0.4.1~prerel6"
+    "dkml-component-network-ocamlcompiler.4.12.1~v1.0.2~prerel2"
     "git+https://github.com/diskuv/dkml-component-ocamlcompiler.git"
   ]
   [
