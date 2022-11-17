@@ -66,9 +66,9 @@ install: [
     # Later can add Dune cross-compiler to get Darwin ARM64.
     "--abi=windows_x86"
     "--abi=windows_x86_64"
-    "--abi=linux_x86"
-    "--abi=linux_x86_64"
-    "--abi=darwin_x86_64"
+    # "--abi=linux_x86"
+    # "--abi=linux_x86_64"
+    # "--abi=darwin_x86_64"
 
     "--work-dir"
     "%{_:share}%/w"
@@ -108,6 +108,10 @@ pin-depends: [
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
+    "dkml-component-staging-withdkml.0.1.0"
+    "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
+  ]
+  [
     "dkml-component-staging-desktop-full.0.1.0"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
@@ -116,8 +120,7 @@ pin-depends: [
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    # TODO: This version does not look right!
-    "dkml-component-network-ocamlcompiler.4.12.1~v0.4.1~prerel6"
+    "dkml-component-network-ocamlcompiler.4.12.1~v1.0.2~prerel2"
     "git+https://github.com/diskuv/dkml-component-ocamlcompiler.git"
   ]
   [
