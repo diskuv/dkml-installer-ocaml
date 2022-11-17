@@ -100,6 +100,10 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
+    "dkml-component-common-opam.2.2.0~alpha0~20221104"
+    "git+https://github.com/diskuv/dkml-component-opam.git"
+  ]
+  [
     "dkml-component-staging-opam32.2.2.0~alpha0~20221104"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
