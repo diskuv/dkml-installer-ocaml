@@ -115,15 +115,3 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-option-vcpkg.git"
   ]
 ]
-extra-source "dl/dkml-runtime-common.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel9.tar.gz"
-  checksum: [
-    "sha256=fe9d2c9617b5ff4c8fa7d6b666160beedac6e1121fdf66a748d6b37541d6ce0c"
-  ]
-}
-extra-source "dl/dkml-runtime-distribution.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/1.0.2-prerel9.tar.gz"
-  checksum: [
-    "sha256=8581644c60a77022546521e247d49d9ad9722c76fee89bdca42a6044fc240369"
-  ]
-}
