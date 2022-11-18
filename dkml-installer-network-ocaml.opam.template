@@ -50,6 +50,12 @@ install: [
   ]
 ]
 pin-depends: [
+  # Needs to be upgraded in ci-pkgs.txt
+  [
+    "crunch.3.3.1"
+    "git+https://github.com/mirage/ocaml-crunch.git#v3.3.1"
+  ]
+
   [
     "dkml-runtime-common.1.0.2~prerel9"
     "git+https://github.com/diskuv/dkml-runtime-common.git"
