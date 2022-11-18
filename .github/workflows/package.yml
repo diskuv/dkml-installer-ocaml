@@ -183,21 +183,21 @@ jobs:
             default_shell: msys2 {0}
             msys2_system: CLANG64
             msys2_packages: mingw-w64-clang-x86_64-pkg-config
-          - os: macos-latest
-            abi-pattern: macos-darwin_all
-            dkml-host-abi: darwin_x86_64
-            opam-root: /Users/runner/.opam
-            default_shell: sh
-          - os: ubuntu-latest
-            abi-pattern: manylinux2014-linux_x86
-            dkml-host-abi: linux_x86
-            opam-root: .ci/opamroot
-            default_shell: sh
-          - os: ubuntu-latest
-            abi-pattern: manylinux2014-linux_x86_64
-            dkml-host-abi: linux_x86_64
-            opam-root: .ci/opamroot
-            default_shell: sh
+          # - os: macos-latest
+          #   abi-pattern: macos-darwin_all
+          #   dkml-host-abi: darwin_x86_64
+          #   opam-root: /Users/runner/.opam
+          #   default_shell: sh
+          # - os: ubuntu-latest
+          #   abi-pattern: manylinux2014-linux_x86
+          #   dkml-host-abi: linux_x86
+          #   opam-root: .ci/opamroot
+          #   default_shell: sh
+          # - os: ubuntu-latest
+          #   abi-pattern: manylinux2014-linux_x86_64
+          #   dkml-host-abi: linux_x86_64
+          #   opam-root: .ci/opamroot
+          #   default_shell: sh
 
     runs-on: ${{ matrix.os }}
     name: build / ${{ matrix.abi-pattern }}
