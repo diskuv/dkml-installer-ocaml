@@ -55,6 +55,10 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
   [
+    "dkml-runtime-distribution.1.0.2~prerel9"
+    "git+https://github.com/diskuv/dkml-runtime-distribution.git"
+  ]
+  [
     "dkml-component-offline-opam.2.2.0~alpha0~20221104"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
