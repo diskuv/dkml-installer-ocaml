@@ -55,6 +55,10 @@ pin-depends: [
     "crunch.3.3.1"
     "git+https://github.com/mirage/ocaml-crunch.git#v3.3.1"
   ]
+  [
+    "cmdliner.1.1.1"
+    "git+https://erratique.ch/repos/cmdliner.git#v1.1.1"
+  ]
 
   [
     "dkml-runtime-common.1.0.2~prerel9"
