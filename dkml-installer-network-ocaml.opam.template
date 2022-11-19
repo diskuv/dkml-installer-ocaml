@@ -16,8 +16,6 @@ install: [
     "--component"
     "network-ocamlcompiler"
     "--component"
-    "offline-opam"
-    "--component"
     "offline-desktop-full"
 
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
