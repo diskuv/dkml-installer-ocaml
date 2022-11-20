@@ -2,7 +2,7 @@
 ; Do not edit unless need to regenerate!
 ; When regenerating, erase **all** content from this file, save the file, and then run:
 ;   dune clean
-;   dune build installer/bin/dune.inc --auto-promote
+;   dune build installer/bin/dune.gen.inc --auto-promote
 (executable (name discover) (libraries dune.configurator bos fpath)
  (modules discover))
 

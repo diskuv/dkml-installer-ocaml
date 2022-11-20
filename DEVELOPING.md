@@ -1,5 +1,11 @@
 # Development
 
+## Upgrading
+
+```powershell
+dune build '@gen-dkml' --auto-promote
+```
+
 ## Quick Testing on Windows
 
 This assumes you have Diskuv OCaml already installed, and you already have

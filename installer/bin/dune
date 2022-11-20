@@ -15,7 +15,8 @@
    (run ml-of-installer-generator))))
 
 (rule
- (target dune.inc)
+ (alias gen-dkml)
+ (target dune.gen.inc)
  (deps
   create_installers.ml
   discover.ml
@@ -27,7 +28,6 @@
   package_uninstaller.ml
   runner_admin.ml
   runner_user.ml)
- (mode promote)
  (action
   (progn
    (run
@@ -35,5 +35,10 @@
     --project-root
     %{project_root}
     %{target}))))
+
+(rule
+  (alias gen-dkml)
+  (action
+    (diff dune.inc dune.gen.inc)))
 
 (include dune.inc)
