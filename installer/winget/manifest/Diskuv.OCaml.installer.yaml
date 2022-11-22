@@ -7,7 +7,7 @@
 PackageIdentifier: Diskuv.OCaml
 PackageVersion: 1.0.1 # BUMP
 # Scope: user
-UpgradeBehavior: install
+UpgradeBehavior: uninstallPrevious
 Commands:
   # PATH entry: <DiskuvOCamlHome>/bin
   # BUT ... already a [winget install opam] so do not register those commands!
