@@ -17,6 +17,9 @@ $opts = "--ci"
 if (Test-Path $HereDir\setup.exe) {
   Write-Output "Running supplied setup.exe ..."
   & "$HereDir\setup.exe" $opts
+  if ($lastexitcode -ne 0) {
+    throw ("FATAL: setup.exe failed")
+  }
 
 } else {
   # Get the versions which can't be embedded in this UTF-16 BE file
@@ -36,6 +39,9 @@ if (Test-Path $HereDir\setup.exe) {
 
   Write-Output "Running setup.exe ..."
   & "$env:TEMP\setup.exe" $opts
+  if ($lastexitcode -ne 0) {
+    throw ("FATAL: setup.exe failed")
+  }
 }
 
 Write-Output "Done installation."
