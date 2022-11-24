@@ -100,11 +100,11 @@ pin-depends: [
   ]
 
   [
-    "dkml-runtime-common.1.0.2~prerel9"
+    "dkml-runtime-common.1.0.2~prerel20"
     "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
   [
-    "dkml-runtime-distribution.1.0.2~prerel9"
+    "dkml-runtime-distribution.1.0.2~prerel20"
     "git+https://github.com/diskuv/dkml-runtime-distribution.git"
   ]
   [
