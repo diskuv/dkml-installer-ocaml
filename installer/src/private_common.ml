@@ -24,7 +24,7 @@ let program_version = Version.program_version
    Which comes from https://github.com/ocaml/ocaml-logo/tree/master/Colour/Favicon
 *)
 let program_assets =
-  { Author_types.logo_icon_32x32_opt = Assets.read "32x32-win32-icon.ico" }
+  { Author_types.logo_icon_32x32_opt = Assets.read "win32-icon.ico" }
 
 let program_info =
   {
