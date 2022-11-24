@@ -49,7 +49,7 @@ Write-Host "Done installation."
 # Refresh the PATH with newly installed User entries
 $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.Path]::PathSeparator + $env:Path
 # Mimic $DiskuvOCamlHome
-$env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml\0"
+$env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml"
 
 Write-Host "Printing installation ..."
 opam var
