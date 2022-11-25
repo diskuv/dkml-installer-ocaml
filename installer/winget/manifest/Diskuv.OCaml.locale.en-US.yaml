@@ -32,6 +32,12 @@ Description: |-
 
   The installation will take approximately 1.5 HOURS on a modern Windows PC.
 
+  Installing this package will automatically install the required prerequisites
+  for Windows development:
+  * Visual Studio Build Tools 2019 (it will not touch any existing Visual Studio
+    installation)
+  * Git for Windows (if and only if your machine does not have it installed)
+
   These alternatives may be better depending on your use case:
 
   * Developing in a Javascript first environment? Have a look at Esy and Reason
