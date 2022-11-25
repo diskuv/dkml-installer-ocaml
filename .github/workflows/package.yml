@@ -124,6 +124,12 @@ jobs:
               rm -rf diskuv-ocaml
             fi
           fi
+      - name: Opam versions
+        run: |
+          # (version 1.0.1) -> 1.0.1
+          OPAMMAJMINPAT=$(awk '$1 == "(version" {sub(/)/,"",$2); print $2}' dune-project)
+          echo "OPAMMAJMINPAT=$OPAMMAJMINPAT" >> $GITHUB_ENV
+
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
@@ -131,18 +137,18 @@ jobs:
           ## Asset Listing
           | Asset                                                 | Supported? | Description                                                                         |
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
-          | [setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
-          | [setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86-$MAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
-          | [uninstall-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86_64-$MAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
-          | [uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86-$MAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
-          | [unsigned-diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.exe) | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
-          | [unsigned-diskuv-ocaml-windows_x86-i-$MAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$MAJMINPAT.exe)    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
-          | [diskuv-ocaml-darwin_x86_64-i-$MAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-darwin_x86_64-i-$MAJMINPAT.tar.gz)        | No         | Unsigned macOS on Intel binary distribution                                         |
-          | [diskuv-ocaml-linux_x86_64-i-$MAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86_64-i-$MAJMINPAT.tar.gz)         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
-          | [diskuv-ocaml-linux_x86-i-$MAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86-i-$MAJMINPAT.tar.gz)            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux          |
-          | [diskuv-ocaml-windows_x86-i-$MAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86-i-$MAJMINPAT.sfx)             | No         | Self-extracting executable header used when creating signed installers from ...     |
-          | [diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86_64-i-$MAJMINPAT.sfx)          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
-          | *-u-$MAJMINPAT.*                                      | No         | Uninstallers for all the above                                                      |
+          | [setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
+          | [setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
+          | [uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
+          | [uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
+          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe) | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          | [diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz)        | No         | Unsigned macOS on Intel binary distribution                                         |
+          | [diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz)         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
+          | [diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz)            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux          |
+          | [diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.sfx)             | No         | Self-extracting executable header used when creating signed installers from ...     |
+          | [diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.sfx)          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
+          | *-u-$OPAMMAJMINPAT.*                                      | No         | Uninstallers for all the above                                                      |
           EOF
           echo > emptyline
           if [ -e "$notes" ]; then
