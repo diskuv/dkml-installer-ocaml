@@ -10,13 +10,26 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "gusztavvargadr/windows-10-enterprise"
-  #config.vm.box_version = "2101.0.2109"
-  # Want to avoid HTTP 429 rate limiting on https://vagrantcloud.com/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box so
-  # use mirrored content on Diskuv Communicator CDN; it really should be on a Diskuv OCaml CDN when that is ready.
-  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box"
+  # =================================
+  # Box
+  # =================================
+
+  # * Every Vagrant development environment requires a box
+  # * You can search for boxes at https://vagrantcloud.com/search.
+  # * Want to avoid HTTP 429 rate limiting on https://vagrantcloud.com/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box so
+  #   use mirrored content on Diskuv Communicator CDN; it really should be on a Diskuv OCaml CDN when that is ready.
+  # * SOP: SOP_UploadingPublicAssets.md of communicator infra (only available to Diskuv admins)
+  # * Either specify box_version or box_url, or specify none.
+
+  # ~~~~~~ Windows 10 Version 21H2 Enterprise
+  config.vm.box = "gusztavvargadr/windows-10-21h2-enterprise"
+  #config.vm.box_version = "2102.0.2211"
+  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-21h2-enterprise/versions/2102.0.2211/providers/virtualbox.box"
+
+  # ~~~~~~ Windows 10 Version 21H1 Enterprise
+  #config.vm.box = "gusztavvargadr/windows-10-enterprise"
+  ##config.vm.box_version = "2101.0.2109"
+  #config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
