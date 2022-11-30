@@ -75,9 +75,12 @@ Write-Output "Testing otherplayground ..."
 (Test-Path -Path C:\vagrant\otherplayground) -or $(New-Item C:\vagrant\otherplayground -ItemType Directory)
 Set-Location C:\vagrant\otherplayground     # aka. cd playground
 $env:OPAMYES = "1"                          # aka. OPAMYES=1 opam dkml init ...
+$env:DKML_BUILD_TRACE = "ON"                # enable tracing
+$env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
+$env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
 opam dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of opam dkml init
 if ($lastexitcode -ne 0) { throw ("FATAL: opam dkml init failed") }
-opam install graphics --yes       # install something with a low number of dependencies, that sufficienly exercises Opam
+opam install graphics --yes       # install something with a low number of dependencies, that sufficiently exercises Opam
 if ($lastexitcode -ne 0) {
   Write-Output "----- TROUBLESHOOTING: dune-*-*.out ----"
   Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Output "[BEGIN $_]" ; Get-Content $_; Write-Output "[END $_]`n" }
