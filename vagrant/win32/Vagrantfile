@@ -10,37 +10,10 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # =================================
-  # Box
-  # =================================
-
-  # * Every Vagrant development environment requires a box
-  # * You can search for boxes at https://vagrantcloud.com/search.
-  # * Want to avoid HTTP 429 rate limiting on https://vagrantcloud.com/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box so
-  #   use mirrored content on Diskuv Communicator CDN; it really should be on a Diskuv OCaml CDN when that is ready.
-  # * SOP: SOP_UploadingPublicAssets.md of communicator infra (only available to Diskuv admins)
-  # * Either specify box_version or box_url, or specify none.
-
-  # ~~~~~~ Windows 11 Version 21H2 Enterprise
-  #config.vm.box = "gusztavvargadr/windows-11-21h2-enterprise"
-  ##config.vm.box_version = "2102.0.2211"
-  #config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-11-21h2-enterprise/versions/2102.0.2211/providers/virtualbox.box"
-
-  # ~~~~~~ Windows 10 Version 22H2 Enterprise NoCM
-  #  > `-nocm` is the absence of Chocolately, Chef and SSH
-  #config.vm.box = "gusztavvargadr/windows-10-22h2-enterprise-nocm"
-  ##config.vm.box_version = "2202.0.2211"
-  #config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-22h2-enterprise-nocm/versions/2202.0.2211/providers/virtualbox.box"
-
-  # ~~~~~~ Windows 10 Version 21H2 Enterprise
-  config.vm.box = "gusztavvargadr/windows-10-21h2-enterprise"
-  #config.vm.box_version = "2102.0.2211"
-  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-21h2-enterprise/versions/2102.0.2211/providers/virtualbox.box"
-
-  # ~~~~~~ Windows 10 Version 21H1 Enterprise
-  #config.vm.box = "gusztavvargadr/windows-10-enterprise"
-  ##config.vm.box_version = "2101.0.2109"
-  #config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box"
+  # ~~~~~~ Windows 10 Version 21H1 Enterprise (can be overridden by |machine|)
+  config.vm.box = "gusztavvargadr/windows-10-enterprise"
+  #config.vm.box_version = "2101.0.2109"
+  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -118,7 +91,53 @@ Vagrant.configure("2") do |config|
   #     "#{dkml_host_abi}-#{ocaml_version}"
 
   ["windows_x86", "windows_x86_64"].each do |dkml_host_abi|
-    config.vm.define "#{dkml_host_abi}", autostart: false do |machine|
+
+    # * You can search for boxes at https://vagrantcloud.com/search.
+    # * We want to avoid HTTP 429 rate limiting on https://vagrantcloud.com/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box so
+    #   use mirrored content on Diskuv Communicator CDN; it really should be on a Diskuv OCaml CDN when that is ready.
+    # * SOP: SOP_UploadingPublicAssets.md of communicator infra (only available to Diskuv admins)
+    # * Either specify box_version or box_url, or specify none.
+
+    config.vm.define "#{dkml_host_abi}-windows-10-enterprise", autostart: false do |machine|
+      # ~~~~~~ Windows 10 Version 21H1 Enterprise
+      machine.vm.box = "gusztavvargadr/windows-10-enterprise"
+      ##machine.vm.box_version = "2101.0.2109"
+      machine.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-enterprise/versions/2101.0.2109/providers/virtualbox.box"
+
+      machine.vm.provision "shell", inline: <<-SHELL
+        C:\\vagrant\\test-language.ps1
+      SHELL
+    end
+
+    config.vm.define "#{dkml_host_abi}-windows-10-21h2-enterprise", autostart: false do |machine|
+      # ~~~~~~ Windows 10 Version 21H2 Enterprise
+      machine.vm.box = "gusztavvargadr/windows-10-21h2-enterprise"
+      #machine.vm.box_version = "2102.0.2211"
+      machine.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-21h2-enterprise/versions/2102.0.2211/providers/virtualbox.box"
+
+      machine.vm.provision "shell", inline: <<-SHELL
+        C:\\vagrant\\test-language.ps1
+      SHELL
+    end
+
+    config.vm.define "#{dkml_host_abi}-windows-10-22h2-enterprise-nocm", autostart: false do |machine|
+      # ~~~~~~ Windows 10 Version 22H2 Enterprise NoCM
+      #  > `-nocm` is the absence of Chocolately, Chef and SSH
+      machine.vm.box = "gusztavvargadr/windows-10-22h2-enterprise-nocm"
+      #machine.vm.box_version = "2202.0.2211"
+      machine.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-22h2-enterprise-nocm/versions/2202.0.2211/providers/virtualbox.box"
+
+      machine.vm.provision "shell", inline: <<-SHELL
+        C:\\vagrant\\test-language.ps1
+      SHELL
+    end
+
+    config.vm.define "#{dkml_host_abi}-windows-11-21h2-enterprise", autostart: false do |machine|
+      # ~~~~~~ Windows 11 Version 21H2 Enterprise
+      machine.vm.box = "gusztavvargadr/windows-11-21h2-enterprise"
+      #machine.vm.box_version = "2102.0.2211"
+      machine.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-11-21h2-enterprise/versions/2102.0.2211/providers/virtualbox.box"
+
       machine.vm.provision "shell", inline: <<-SHELL
         C:\\vagrant\\test-language.ps1
       SHELL

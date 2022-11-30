@@ -587,13 +587,18 @@ jobs:
         dkml-host-abi:
           - windows_x86
           - windows_x86_64
+        virtualbox:
+          - windows-10-enterprise
+          - windows-10-21h2-enterprise
+          - windows-10-22h2-enterprise-nocm
+          - windows-11-21h2-enterprise
 
     # macOS-12 is only GitHub CI runner that supports VirtualBox
     # - the suggested 10.15 from https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
     #   is deprecated (https://github.com/actions/runner-images/issues/5583)
     # - virtualbox added to macOS-12 in https://github.com/actions/runner-images/pull/5594
     runs-on: macos-12
-    name: vagrant / ${{ matrix.dkml-host-abi }}
+    name: vagrant / ${{ matrix.dkml-host-abi }} / ${{ matrix.virtualbox }}
 
     steps:
       - name: Checkout code
@@ -630,7 +635,7 @@ jobs:
           mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml-host-abi}}-u-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
 
           cd vagrant/win32
-          vagrant up "${{ matrix.dkml-host-abi }}"
+          vagrant up "${{ matrix.dkml-host-abi }}-${{ matrix.virtualbox }}"
 
       - name: Check test_installation.t status
         run: |
