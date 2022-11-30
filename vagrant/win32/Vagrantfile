@@ -21,10 +21,16 @@ Vagrant.configure("2") do |config|
   # * SOP: SOP_UploadingPublicAssets.md of communicator infra (only available to Diskuv admins)
   # * Either specify box_version or box_url, or specify none.
 
-  # ~~~~~~ Windows 10 Version 22H2 Enterprise
-  config.vm.box = "gusztavvargadr/windows-10-22h2-enterprise-nocm"
-  #config.vm.box_version = "2202.0.2211"
-  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-22h2-enterprise-nocm/versions/2202.0.2211/providers/virtualbox.box"
+  # ~~~~~~ Windows 11 Version 21H2 Enterprise
+  config.vm.box = "gusztavvargadr/windows-11-enterprise"
+  #config.vm.box_version = "2102.0.2211"
+  config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-11-enterprise/versions/2102.0.2211/providers/virtualbox.box"
+
+  # ~~~~~~ Windows 10 Version 22H2 Enterprise NoCM
+  #  > `-nocm` is the absence of Chocolately, Chef and SSH
+  #config.vm.box = "gusztavvargadr/windows-10-22h2-enterprise-nocm"
+  ##config.vm.box_version = "2202.0.2211"
+  #config.vm.box_url = "https://public.communicator.diskuv.com/dkml/vagrant-mirror/gusztavvargadr/boxes/windows-10-22h2-enterprise-nocm/versions/2202.0.2211/providers/virtualbox.box"
 
   # ~~~~~~ Windows 10 Version 21H2 Enterprise
   #config.vm.box = "gusztavvargadr/windows-10-21h2-enterprise"
