@@ -101,7 +101,15 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Semver versions
+      - name: Checkout installer code
+        uses: actions/checkout@v3
+      - name: Decode opam version of installer
+        run: |
+          # (version 1.0.1) -> 1.0.1
+          OPAMMAJMINPAT=$(awk '$1 == "(version" {sub(/)/,"",$2); print $2}' dune-project)
+          echo "OPAMMAJMINPAT=$OPAMMAJMINPAT" >> $GITHUB_ENV
+
+      - name: Decode semver versions of CI tag
         run: |
           # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0
           # From refs/tags/v0.4.0+something -> 0.4.0
@@ -117,18 +125,13 @@ jobs:
       - name: Checkout diskuv-ocaml at semver tags
         run: |
           git clone https://gitlab.com/diskuv/diskuv-ocaml.git
-          if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPATPRE}"; then
+          if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPATPRE}"; then
             # If there is no prerelease tag, perhaps there is a maj/min/patch tag?
-            if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "v${MAJMINPAT}"; then
+            if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPAT}"; then
               # If there is a maj/min/patch tag, don't let next step grab notes from HEAD
               rm -rf diskuv-ocaml
             fi
           fi
-      - name: Opam versions
-        run: |
-          # (version 1.0.1) -> 1.0.1
-          OPAMMAJMINPAT=$(awk '$1 == "(version" {sub(/)/,"",$2); print $2}' dune-project)
-          echo "OPAMMAJMINPAT=$OPAMMAJMINPAT" >> $GITHUB_ENV
 
       - name: View release notes
         run: |
