@@ -58,11 +58,11 @@ pin-depends: [
   ]
 
   [
-    "dkml-runtime-common.1.0.2~prerel26"
+    "dkml-runtime-common.1.0.2~prerel27"
     "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
   [
-    "dkml-runtime-distribution.1.0.2~prerel26"
+    "dkml-runtime-distribution.1.0.2~prerel27"
     "git+https://github.com/diskuv/dkml-runtime-distribution.git"
   ]
   [
@@ -118,7 +118,7 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-component-unixutils.git"
   ]
   [
-    "dkml-component-network-unixutils.0.2.0"
+    "dkml-component-offline-unixutils.0.2.0"
     "git+https://github.com/diskuv/dkml-component-unixutils.git"
   ]
   [
