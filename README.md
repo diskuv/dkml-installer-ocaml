@@ -118,8 +118,7 @@ In addition, there are
  
 ## Status
 
-| What                           | Branch/Tag | Status                                                                                                                                                                                                  |
-| ------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Installer packages             |            | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml)       |
-| Installer syntax check         |            | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)                   |
-| gitlab.com/diskuv/diskuv-ocaml | v1.0.1     | [![gitlab.com/diskuv/diskuv-ocaml v1.0.1 status](https://gitlab.com/diskuv/diskuv-ocaml/badges/v1.0.1/pipeline.svg "legacy diskuv-ocaml v1.0.1")](https://gitlab.com/diskuv/diskuv-ocaml/-/tags/v1.0.1) |
+| What                   | Branch/Tag | Status                                                                                                                                                                                            |
+| ---------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Installer packages     |            | [![Package OCaml Releases](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/package.yml) |
+| Installer syntax check |            | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)             |
