@@ -131,6 +131,10 @@ pin-depends: [
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
+    "dkml-component-staging-dkmlconfdir.0.1.0"
+    "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
+  ]
+  [
     "dkml-component-staging-desktop-full.0.1.0"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
