@@ -3,6 +3,8 @@
 ## Upgrading
 
 ```powershell
+dune clean
+echo "" > installer\bin\dune.inc
 dune build '@gen-dkml' --auto-promote
 ```
 
