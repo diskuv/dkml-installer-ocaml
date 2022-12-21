@@ -62,3 +62,12 @@ $env:VAGRANT_EXPERIMENTAL = "disks" ; vagrant up fr-FR  ; EjectAllCds -SystemLoc
 $env:VAGRANT_EXPERIMENTAL = "disks" ; vagrant up zh-CN  ; EjectAllCds -SystemLocale zh-CN  ; vagrant suspend zh-CN
 $env:VAGRANT_EXPERIMENTAL = "disks" ; vagrant up manual ; EjectAllCds -SystemLocale manual ; vagrant suspend manual
 ```
+
+## Mock CA Certificates
+
+```sh
+openssl genrsa 2048 > mock-ca-key.pem
+openssl req -new -x509 -nodes -days 365000 -key mock-ca-key.pem -out mock-ca-cert.pem
+```
+
+All the defaults were used.

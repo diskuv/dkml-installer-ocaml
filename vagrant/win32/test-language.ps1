@@ -9,6 +9,26 @@ $HereScript = $MyInvocation.MyCommand.Path
 $HereDir = (get-item $HereScript).Directory
 
 # ========================
+# Configure installation
+
+if (!(Test-Path "$env:ProgramData\DiskuvOCaml\conf")) {
+  New-Item -ItemType Directory "$env:ProgramData\DiskuvOCaml\conf"
+}
+
+# +feature_flag_imprecise_c99_float_ops
+#   configure: error: fma does not work, enable emulation with --enable-imprecise-c99-float-ops
+# seems to be a problem with VirtualBox on macOS hardware
+Set-Content `
+  -Path "$env:ProgramData\DiskuvOCaml\conf\ocamlcompiler.sexp" `
+  -Value "((feature_flag_imprecise_c99_float_ops))"
+
+# +trust_anchor
+$EscapedHereDir = "$HereDir".replace("\", "\\")
+Set-Content `
+  -Path "$env:ProgramData\DiskuvOCaml\conf\unixutils.sexp" `
+  -Value "((trust_anchors (`"$EscapedHereDir\\mock-ca-cert.pem`")))"
+
+# ========================
 # START Install instructions from https://diskuv.gitlab.io/diskuv-ocaml/index.html
 
 #   --ci will skip confirmation question at end of setup.exe
