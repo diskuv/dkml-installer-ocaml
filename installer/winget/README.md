@@ -59,7 +59,8 @@ git clone https://github.com/microsoft/winget-pkgs.git
 SECOND, run the manifest in the sandbox:
 
 ```powershell
-.\Tools\SandboxTest.ps1 ..\dkml-installer-ocaml\installer\winget\manifest
+if (Test-Path ..\di-ocaml) {$DIOCAML="..\di-ocaml"} else {$DIOCAML="..\dkml-installer-ocaml"}
+.\Tools\SandboxTest.ps1 "$DIOCAML\installer\winget\manifest"
 ```
 
 If the installer fails with:
