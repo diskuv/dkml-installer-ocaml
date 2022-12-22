@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
 
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: 1.0.1 # BUMP
+PackageVersion: 1.1.0-prerel19 # BUMP
 PackageLocale: en-US
 #   Publisher
 #     Keep in sync with installer\src\private_common.ml "organization" which is used by
