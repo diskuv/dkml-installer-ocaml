@@ -83,8 +83,9 @@ $opamroot = opam var root
 
 Write-Output "Testing installation ..."
 # Clean, run test for installation and save results
-dune clean --root C:\vagrant\test_installation.t
-if ($lastexitcode -ne 0) { throw ("FATAL: dune clean failed") }
+if (Test-Path C:\vagrant\test_installation.t\_build) {
+  Remove-Item -Path C:\vagrant\test_installation.t\_build -Force -Recurse
+}
 dune runtest --root C:\vagrant\test_installation.t --display=short
 if ($lastexitcode -ne 0) { throw ("FATAL: dune runtest failed") }
 Set-Content -Path "C:\vagrant\test_installation.t\exitcode.$SystemLocale.txt" -Value $LastExitCode -NoNewline -Encoding Ascii
