@@ -19,13 +19,18 @@ Commands:
   # BUT 1 ... max 16 entries in Commands:[] so took only the most commonly used
   # BUT 2 ... will be a [winget install dune] so do not register those commands!
   # - dune
+  - dkml
   - ocaml
   - ocamlc
+  - ocamlc.opt
   - ocamldebug
-  - ocamldoc
+  # BUT 3 ... ocamldoc is essentially deprecated by odoc
+  # - ocamldoc
   - ocamlopt
+  - ocamlopt.opt
   - ocamlrun
-  - with-dkml
+  # BUT 4 ... with-dkml is deprecated and will be rolled into dkml
+  # - with-dkml
 Platform:
   - "Windows.Desktop"
 # Minimum OS comes from https://github.com/diskuv/dkml-runtime-distribution/blob/ff7e6bcbf3dbdb37e64b20a57e2dea0fa9d27ed5/src/windows/Machine/Machine.psm1#L14:
