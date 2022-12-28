@@ -5,7 +5,7 @@
 #   https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0#best-practices
 # Reference: https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.2.0/installer.md
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: 1.1.0-prerel19 # BUMP
+PackageVersion: "1.1.0" # BUMP
 # Scope: user
 UpgradeBehavior: uninstallPrevious
 Commands:
@@ -45,7 +45,7 @@ InstallerSwitches:
   SilentWithProgress: --ci
   Interactive: --color=always
   InstallLocation: --prefix "<INSTALLPATH>"
-ReleaseDate: 2022-09-05 # BUMP
+ReleaseDate: 2022-12-28 # BUMP
 # Dependencies:
   # ExternalDependencies:
   #   - Microsoft.VisualStudio.2019.BuildTools
