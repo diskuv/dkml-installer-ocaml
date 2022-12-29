@@ -152,19 +152,19 @@ if ! gh auth status; then
     gh auth login
 fi
 
-# Install unbuffer (optional)
-progress "Installing unbuffer"
+# Install winpty (optional)
+progress "Installing winpty"
 if [ -x /usr/bin/pacman ] && is_msys2_msys_build_machine; then
-    pacman -S --needed --noconfirm expect
+    pacman -S --needed --noconfirm winpty
 fi
 
 # Find Pre-release
 progress "Finding latest release marked as Pre-release"
-unbuffer_exe=$(command -v unbuffer || true)
-if [ -n "$unbuffer_exe" ]; then
+winpty_exe=$(command -v winpty || true)
+if [ -n "$winpty_exe" ]; then
     # Unbuffering keeps the nice colors. Completely optional of course.
     # But it keeps escape codes in its output, so we have to do listing twice.
-    "$unbuffer_exe" gh release list --repo "$GHREPO" --exclude-drafts
+    "$winpty_exe" -Xallow-non-tty gh release list --repo "$GHREPO" --exclude-drafts
     gh release list --repo "$GHREPO" --exclude-drafts > releases.txt
 else
     gh release list --repo "$GHREPO" --exclude-drafts | tee releases.txt
