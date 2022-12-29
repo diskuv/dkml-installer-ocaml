@@ -69,9 +69,9 @@ ReleaseDate: 2022-12-28 # BUMP
 Installers:
   - Architecture: x64
 
-    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.1.0-prerel19/unsigned-diskuv-ocaml-windows_x86_64-i-1.0.1.exe # BUMP
+    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.1.0/setup-diskuv-ocaml-windows_x86_64-1.1.0.exe # BUMP
     InstallerType: exe
-    InstallerSha256: 418362603c89b817f0b422c331dee3ce250d3526bcf3728d989a01d4a51bd7dc # BUMP
+    InstallerSha256: 6a47c8c3b4b9cfb67dde08e6ec8ed6f0cda8d23870b5feeffd0ee9f28a49fb1b # BUMP
 
 ManifestType: "installer"
 ManifestVersion: "1.1.0"

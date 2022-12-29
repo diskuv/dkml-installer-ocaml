@@ -32,6 +32,9 @@ Description: |-
 
   The installation will take approximately 1.5 HOURS on a modern Windows PC.
 
+  This version does not currently work if you have a space in your username
+  (ex. C:\Users\Jane Smith).
+
   Installing this package will automatically install the required prerequisites
   for Windows development:
   * Visual Studio Build Tools 2019 (it will not touch any existing Visual Studio
@@ -48,6 +51,12 @@ Description: |-
   * Wanting quick installations? Use anything but Diskuv OCaml! Diskuv OCaml
     will conduct from-source builds unless it can guarantee (and code sign) the
     binaries are reproducible. Today that means a lot of compiling.
+
+  Commercial tools and support are available from Diskuv for mixed OCaml/C
+  development; however, this pure OCaml winget package only has limited support
+  for mixed OCaml/C. For example, the "ctypes" opam package has been patched
+  to work with Visual Studio but is out-dated. Contact
+  support AT diskuv.com if you need OCaml/C development.
 Moniker: dkml
 Tags:
 - foss
