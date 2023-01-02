@@ -29,7 +29,7 @@ Set-Content `
   -Value "((trust_anchors (`"$EscapedHereDir\\mock-ca-cert.pem`")))"
 
 # ========================
-# START Install instructions from https://diskuv.gitlab.io/diskuv-ocaml/index.html
+# START Install instructions from https://diskuv-ocaml.gitlab.io/distributions/dkml/index.html
 
 #   --ci will skip confirmation question at end of setup.exe
 $opts = "--ci"
