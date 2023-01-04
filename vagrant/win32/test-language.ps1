@@ -107,6 +107,7 @@ if ($lastexitcode -ne 0) {
   throw ("FATAL: opam install graphics failed")
 }
 opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
+opam install pyml --yes           # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/12
 if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
 
 Write-Output "Done tests."
