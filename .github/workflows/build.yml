@@ -1,0 +1,319 @@
+# Suggested filename: .github/workflows/build-with-dkml.yml
+
+name: Build with DKML compiler
+
+env:
+  OPAM_PACKAGE: dkml-installer-network-ocaml
+  PROGRAM_NAME_KEBAB: diskuv-ocaml
+  DKML_COMPILER: "" # You can override the dkml-compiler package version. Example: 4.12.1-v1.0.2, 4.14.0-v1.1.0-prerel1
+
+on:
+  push:
+    branches:
+      - main
+      - v*
+    tags:
+      - v*
+  # ... or trigger manually from GitHub web interface
+  workflow_dispatch:
+    inputs:
+      test-filter:
+        type: choice
+        description: "Which tests are used"
+        required: false
+        default: all-tests
+        options:
+          - "all-tests"
+          - "no-tests"
+          - "no-direct-tests"
+          - "no-vagrant-tests"
+
+jobs:
+  build:
+    timeout-minutes: 90 # 1.5 hours
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86
+            dkml_host_abi: windows_x86
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86_64
+            dkml_host_abi: windows_x86_64
+          # - gh_os: ubuntu-latest
+          #   abi_pattern: manylinux2014-linux_x86
+          #   dkml_host_abi: linux_x86
+          # - gh_os: ubuntu-latest
+          #   abi_pattern: manylinux2014-linux_x86_64
+          #   dkml_host_abi: linux_x86_64
+          # - gh_os: macos-latest
+          #   abi_pattern: macos-darwin_all
+          #   dkml_host_abi: darwin_x86_64
+
+    runs-on: ${{ matrix.gh_os }}
+    name: build / ${{ matrix.abi_pattern }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # The Setup DKML action will create the environment variables:
+      #   opam_root, exe_ext, dkml_host_abi, abi_pattern (and many more)
+
+      - name: Setup DKML on a Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        uses: ./ci/setup-dkml/gh-windows/pre
+        with:
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+
+      - name: Setup DKML on a Darwin host
+        if: startsWith(matrix.dkml_host_abi, 'darwin_')
+        uses: ./ci/setup-dkml/gh-darwin/pre
+        with:
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+
+      - name: Setup DKML on a Linux host
+        if: startsWith(matrix.dkml_host_abi, 'linux_')
+        uses: ./ci/setup-dkml/gh-linux/pre
+        with:
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+
+      # This section is for your own build logic which you should place in ci/build-test.sh or a similar file
+
+      - name: Build and test the package on Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        shell: msys2 {0}
+        # with:
+        #   DKML_HOST_ABI: ${{ matrix.dkml_host_abi }}
+        run: ci/build-test.sh --opam-package=${{ env.OPAM_PACKAGE }} --program-name-kebab=${{ env.PROGRAM_NAME_KEBAB }}
+
+      - name: Build and test the package on non-Windows host
+        if: "!startsWith(matrix.dkml_host_abi, 'windows_')"
+        # with:
+        #   DKML_HOST_ABI: ${{ matrix.dkml_host_abi }}
+        run: ci/build-test.sh --opam-package=${{ env.OPAM_PACKAGE }} --program-name-kebab=${{ env.PROGRAM_NAME_KEBAB }}
+
+      # The Teardown DKML action will finalize caching, etc.
+
+      - name: Teardown DKML on a Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        uses: ./ci/setup-dkml/gh-windows/post
+
+      - name: Teardown DKML on a Darwin host
+        if: startsWith(matrix.dkml_host_abi, 'darwin_')
+        uses: ./ci/setup-dkml/gh-darwin/post
+
+      - name: Teardown DKML on a Linux host
+        if: startsWith(matrix.dkml_host_abi, 'linux_')
+        uses: ./ci/setup-dkml/gh-linux/post
+
+      # We'll capture the dist/ folder for the testing steps
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.dkml_host_abi }}
+          path: dist/
+
+  release-notes:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout installer code
+        uses: actions/checkout@v3
+      - name: Decode opam version of installer
+        run: |
+          # (version 1.0.1) -> 1.0.1
+          OPAMMAJMINPAT=$(awk '$1 == "(version" {sub(/)/,"",$2); print $2}' dune-project)
+          echo "OPAMMAJMINPAT=$OPAMMAJMINPAT" >> $GITHUB_ENV
+
+      - name: Decode semver versions of CI tag
+        run: |
+          # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0
+          # From refs/tags/v0.4.0+something -> 0.4.0
+          MAJMINPAT=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#-.*##; s#+.*##')
+          # From refs/tags/v0.4.0-prerel91_r1_no_test -> 0.4.0-prerel91
+          # From refs/tags/v0.4.0+something -> 0.4.0
+          MAJMINPATPRE=$(printf "%s" '${{ github.ref }}' | sed 's#refs/tags/##; s#^v##; s#\(-prerel[0-9]*\).*#\1#; s#+.*##')
+          echo "MAJMINPAT=$MAJMINPAT" >> $GITHUB_ENV
+          echo "MAJMINPATPRE=$MAJMINPATPRE" >> $GITHUB_ENV
+
+          printf 'Major.Minor.Patch = \e[1;34m%s\e[0m\n' "$MAJMINPAT"
+          printf 'Major.Minor.Patch[-Prerelease] = \e[1;34m%s\e[0m\n' "$MAJMINPATPRE"
+      - name: Checkout diskuv-ocaml at semver tags
+        run: |
+          git clone https://gitlab.com/diskuv-ocaml/distributions/dkml.git
+          if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPATPRE}"; then
+            # If there is no prerelease tag, perhaps there is a maj/min/patch tag?
+            if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPAT}"; then
+              # If there is a maj/min/patch tag, don't let next step grab notes from HEAD
+              rm -rf diskuv-ocaml
+            fi
+          fi
+
+      - name: View release notes
+        run: |
+          notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
+          cat > footer.md <<EOF
+          ## Asset Listing
+          | Asset                                                 | Supported? | Description                                                                         |
+          | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
+          | [setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
+          | [setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
+          | [uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
+          | [uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
+          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe) | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
+          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          | [diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz)        | No         | Unsigned macOS on Intel binary distribution                                         |
+          | [diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz)         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
+          | [diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz)            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux          |
+          | [diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.sfx)             | No         | Self-extracting executable header used when creating signed installers from ...     |
+          | [diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.sfx](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.sfx)          | No         | ... the pk7zip contents of the unsigned Windows installers                          |
+          | *-u-$OPAMMAJMINPAT.*                                      | No         | Uninstallers for all the above                                                      |
+          EOF
+          echo > emptyline
+          if [ -e "$notes" ]; then
+            RELEASEDATE=$(date -u +%Y-%m-%d)
+            cat "$notes" emptyline footer.md | sed "s/@@YYYYMMDD@@/$RELEASEDATE/" > notes.md
+          else
+            cp footer.md notes.md
+          fi
+          cat notes.md # Just for troubleshooting
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-notes
+          path: notes.md
+
+  # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
+  # For example, found missing vcruntime140.dll with Vagrant testing.
+  vagrant-testing:
+    timeout-minutes: 180 # 3.0 hours
+    if: |
+      github.event.inputs.test-filter != 'no-tests' &&
+      github.event.inputs.test-filter != 'no-vagrant-tests' &&
+      !endsWith(github.ref_name, '_no_test')
+
+    # Wait for build
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019]
+        dkml_host_abi:
+          - windows_x86
+          - windows_x86_64
+        virtualbox:
+          - windows-10-enterprise
+          - windows-10-21h2-enterprise
+          - windows-10-22h2-enterprise-nocm
+          - windows-11-21h2-enterprise
+
+    # macOS-12 is only GitHub CI runner that supports VirtualBox
+    # - the suggested 10.15 from https://stackoverflow.com/questions/66261101/using-vagrant-on-github-actions-ideally-incl-virtualbox
+    #   is deprecated (https://github.com/actions/runner-images/issues/5583)
+    # - virtualbox added to macOS-12 in https://github.com/actions/runner-images/pull/5594
+    runs-on: macos-12
+    name: vagrant / ${{ matrix.dkml_host_abi }} / ${{ matrix.virtualbox }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download and unpack ${{ matrix.dkml_host_abi }} artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.dkml_host_abi }}
+          path: dist
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v3
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('vagrant/win32/Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+
+      - name: Sanitize
+        run: rm -rf ~/playground
+
+      - name: vagrant up for ${{ matrix.dkml_host_abi }} build
+        run: |
+          #!/bin/sh
+          set -eufx
+
+          awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+
+          # Move artifacts into the Vagrant filesystem as "setup.exe" and "uninstall.exe"
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-i-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-u-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
+
+          cd vagrant/win32
+          vagrant up "${{ matrix.dkml_host_abi }}-${{ matrix.virtualbox }}"
+
+      - name: Check test_installation.t status
+        run: |
+          set -x ; EXITC=$(awk 'NF>0{print $1}' vagrant/win32/test_installation.t/exitcode.en-US.txt) ; if [ ! "$EXITC" = 0 ]; then echo "FATAL: Vagrant test_installation.t FAILED with exit code $EXITC"; exit 1; fi
+
+      - name: Get EstimatedSize= for Windows registry
+        run: |
+          cat vagrant/win32/test_installation.t/estimatedsize.en-US.txt
+
+      - name: Check otherplayground creation
+        run: |
+          set -x ; find vagrant/win32/otherplayground ; if [ ! -e vagrant/win32/otherplayground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant otherplayground creation FAILED"; exit 1; fi
+
+  #--------
+  # Release
+  #--------
+  #
+  # We need Release to run even if the tests are disabled with _no_test tag
+  # or through a test-filter. That means we cannot put a dependency on
+  # the tests.
+  # With no dependency on tests, we can create a Release even if tests fail.
+  # But that is OK because the Release is just a Pre-release.
+
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed for softprops/action-gh-release@v1
+    # Wait until `build` and `release-notes` complete
+    needs:
+      - build
+      - release-notes
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Remove setup artifacts
+        run: rm -rf setup-*
+        working-directory: dist
+
+      - name: Restructure multi-ABI directories
+        run: |
+          _release="$(pwd)/_release"
+          install -d "$_release"
+
+          # Special case: Release notes are not part of multi-ABI
+          mv dist/release-notes release-notes
+
+          cd dist
+          find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
+            rsync -av $distname/ "$_release"
+          done
+
+      - name: Display files to be distributed
+        run: ls -R
+        working-directory: _release
+
+      - name: Release (only when Git tag pushed)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          prerelease: true # becomes a real release after it is signed externally
+          body_path: release-notes/notes.md
+          files: |
+            _release/*
