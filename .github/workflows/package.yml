@@ -411,7 +411,7 @@ jobs:
               ;;
             darwin*)
               opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-i.sh -o dist -e .tar.gz -t bsd tar --gzip
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-i.sh -o dist -e .tar.gz -t bsd tar --gzip
+              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-u.sh -o dist -e .tar.gz -t bsd tar --gzip
               ;;
             windows_*)
               opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-i-*.exe" -exec install {} dist/ \;
