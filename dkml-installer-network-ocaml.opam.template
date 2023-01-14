@@ -58,11 +58,11 @@ pin-depends: [
   ]
 
   [
-    "dkml-runtime-common.1.1.0~prerel15"
+    "dkml-runtime-common.1.2.0~prerel1"
     "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
   [
-    "dkml-runtime-distribution.1.1.0~prerel15"
+    "dkml-runtime-distribution.1.2.0~prerel1"
     "git+https://github.com/diskuv/dkml-runtime-distribution.git"
   ]
   [
@@ -82,27 +82,27 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
-    "dkml-component-common-desktop.0.1.0"
+    "dkml-component-common-desktop.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    "dkml-component-staging-withdkml.0.1.0"
+    "dkml-component-staging-withdkml.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    "dkml-component-staging-dkmlconfdir.0.1.0"
+    "dkml-component-staging-dkmlconfdir.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    "dkml-component-staging-desktop-full.0.1.0"
+    "dkml-component-staging-desktop-full.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    "dkml-component-offline-desktop-full.0.1.0"
+    "dkml-component-offline-desktop-full.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
-    "dkml-component-staging-desktop-compile.0.1.0"
+    "dkml-component-staging-desktop-compile.0.1.1"
     "git+https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop.git"
   ]
   [
