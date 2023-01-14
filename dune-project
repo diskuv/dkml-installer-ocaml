@@ -27,6 +27,7 @@
   (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
   (dkml-install-installer                 (>= 0.3.0))
   (dkml-package-console                   (>= 0.3.0))
+  (dkml-workflows                         (and (>= 1.1.0) :build))
   ; crunch 3.2.0 has problems with reading CRLF on Windows
   (crunch                                 (>= 3.3.1))
   (alcotest                               (and (>= 1.4.0) :with-test))))
