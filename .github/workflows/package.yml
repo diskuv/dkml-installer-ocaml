@@ -22,7 +22,7 @@ on:
         type: string
         description: "Git branch, tag or commit for dkml-install, dkml-install-runner and dkml-package-console"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       dkml-compiler:
         type: string
         description: "Git branch, tag or commit for dkml-base-compiler"
@@ -32,7 +32,7 @@ on:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-ocamlcompiler"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       dkml-component-ocamlrun:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-ocamlrun"
@@ -42,22 +42,22 @@ on:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-opam"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       dkml-component-curl:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-curl package"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       dkml-component-unixutils:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-unixutils packages"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       conf-dkml-cross-toolchain:
         type: string
         description: "Git branch, tag or commit for conf-dkml-cross-toolchain"
         required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
+        default: "@repository@"
       diskuv-opam-repository:
         # Used by all_setup_opam_repositories.sh
         type: string
@@ -224,7 +224,6 @@ jobs:
       DKML_COMPONENT_NETWORK_OCAMLCOMPILER: "${{ github.event.inputs.dkml-component-ocamlcompiler }}"
       DKML_COMPONENT_STAGING_OCAMLRUN: "${{ github.event.inputs.dkml-component-ocamlrun }}"
       DKML_COMPONENT_STAGING_OPAM: "${{ github.event.inputs.dkml-component-opam }}"
-      DKML_COMPONENT_XX_CONSOLE: ""
       # These are not independent of dkml-install-api; they reside in same
       # repository; we cannot go over max 10 GitHub workflow inputs.
       DKML_INSTALL: "${{ github.event.inputs.dkml-install-api }}"
@@ -358,20 +357,6 @@ jobs:
         if: ${{ env.DKML_COMPONENT_OFFLINE_UNIXUTILS != '@repository@' }}
         run: opamrun pin add --yes --no-action dkml-component-offline-unixutils .ci/g/dkml-component-offline-unixutils
 
-      # dkml-component-xx-console
-
-      - name: Checkout dkml-component-xx-console
-        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/dkml-component-console
-          path: .ci/g/dkml-component-xx-console
-          ref: ${{ env.DKML_COMPONENT_XX_CONSOLE }} # empty is no `ref`, which is default branch
-
-      - name: Pin dkml-component-xx-console to checkout instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_XX_CONSOLE != '@repository@' }}
-        run: opamrun pin add --yes --no-action dkml-component-xx-console .ci/g/dkml-component-xx-console
-
       # dkml-option-vcpkg (always checkout until in repository)
 
       - name: Checkout dkml-option-vcpkg
@@ -382,17 +367,6 @@ jobs:
 
       - name: Pin dkml-option-vcpkg to checkout instead of Opam repository
         run: opamrun pin add --yes --no-action dkml-option-vcpkg .ci/g/dkml-option-vcpkg
-
-      # diskuvbox bug fix
-
-      - name: Checkout diskuvbox
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/diskuvbox
-          path: .ci/g/diskuvbox
-
-      - name: Pins for bugfix of diskuvbox
-        run: opamrun pin add --yes --no-action diskuvbox .ci/g/diskuvbox
 
       # version pins
       - name: Pins for packages to work on all OSes including Windows
