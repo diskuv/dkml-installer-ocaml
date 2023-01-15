@@ -28,14 +28,15 @@ export PIN_CTYPES='0.19.2-windowssupport-r4'
 export PIN_CURLY='0.2.1-windows-env_r2'
 export PIN_DIGESTIF='1.0.1'
 export PIN_DUNE='3.6.2'
-export PIN_DKML_APPS='1.2.0~prerel1'
+export PIN_DKML_APPS='1.2.0~prerel3'
+export PIN_DKML_EXE='1.2.0~prerel3'
 export PIN_OCAMLBUILD='0.14.0'
 export PIN_OCAMLFIND='1.9.1'
 export PIN_OCP_INDENT='1.8.2-windowssupport'
 export PIN_PPX_EXPECT='v0.14.1'
 export PIN_PTIME='0.8.6-msvcsupport'
 export PIN_TIME_NOW='v0.14.0'
-export PIN_WITH_DKML='1.2.0~prerel1'
+export PIN_WITH_DKML='1.2.0~prerel3'
 
 usage() {
   echo 'Setup Diskuv OCaml (DKML) compiler on a desktop PC.' >&2
@@ -66,6 +67,7 @@ usage() {
   echo "  --PIN_DIGESTIF=<value>. Defaults to: ${PIN_DIGESTIF}" >&2
   echo "  --PIN_DUNE=<value>. Defaults to: ${PIN_DUNE}" >&2
   echo "  --PIN_DKML_APPS=<value>. Defaults to: ${PIN_DKML_APPS}" >&2
+  echo "  --PIN_DKML_EXE=<value>. Defaults to: ${PIN_DKML_EXE}" >&2
   echo "  --PIN_OCAMLBUILD=<value>. Defaults to: ${PIN_OCAMLBUILD}" >&2
   echo "  --PIN_OCAMLFIND=<value>. Defaults to: ${PIN_OCAMLFIND}" >&2
   echo "  --PIN_OCP_INDENT=<value>. Defaults to: ${PIN_OCP_INDENT}" >&2
@@ -125,6 +127,8 @@ while getopts :h-: option; do
     PIN_DUNE=*) PIN_DUNE=${OPTARG#*=} ;;
     PIN_DKML_APPS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_APPS=*) PIN_DKML_APPS=${OPTARG#*=} ;;
+    PIN_DKML_EXE) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_EXE=*) PIN_DKML_EXE=${OPTARG#*=} ;;
     PIN_OCAMLBUILD) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_OCAMLBUILD=*) PIN_OCAMLBUILD=${OPTARG#*=} ;;
     PIN_OCAMLFIND) fail "Option \"$OPTARG\" missing argument" ;;
@@ -407,9 +411,9 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
 # Constants
-DKML_VERSION=1.2.0-prerel1
+DKML_VERSION=1.2.0-prerel3
 
 setup_WORKSPACE_VARNAME=$1
 shift

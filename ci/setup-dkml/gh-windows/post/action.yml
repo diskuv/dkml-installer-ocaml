@@ -89,13 +89,14 @@ runs:
         PIN_CURLY: '0.2.1-windows-env_r2'
         PIN_DIGESTIF: '1.0.1'
         PIN_DUNE: '3.6.2'
-        PIN_DKML_APPS: '1.2.0~prerel1'
+        PIN_DKML_APPS: '1.2.0~prerel3'
+        PIN_DKML_EXE: '1.2.0~prerel3'
         PIN_OCAMLBUILD: '0.14.0'
         PIN_OCAMLFIND: '1.9.1'
         PIN_OCP_INDENT: '1.8.2-windowssupport'
         PIN_PPX_EXPECT: 'v0.14.1'
         PIN_PTIME: '0.8.6-msvcsupport'
         PIN_TIME_NOW: 'v0.14.0'
-        PIN_WITH_DKML: '1.2.0~prerel1'
+        PIN_WITH_DKML: '1.2.0~prerel3'
       run: |
         sh .ci/sd4/run-teardown-dkml.sh GITHUB_WORKSPACE "$GITHUB_WORKSPACE"

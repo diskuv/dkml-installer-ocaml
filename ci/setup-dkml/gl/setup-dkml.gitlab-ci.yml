@@ -23,14 +23,15 @@ variables:
   PIN_CURLY: '0.2.1-windows-env_r2'
   PIN_DIGESTIF: '1.0.1'
   PIN_DUNE: '3.6.2'
-  PIN_DKML_APPS: '1.2.0~prerel1'
+  PIN_DKML_APPS: '1.2.0~prerel3'
+  PIN_DKML_EXE: '1.2.0~prerel3'
   PIN_OCAMLBUILD: '0.14.0'
   PIN_OCAMLFIND: '1.9.1'
   PIN_OCP_INDENT: '1.8.2-windowssupport'
   PIN_PPX_EXPECT: 'v0.14.1'
   PIN_PTIME: '0.8.6-msvcsupport'
   PIN_TIME_NOW: 'v0.14.0'
-  PIN_WITH_DKML: '1.2.0~prerel1'
+  PIN_WITH_DKML: '1.2.0~prerel3'
 
 .common:setup-dkml-allplusmincache:
   stage: build
@@ -42,14 +43,14 @@ variables:
     expire_in: "1 days"
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "a_1_${CACHE_PREFIX}-edabddd-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "a_1_${CACHE_PREFIX}-9e28d5a-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - ${opam_root_cacheable}/download-cache
 
 .common:setup-dkml-cache:
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "b_1_${CACHE_PREFIX}-edabddd-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "b_1_${CACHE_PREFIX}-9e28d5a-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - .ci/sd4/bs
         - ${opam_root_cacheable}/config
@@ -439,9 +440,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
       # Constants
-      DKML_VERSION=1.2.0-prerel1
+      DKML_VERSION=1.2.0-prerel3
 
       setup_WORKSPACE_VARNAME=$1
       shift
@@ -2241,9 +2242,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
       # Constants
-      DKML_VERSION=1.2.0-prerel1
+      DKML_VERSION=1.2.0-prerel3
 
       setup_WORKSPACE_VARNAME=$1
       shift
@@ -3823,9 +3824,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
       # Constants
-      DKML_VERSION=1.2.0-prerel1
+      DKML_VERSION=1.2.0-prerel3
 
       setup_WORKSPACE_VARNAME=$1
       shift
