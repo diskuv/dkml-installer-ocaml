@@ -66,6 +66,10 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-runtime-distribution.git"
   ]
   [
+    "dkml-component-staging-ocamlrun.4.14.0~v1.0.2~prerel33"
+    "git+https://github.com/diskuv/dkml-component-ocamlrun.git"
+  ]
+  [
     "dkml-component-offline-opamshim.2.2.0~alpha0~20221228"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
