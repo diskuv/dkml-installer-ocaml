@@ -23,14 +23,14 @@ variables:
   PIN_CURLY: '0.2.1-windows-env_r2'
   PIN_DIGESTIF: '1.0.1'
   PIN_DUNE: '3.6.2'
-  PIN_DKML_APPS: '1.1.0'
+  PIN_DKML_APPS: '1.2.0~prerel1'
   PIN_OCAMLBUILD: '0.14.0'
   PIN_OCAMLFIND: '1.9.1'
   PIN_OCP_INDENT: '1.8.2-windowssupport'
   PIN_PPX_EXPECT: 'v0.14.1'
   PIN_PTIME: '0.8.6-msvcsupport'
   PIN_TIME_NOW: 'v0.14.0'
-  PIN_WITH_DKML: '1.1.0'
+  PIN_WITH_DKML: '1.2.0~prerel1'
 
 .common:setup-dkml-allplusmincache:
   stage: build
@@ -42,14 +42,14 @@ variables:
     expire_in: "1 days"
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "a_1_${CACHE_PREFIX}-1_2_0-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "a_1_${CACHE_PREFIX}-1c64fee-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - ${opam_root_cacheable}/download-cache
 
 .common:setup-dkml-cache:
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "b_1_${CACHE_PREFIX}-1_2_0-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "b_1_${CACHE_PREFIX}-1c64fee-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - .ci/sd4/bs
         - ${opam_root_cacheable}/config
@@ -439,9 +439,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
       # Constants
-      DKML_VERSION=1.1.0
+      DKML_VERSION=1.2.0-prerel1
 
       setup_WORKSPACE_VARNAME=$1
       shift
@@ -1912,7 +1912,7 @@ variables:
       msys2_system: 'MINGW32',
       msys2_packages: 'mingw-w64-i686-pkg-config',
       exe_ext: '.exe',
-      bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+      bootstrap_opam_version: '2.2.0-alpha-20221104',
       opam_abi: 'windows_x86',
       dkml_host_abi: 'windows_x86',
       opam_root: 'C:/o',
@@ -1933,7 +1933,7 @@ variables:
       msys2_system: 'CLANG64',
       msys2_packages: 'mingw-w64-clang-x86_64-pkg-config',
       exe_ext: '.exe',
-      bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+      bootstrap_opam_version: '2.2.0-alpha-20221104',
       opam_abi: 'windows_x86_64',
       dkml_host_abi: 'windows_x86_64',
       opam_root: 'C:/o',
@@ -1955,7 +1955,7 @@ variables:
         msys2_system: 'MINGW32',
         msys2_packages: 'mingw-w64-i686-pkg-config',
         exe_ext: '.exe',
-        bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+        bootstrap_opam_version: '2.2.0-alpha-20221104',
         opam_abi: 'windows_x86',
         dkml_host_abi: 'windows_x86',
         opam_root: 'C:/o',
@@ -1969,7 +1969,7 @@ variables:
         msys2_system: 'CLANG64',
         msys2_packages: 'mingw-w64-clang-x86_64-pkg-config',
         exe_ext: '.exe',
-        bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+        bootstrap_opam_version: '2.2.0-alpha-20221104',
         opam_abi: 'windows_x86_64',
         dkml_host_abi: 'windows_x86_64',
         opam_root: 'C:/o',
@@ -1987,7 +1987,7 @@ variables:
         opam_root_cacheable: '${CI_PROJECT_DIR}/.ci/o',
         abi_pattern: 'macos-darwin_all',
         gl_image: 'macos-11-xcode-12',
-        bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+        bootstrap_opam_version: '2.2.0-alpha-20221104',
         dkml_host_abi: 'darwin_x86_64',
         opam_root: '${CI_PROJECT_DIR}/.ci/o' },
         
@@ -2241,9 +2241,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
       # Constants
-      DKML_VERSION=1.1.0
+      DKML_VERSION=1.2.0-prerel1
 
       setup_WORKSPACE_VARNAME=$1
       shift
@@ -3502,7 +3502,7 @@ variables:
         opam_root_cacheable: '.ci/o',
         abi_pattern: 'manylinux2014-linux_x86',
         comment: '(CentOS 7, etc.)',
-        bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+        bootstrap_opam_version: '2.2.0-alpha-20221104',
         dkml_host_abi: 'linux_x86',
         opam_root: '.ci/o',
         in_docker: 'true',
@@ -3513,7 +3513,7 @@ variables:
         opam_root_cacheable: '.ci/o',
         abi_pattern: 'manylinux2014-linux_x86_64',
         comment: '(CentOS 7, etc.)',
-        bootstrap_opam_version: '2.2.0-dkml20220801T155940Z',
+        bootstrap_opam_version: '2.2.0-alpha-20221104',
         dkml_host_abi: 'linux_x86_64',
         opam_root: '.ci/o',
         dockcross_image: 'dockcross/manylinux2014-x64',
@@ -3823,9 +3823,9 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
       # Constants
-      DKML_VERSION=1.1.0
+      DKML_VERSION=1.2.0-prerel1
 
       setup_WORKSPACE_VARNAME=$1
       shift

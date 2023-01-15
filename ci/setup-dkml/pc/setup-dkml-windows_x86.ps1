@@ -140,14 +140,14 @@ param (
   ,[Parameter()] [string] $PIN_CURLY = "0.2.1-windows-env_r2"
   ,[Parameter()] [string] $PIN_DIGESTIF = "1.0.1"
   ,[Parameter()] [string] $PIN_DUNE = "3.6.2"
-  ,[Parameter()] [string] $PIN_DKML_APPS = "1.1.0"
+  ,[Parameter()] [string] $PIN_DKML_APPS = "1.2.0~prerel1"
   ,[Parameter()] [string] $PIN_OCAMLBUILD = "0.14.0"
   ,[Parameter()] [string] $PIN_OCAMLFIND = "1.9.1"
   ,[Parameter()] [string] $PIN_OCP_INDENT = "1.8.2-windowssupport"
   ,[Parameter()] [string] $PIN_PPX_EXPECT = "v0.14.1"
   ,[Parameter()] [string] $PIN_PTIME = "0.8.6-msvcsupport"
   ,[Parameter()] [string] $PIN_TIME_NOW = "v0.14.0"
-  ,[Parameter()] [string] $PIN_WITH_DKML = "1.1.0"
+  ,[Parameter()] [string] $PIN_WITH_DKML = "1.2.0~prerel1"
 )
 
 $ErrorActionPreference = "Stop"
@@ -182,7 +182,7 @@ $env:abi_pattern = "win32-windows_x86"
 $env:msys2_system = "MINGW32"
 $env:msys2_packages = "mingw-w64-i686-pkg-config"
 $env:exe_ext = ".exe"
-$env:bootstrap_opam_version = "2.2.0-dkml20220801T155940Z"
+$env:bootstrap_opam_version = "2.2.0-alpha-20221104"
 $env:opam_abi = "windows_x86"
 $env:dkml_host_abi = "windows_x86"
 $env:opam_root = "${env:PC_PROJECT_DIR}/.ci/o"
@@ -514,9 +514,9 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
 # Constants
-DKML_VERSION=1.1.0
+DKML_VERSION=1.2.0-prerel1
 
 setup_WORKSPACE_VARNAME=$1
 shift
