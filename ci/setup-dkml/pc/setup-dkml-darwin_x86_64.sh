@@ -14,11 +14,12 @@ export FDOPEN_OPAMEXE_BOOTSTRAP=false
 export CACHE_PREFIX=v1
 export OCAML_COMPILER=
 export DKML_COMPILER=
+export SECONDARY_SWITCH=false
 export CONF_DKML_CROSS_TOOLCHAIN=@repository@
 export DISKUV_OPAM_REPOSITORY=
-export SECONDARY_SWITCH=false
+export DKML_HOME=
 # autogen from global_env_vars.
-export DEFAULT_DKML_COMPILER='4.12.1-v1.0.2'
+export DEFAULT_DKML_COMPILER='4.14.0-v1.1.0-prerel15'
 export PIN_BASE='v0.14.3'
 export PIN_BIGSTRINGAF='0.8.0'
 export PIN_CORE_KERNEL='v0.14.2'
@@ -26,16 +27,15 @@ export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r4'
 export PIN_CTYPES='0.19.2-windowssupport-r4'
 export PIN_CURLY='0.2.1-windows-env_r2'
 export PIN_DIGESTIF='1.0.1'
-export PIN_DUNE='2.9.3+shim.1.0.2~r0'
-export PIN_DUNE_CONFIGURATOR='2.9.3'
-export PIN_DKML_APPS='1.0.1'
+export PIN_DUNE='3.6.2'
+export PIN_DKML_APPS='1.1.0'
 export PIN_OCAMLBUILD='0.14.0'
 export PIN_OCAMLFIND='1.9.1'
 export PIN_OCP_INDENT='1.8.2-windowssupport'
 export PIN_PPX_EXPECT='v0.14.1'
 export PIN_PTIME='0.8.6-msvcsupport'
 export PIN_TIME_NOW='v0.14.0'
-export PIN_WITH_DKML='1.0.1'
+export PIN_WITH_DKML='1.1.0'
 
 usage() {
   echo 'Setup Diskuv OCaml (DKML) compiler on a desktop PC.' >&2
@@ -53,6 +53,7 @@ usage() {
   echo "  --SECONDARY_SWITCH=true|false. If true then the secondary switch named 'two' is created, in addition to the always-present 'dkml' switch. Defaults to: ${SECONDARY_SWITCH}" >&2
   echo "  --CONF_DKML_CROSS_TOOLCHAIN=<value>. Unspecified or blank is the latest from the default branch (main) of conf-dkml-cross-toolchain. @repository@ is the latest from Opam. Defaults to: ${CONF_DKML_CROSS_TOOLCHAIN}" >&2
   echo "  --DISKUV_OPAM_REPOSITORY=<value>. Defaults to the value of --DEFAULT_DISKUV_OPAM_REPOSITORY_TAG (see below)" >&2
+  echo "  --DKML_HOME=<value>. then DiskuvOCamlHome, DiskuvOCamlBinaryPaths and DiskuvOCamlDeploymentId will be set, in addition to the always-present DiskuvOCamlVarsVersion and DiskuvOCamlVersion." >&2
 
   # autogen from global_env_vars.
   echo "  --DEFAULT_DKML_COMPILER=<value>. Defaults to: ${DEFAULT_DKML_COMPILER}" >&2
@@ -64,7 +65,6 @@ usage() {
   echo "  --PIN_CURLY=<value>. Defaults to: ${PIN_CURLY}" >&2
   echo "  --PIN_DIGESTIF=<value>. Defaults to: ${PIN_DIGESTIF}" >&2
   echo "  --PIN_DUNE=<value>. Defaults to: ${PIN_DUNE}" >&2
-  echo "  --PIN_DUNE_CONFIGURATOR=<value>. Defaults to: ${PIN_DUNE_CONFIGURATOR}" >&2
   echo "  --PIN_DKML_APPS=<value>. Defaults to: ${PIN_DKML_APPS}" >&2
   echo "  --PIN_OCAMLBUILD=<value>. Defaults to: ${PIN_OCAMLBUILD}" >&2
   echo "  --PIN_OCAMLFIND=<value>. Defaults to: ${PIN_OCAMLFIND}" >&2
@@ -102,6 +102,8 @@ while getopts :h-: option; do
     CONF_DKML_CROSS_TOOLCHAIN=*) CONF_DKML_CROSS_TOOLCHAIN=${OPTARG#*=} ;;
     DISKUV_OPAM_REPOSITORY) fail "Option \"$OPTARG\" missing argument" ;;
     DISKUV_OPAM_REPOSITORY=*) DISKUV_OPAM_REPOSITORY=${OPTARG#*=} ;;
+    DKML_HOME) fail "Option \"$OPTARG\" missing argument" ;;
+    DKML_HOME=*) DKML_HOME=${OPTARG#*=} ;;
     # autogen from global_env_vars.
     DEFAULT_DKML_COMPILER) fail "Option \"$OPTARG\" missing argument" ;;
     DEFAULT_DKML_COMPILER=*) DEFAULT_DKML_COMPILER=${OPTARG#*=} ;;
@@ -121,8 +123,6 @@ while getopts :h-: option; do
     PIN_DIGESTIF=*) PIN_DIGESTIF=${OPTARG#*=} ;;
     PIN_DUNE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DUNE=*) PIN_DUNE=${OPTARG#*=} ;;
-    PIN_DUNE_CONFIGURATOR) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_DUNE_CONFIGURATOR=*) PIN_DUNE_CONFIGURATOR=${OPTARG#*=} ;;
     PIN_DKML_APPS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_APPS=*) PIN_DKML_APPS=${OPTARG#*=} ;;
     PIN_OCAMLBUILD) fail "Option \"$OPTARG\" missing argument" ;;
@@ -311,6 +311,10 @@ shift
 setup_WORKSPACE=$1
 shift
 
+if [ -x /usr/bin/cygpath ]; then
+    setup_WORKSPACE=$(/usr/bin/cygpath -au "$setup_WORKSPACE")
+fi
+
 # ------------------------ Functions ------------------------
 
 # shellcheck source=./common-values.sh
@@ -382,6 +386,10 @@ install -d .ci/sd4/g
 
 # dkml-runtime-distribution
 
+#   For 'Diagnose Visual Studio environment variables (Windows)' we need dkml-runtime-distribution
+#   so that 'Import-Module Machine' and 'Get-VSSetupInstance' can be run.
+#   The version doesn't matter too much, as long as it has a functioning Get-VSSetupInstance.
+#   commit 1a3ec82dd851751a95e6a4797387a8163c51520e = tag v0.4.0-prerel20
 case "$dkml_host_abi" in
 windows_*)
     section_begin checkout-dkml-runtime-distribution 'Checkout dkml-runtime-distribution'
@@ -399,17 +407,18 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cc9518fa5630bfbe24d4c5e0e2cc29af513037ce
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
 # Constants
-#   Should be edited by release.sh, but ...
-#   Can't be 1.0.0 or later until https://github.com/ocaml/opam-repository/pull/21704 ocaml-option-32bit
-#   can come back in.
-DKML_VERSION=0.4.0
+DKML_VERSION=1.1.0
 
 setup_WORKSPACE_VARNAME=$1
 shift
 setup_WORKSPACE=$1
 shift
+
+if [ -x /usr/bin/cygpath ]; then
+    setup_WORKSPACE=$(/usr/bin/cygpath -au "$setup_WORKSPACE")
+fi
 
 # ------------------ Variables and functions ------------------------
 
@@ -472,6 +481,7 @@ OCAML_COMPILER=${OCAML_COMPILER:-}
 CONF_DKML_CROSS_TOOLCHAIN=${CONF_DKML_CROSS_TOOLCHAIN:-}
 SECONDARY_SWITCH=${SECONDARY_SWITCH:-}
 MANYLINUX=${MANYLINUX:-}
+DKML_HOME=${DKML_HOME:-}
 VERBOSE=${VERBOSE:-}
 .
 -------------------
@@ -512,7 +522,6 @@ PIN_CURLY=${PIN_CURLY}
 PIN_DIGESTIF=${PIN_DIGESTIF}
 PIN_DKML_APPS=${PIN_DKML_APPS}
 PIN_DUNE=${PIN_DUNE}
-PIN_DUNE_CONFIGURATOR=${PIN_DUNE_CONFIGURATOR}
 PIN_OCAMLBUILD=${PIN_OCAMLBUILD}
 PIN_OCAMLFIND=${PIN_OCAMLFIND}
 PIN_OCP_INDENT=${PIN_OCP_INDENT}
@@ -862,6 +871,7 @@ EOF
 
     # ---------------
     # Create Opam troubleshooting script
+    #   Dump logs modified within the last 4 hours
     # ---------------
 
     cat >.ci/sd4/troubleshoot-opam.sh <<EOF
@@ -869,8 +879,13 @@ EOF
 set -euf
 OPAMROOT=\$1
 shift
+if find . -maxdepth 0 -mmin -240 2>/dev/null >/dev/null; then
+    FINDARGS="-mmin -240" # is -mmin supported? BSD (incl. macOS), MSYS2, GNU
+else
+    FINDARGS="-mtime -1" # use 1 day instead. Solaris
+fi
 printf "\n\n========= [START OF TROUBLESHOOTING] ===========\n\n" >&2
-find "\$OPAMROOT"/log -mindepth 1 -maxdepth 1 -name "*.out" ! -name "log-*.out" ! -name "ocaml-variants-*.out" | while read -r dump_on_error_LOG; do
+find "\$OPAMROOT"/log -mindepth 1 -maxdepth 1 \$FINDARGS -name "*.out" ! -name "log-*.out" ! -name "ocaml-variants-*.out" | while read -r dump_on_error_LOG; do
     dump_on_error_BLOG=\$(basename "\$dump_on_error_LOG")
     printf "\n\n========= [TROUBLESHOOTING] %s ===========\n\n" "\$dump_on_error_BLOG" >&2
     awk -v BLOG="\$dump_on_error_BLOG" '{print "[" BLOG "]", \$0}' "\$dump_on_error_LOG" >&2
@@ -1275,6 +1290,7 @@ do_pins() {
         # Validate OCAML_COMPILER (OCAML_COMPILER specified)
         case "${OCAML_COMPILER:-}" in
         4.12.1) true ;;
+        4.14.0) true ;;
         *)
             echo "OCAML_COMPILER version ${OCAML_COMPILER:-} is not supported" >&2
             exit 109
@@ -1334,7 +1350,7 @@ do_pins() {
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version digestif "${PIN_DIGESTIF}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-apps "${PIN_DKML_APPS}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune "${PIN_DUNE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-configurator "${PIN_DUNE_CONFIGURATOR}"
+    opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action dune-configurator # this used to be pinned, so any cached opamroot needs it unpinned
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlbuild "${PIN_OCAMLBUILD}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlfind "${PIN_OCAMLFIND}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocp-indent "${PIN_OCP_INDENT}"
@@ -1431,12 +1447,32 @@ do_use_vsstudio dkml
 do_setenv() {
     do_setenv_SWITCH=$1
     shift
+    section_begin "setenv-$do_setenv_SWITCH" "Set opam option for $do_setenv_SWITCH switch"
     opamrun option --switch "$do_setenv_SWITCH" setenv > ".ci/sd4/setenv.$do_setenv_SWITCH.txt"
     if ! grep -q '\(^|\[\)DiskuvOCamlVarsVersion ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
         opamrun option --switch "$do_setenv_SWITCH" setenv+='DiskuvOCamlVarsVersion = "2"'
     fi
     if ! grep -q '\(^|\[\)DiskuvOCamlVersion ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
         opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlVersion = \"$DKML_VERSION\""
+    fi
+    if [ "$do_setenv_SWITCH" = dkml ] && [ -n "${DKML_HOME:-}" ]; then
+      do_setenv_DKMLHOME_ESCAPED="$DKML_HOME"
+      do_setenv_USRBIN_ESCAPED="$DKML_HOME/usr/bin"
+      do_setenv_BIN_ESCAPED="$DKML_HOME/bin"
+      if [ -x /usr/bin/cygpath ]; then
+        do_setenv_DKMLHOME_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_DKMLHOME_ESCAPED" | sed 's/\\/\\\\/g')
+        do_setenv_USRBIN_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_USRBIN_ESCAPED" | sed 's/\\/\\\\/g')
+        do_setenv_BIN_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_BIN_ESCAPED" | sed 's/\\/\\\\/g')
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlHome ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlHome = \"$do_setenv_DKMLHOME_ESCAPED\""
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlBinaryPaths ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlBinaryPaths = \"$do_setenv_USRBIN_ESCAPED;$do_setenv_BIN_ESCAPED\""
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlDeploymentId ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlDeploymentId = \"setup-dkml-switch-$do_setenv_SWITCH\""
+      fi
     fi
     case "${dkml_host_abi}" in
     windows_*)
@@ -1452,6 +1488,7 @@ do_setenv() {
             opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlMSYS2Dir = \"$MSYS2_DIR_NATIVE_ESCAPED\""
         fi
     esac
+    section_end "setenv-$do_setenv_SWITCH"
 }
 if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
     do_setenv two

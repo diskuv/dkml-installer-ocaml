@@ -51,7 +51,7 @@ runs:
         _STUB_FOR_AUTOGEN: "ON" # 
 
         # autogen from global_env_vars.
-        DEFAULT_DKML_COMPILER: '4.12.1-v1.0.2'
+        DEFAULT_DKML_COMPILER: '4.14.0-v1.1.0-prerel15'
         PIN_BASE: 'v0.14.3'
         PIN_BIGSTRINGAF: '0.8.0'
         PIN_CORE_KERNEL: 'v0.14.2'
@@ -59,15 +59,14 @@ runs:
         PIN_CTYPES: '0.19.2-windowssupport-r4'
         PIN_CURLY: '0.2.1-windows-env_r2'
         PIN_DIGESTIF: '1.0.1'
-        PIN_DUNE: '2.9.3+shim.1.0.2~r0'
-        PIN_DUNE_CONFIGURATOR: '2.9.3'
-        PIN_DKML_APPS: '1.0.1'
+        PIN_DUNE: '3.6.2'
+        PIN_DKML_APPS: '1.1.0'
         PIN_OCAMLBUILD: '0.14.0'
         PIN_OCAMLFIND: '1.9.1'
         PIN_OCP_INDENT: '1.8.2-windowssupport'
         PIN_PPX_EXPECT: 'v0.14.1'
         PIN_PTIME: '0.8.6-msvcsupport'
         PIN_TIME_NOW: 'v0.14.0'
-        PIN_WITH_DKML: '1.0.1'
+        PIN_WITH_DKML: '1.1.0'
       run: |
         sh .ci/sd4/run-teardown-dkml.sh GITHUB_WORKSPACE "$GITHUB_WORKSPACE"

@@ -34,6 +34,10 @@ Input variable. Unspecified or blank is the latest from the default branch (main
 .PARAMETER DISKUV_OPAM_REPOSITORY
 Input variable. Defaults to the value of -DEFAULT_DISKUV_OPAM_REPOSITORY_TAG (see below)
 
+.PARAMETER DKML_HOME
+Input variables. If specified then DiskuvOCamlHome, DiskuvOCamlBinaryPaths and DiskuvOCamlDeploymentId will be set, in addition to the always-present DiskuvOCamlVarsVersion, DiskuvOCamlVersion
+and DiskuvOCamlMSYS2Dir.
+
 # autogen from global_env_vars.
 .PARAMETER DEFAULT_DKML_COMPILER
 Environment variable.
@@ -60,9 +64,6 @@ Environment variable.
 Environment variable.
 
 .PARAMETER PIN_DUNE
-Environment variable.
-
-.PARAMETER PIN_DUNE_CONFIGURATOR
 Environment variable.
 
 .PARAMETER PIN_DKML_APPS
@@ -118,7 +119,10 @@ param (
   $CONF_DKML_CROSS_TOOLCHAIN = "@repository@",
   [Parameter()]
   [string]
-  $DISKUV_OPAM_REPOSITORY = ""
+  $DISKUV_OPAM_REPOSITORY = "",
+  [Parameter()]
+  [string]
+  $DKML_HOME = ""
 
   # Conflicts with automatic variable $Verbose
   # [Parameter()]
@@ -127,7 +131,7 @@ param (
     
   # Environment variables (can be overridden on command line)
   # autogen from global_env_vars.
-  ,[Parameter()] [string] $DEFAULT_DKML_COMPILER = "4.12.1-v1.0.2"
+  ,[Parameter()] [string] $DEFAULT_DKML_COMPILER = "4.14.0-v1.1.0-prerel15"
   ,[Parameter()] [string] $PIN_BASE = "v0.14.3"
   ,[Parameter()] [string] $PIN_BIGSTRINGAF = "0.8.0"
   ,[Parameter()] [string] $PIN_CORE_KERNEL = "v0.14.2"
@@ -135,16 +139,15 @@ param (
   ,[Parameter()] [string] $PIN_CTYPES = "0.19.2-windowssupport-r4"
   ,[Parameter()] [string] $PIN_CURLY = "0.2.1-windows-env_r2"
   ,[Parameter()] [string] $PIN_DIGESTIF = "1.0.1"
-  ,[Parameter()] [string] $PIN_DUNE = "2.9.3+shim.1.0.2~r0"
-  ,[Parameter()] [string] $PIN_DUNE_CONFIGURATOR = "2.9.3"
-  ,[Parameter()] [string] $PIN_DKML_APPS = "1.0.1"
+  ,[Parameter()] [string] $PIN_DUNE = "3.6.2"
+  ,[Parameter()] [string] $PIN_DKML_APPS = "1.1.0"
   ,[Parameter()] [string] $PIN_OCAMLBUILD = "0.14.0"
   ,[Parameter()] [string] $PIN_OCAMLFIND = "1.9.1"
   ,[Parameter()] [string] $PIN_OCP_INDENT = "1.8.2-windowssupport"
   ,[Parameter()] [string] $PIN_PPX_EXPECT = "v0.14.1"
   ,[Parameter()] [string] $PIN_PTIME = "0.8.6-msvcsupport"
   ,[Parameter()] [string] $PIN_TIME_NOW = "v0.14.0"
-  ,[Parameter()] [string] $PIN_WITH_DKML = "1.0.1"
+  ,[Parameter()] [string] $PIN_WITH_DKML = "1.1.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -169,6 +172,7 @@ $env:DKML_COMPILER = $DKML_COMPILER
 $env:SECONDARY_SWITCH = $SECONDARY_SWITCH
 $env:CONF_DKML_CROSS_TOOLCHAIN = $CONF_DKML_CROSS_TOOLCHAIN
 $env:DISKUV_OPAM_REPOSITORY = $DISKUV_OPAM_REPOSITORY
+$env:DKML_HOME = $DKML_HOME
 
 # Set matrix variables
 # autogen from pc_vars. only windows_x86
@@ -198,7 +202,6 @@ $env:PIN_CTYPES = $PIN_CTYPES
 $env:PIN_CURLY = $PIN_CURLY
 $env:PIN_DIGESTIF = $PIN_DIGESTIF
 $env:PIN_DUNE = $PIN_DUNE
-$env:PIN_DUNE_CONFIGURATOR = $PIN_DUNE_CONFIGURATOR
 $env:PIN_DKML_APPS = $PIN_DKML_APPS
 $env:PIN_OCAMLBUILD = $PIN_OCAMLBUILD
 $env:PIN_OCAMLFIND = $PIN_OCAMLFIND
@@ -412,6 +415,10 @@ shift
 setup_WORKSPACE=$1
 shift
 
+if [ -x /usr/bin/cygpath ]; then
+    setup_WORKSPACE=$(/usr/bin/cygpath -au "$setup_WORKSPACE")
+fi
+
 # ------------------------ Functions ------------------------
 
 # shellcheck source=./common-values.sh
@@ -483,6 +490,10 @@ install -d .ci/sd4/g
 
 # dkml-runtime-distribution
 
+#   For 'Diagnose Visual Studio environment variables (Windows)' we need dkml-runtime-distribution
+#   so that 'Import-Module Machine' and 'Get-VSSetupInstance' can be run.
+#   The version doesn't matter too much, as long as it has a functioning Get-VSSetupInstance.
+#   commit 1a3ec82dd851751a95e6a4797387a8163c51520e = tag v0.4.0-prerel20
 case "$dkml_host_abi" in
 windows_*)
     section_begin checkout-dkml-runtime-distribution 'Checkout dkml-runtime-distribution'
@@ -503,17 +514,18 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cc9518fa5630bfbe24d4c5e0e2cc29af513037ce
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=cdf6463c5c3c7ca37bc798e17929bff1c481bfdd
 # Constants
-#   Should be edited by release.sh, but ...
-#   Can't be 1.0.0 or later until https://github.com/ocaml/opam-repository/pull/21704 ocaml-option-32bit
-#   can come back in.
-DKML_VERSION=0.4.0
+DKML_VERSION=1.1.0
 
 setup_WORKSPACE_VARNAME=$1
 shift
 setup_WORKSPACE=$1
 shift
+
+if [ -x /usr/bin/cygpath ]; then
+    setup_WORKSPACE=$(/usr/bin/cygpath -au "$setup_WORKSPACE")
+fi
 
 # ------------------ Variables and functions ------------------------
 
@@ -576,6 +588,7 @@ OCAML_COMPILER=${OCAML_COMPILER:-}
 CONF_DKML_CROSS_TOOLCHAIN=${CONF_DKML_CROSS_TOOLCHAIN:-}
 SECONDARY_SWITCH=${SECONDARY_SWITCH:-}
 MANYLINUX=${MANYLINUX:-}
+DKML_HOME=${DKML_HOME:-}
 VERBOSE=${VERBOSE:-}
 .
 -------------------
@@ -616,7 +629,6 @@ PIN_CURLY=${PIN_CURLY}
 PIN_DIGESTIF=${PIN_DIGESTIF}
 PIN_DKML_APPS=${PIN_DKML_APPS}
 PIN_DUNE=${PIN_DUNE}
-PIN_DUNE_CONFIGURATOR=${PIN_DUNE_CONFIGURATOR}
 PIN_OCAMLBUILD=${PIN_OCAMLBUILD}
 PIN_OCAMLFIND=${PIN_OCAMLFIND}
 PIN_OCP_INDENT=${PIN_OCP_INDENT}
@@ -966,6 +978,7 @@ EOF
 
     # ---------------
     # Create Opam troubleshooting script
+    #   Dump logs modified within the last 4 hours
     # ---------------
 
     cat >.ci/sd4/troubleshoot-opam.sh <<EOF
@@ -973,8 +986,13 @@ EOF
 set -euf
 OPAMROOT=\$1
 shift
+if find . -maxdepth 0 -mmin -240 2>/dev/null >/dev/null; then
+    FINDARGS="-mmin -240" # is -mmin supported? BSD (incl. macOS), MSYS2, GNU
+else
+    FINDARGS="-mtime -1" # use 1 day instead. Solaris
+fi
 printf "\n\n========= [START OF TROUBLESHOOTING] ===========\n\n" >&2
-find "\$OPAMROOT"/log -mindepth 1 -maxdepth 1 -name "*.out" ! -name "log-*.out" ! -name "ocaml-variants-*.out" | while read -r dump_on_error_LOG; do
+find "\$OPAMROOT"/log -mindepth 1 -maxdepth 1 \$FINDARGS -name "*.out" ! -name "log-*.out" ! -name "ocaml-variants-*.out" | while read -r dump_on_error_LOG; do
     dump_on_error_BLOG=\$(basename "\$dump_on_error_LOG")
     printf "\n\n========= [TROUBLESHOOTING] %s ===========\n\n" "\$dump_on_error_BLOG" >&2
     awk -v BLOG="\$dump_on_error_BLOG" '{print "[" BLOG "]", \$0}' "\$dump_on_error_LOG" >&2
@@ -1379,6 +1397,7 @@ do_pins() {
         # Validate OCAML_COMPILER (OCAML_COMPILER specified)
         case "${OCAML_COMPILER:-}" in
         4.12.1) true ;;
+        4.14.0) true ;;
         *)
             echo "OCAML_COMPILER version ${OCAML_COMPILER:-} is not supported" >&2
             exit 109
@@ -1438,7 +1457,7 @@ do_pins() {
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version digestif "${PIN_DIGESTIF}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-apps "${PIN_DKML_APPS}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune "${PIN_DUNE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-configurator "${PIN_DUNE_CONFIGURATOR}"
+    opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action dune-configurator # this used to be pinned, so any cached opamroot needs it unpinned
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlbuild "${PIN_OCAMLBUILD}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlfind "${PIN_OCAMLFIND}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocp-indent "${PIN_OCP_INDENT}"
@@ -1535,12 +1554,32 @@ do_use_vsstudio dkml
 do_setenv() {
     do_setenv_SWITCH=$1
     shift
+    section_begin "setenv-$do_setenv_SWITCH" "Set opam option for $do_setenv_SWITCH switch"
     opamrun option --switch "$do_setenv_SWITCH" setenv > ".ci/sd4/setenv.$do_setenv_SWITCH.txt"
     if ! grep -q '\(^|\[\)DiskuvOCamlVarsVersion ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
         opamrun option --switch "$do_setenv_SWITCH" setenv+='DiskuvOCamlVarsVersion = "2"'
     fi
     if ! grep -q '\(^|\[\)DiskuvOCamlVersion ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
         opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlVersion = \"$DKML_VERSION\""
+    fi
+    if [ "$do_setenv_SWITCH" = dkml ] && [ -n "${DKML_HOME:-}" ]; then
+      do_setenv_DKMLHOME_ESCAPED="$DKML_HOME"
+      do_setenv_USRBIN_ESCAPED="$DKML_HOME/usr/bin"
+      do_setenv_BIN_ESCAPED="$DKML_HOME/bin"
+      if [ -x /usr/bin/cygpath ]; then
+        do_setenv_DKMLHOME_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_DKMLHOME_ESCAPED" | sed 's/\\/\\\\/g')
+        do_setenv_USRBIN_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_USRBIN_ESCAPED" | sed 's/\\/\\\\/g')
+        do_setenv_BIN_ESCAPED=$(/usr/bin/cygpath -aw "$do_setenv_BIN_ESCAPED" | sed 's/\\/\\\\/g')
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlHome ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlHome = \"$do_setenv_DKMLHOME_ESCAPED\""
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlBinaryPaths ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlBinaryPaths = \"$do_setenv_USRBIN_ESCAPED;$do_setenv_BIN_ESCAPED\""
+      fi
+      if ! grep -q '\(^|\[\)DiskuvOCamlDeploymentId ' ".ci/sd4/setenv.$do_setenv_SWITCH.txt"; then
+          opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlDeploymentId = \"setup-dkml-switch-$do_setenv_SWITCH\""
+      fi
     fi
     case "${dkml_host_abi}" in
     windows_*)
@@ -1556,6 +1595,7 @@ do_setenv() {
             opamrun option --switch "$do_setenv_SWITCH" setenv+="DiskuvOCamlMSYS2Dir = \"$MSYS2_DIR_NATIVE_ESCAPED\""
         fi
     esac
+    section_end "setenv-$do_setenv_SWITCH"
 }
 if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
     do_setenv two
@@ -1658,7 +1698,7 @@ if (("${env:GITLAB_CI}" -eq "true") -or ("${env:PC_CI}" -eq "true")) {
 }
 
 # Locate Visual Studio (Windows)
-if ("${env:vsstudio_dir}" -eq "" -and (!(Test-Path -Path .ci/sd4/vsenv${ExportExt}))) {
+if ("${env:vsstudio_dir}" -eq "" -and (!(Test-Path -Path .ci/sd4/vsenv${ExportExt}) -or !(Test-Path -Path .ci/sd4/vsenv.ps1))) {
     $env:PSModulePath += "$([System.IO.Path]::PathSeparator).ci\sd4\g\dkml-runtime-distribution\src\windows"
     Import-Module Machine
 
@@ -1673,6 +1713,12 @@ if ("${env:vsstudio_dir}" -eq "" -and (!(Test-Path -Path .ci/sd4/vsenv${ExportEx
     Write-Output "${ExportSN}VS_WINSDKVER=${ExportSV}$($VisualStudioProps.WinSdkVer)${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
     Write-Output "${ExportSN}VS_MSVSPREFERENCE=${ExportSV}$($VisualStudioProps.MsvsPreference)${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
     Write-Output "${ExportSN}VS_CMAKEGENERATOR=${ExportSV}$($VisualStudioProps.CMakeGenerator)${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
+
+    Write-Output "`$env:VS_DIR='$($VisualStudioProps.InstallPath)'" > .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_VCVARSVER='$($VisualStudioProps.VcVarsVer)'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_WINSDKVER='$($VisualStudioProps.WinSdkVer)'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_MSVSPREFERENCE='$($VisualStudioProps.MsvsPreference)'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_CMAKEGENERATOR='$($VisualStudioProps.CMakeGenerator)'" >> .ci/sd4/vsenv.ps1
 }
 
 # Link to hardcoded Visual Studio (Windows)
@@ -1682,6 +1728,12 @@ if ("${env:vsstudio_dir}" -ne "") {
     Write-Output "${ExportSN}VS_WINSDKVER=${ExportSV}${env:vsstudio_winsdkver}${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
     Write-Output "${ExportSN}VS_MSVSPREFERENCE=${ExportSV}${env:vsstudio_msvspreference}${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
     Write-Output "${ExportSN}VS_CMAKEGENERATOR=${ExportSV}${env:vsstudio_cmakegenerator}${ExportEV}" >> .ci/sd4/vsenv${ExportExt}
+
+    Write-Output "`$env:VS_DIR='${env:vsstudio_dir}'" > .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_VCVARSVER='${env:vsstudio_vcvarsver}'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_WINSDKVER='${env:vsstudio_winsdkver}'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_MSVSPREFERENCE='${env:vsstudio_msvspreference}'" >> .ci/sd4/vsenv.ps1
+    Write-Output "`$env:VS_CMAKEGENERATOR='${env:vsstudio_cmakegenerator}'" >> .ci/sd4/vsenv.ps1
 }
 
 '@
@@ -1696,6 +1748,8 @@ REM packages (ocamlbuild, etc.) which
 REM need a native compiler will fail without the MSVC compiler in the
 REM PATH. There isn't a `with-dkml.exe` alternative available at
 REM this stage of the GitHub workflow.
+SET VSCMD_DEBUG=2
+SET VSCMD_SKIP_SENDTELEMETRY=1
 call "%VS_DIR%\Common7\Tools\VsDevCmd.bat" -no_logo -host_arch=%vsstudio_hostarch% -arch=%vsstudio_arch% -vcvars_ver=%VS_VCVARSVER% -winsdk=%VS_WINSDKVER%
 if %ERRORLEVEL% neq 0 (
     echo.
@@ -1716,7 +1770,7 @@ REM * We can't use `bash -lc` directly to query for all MSVC environment variabl
 REM   because it stomps over the PATH. So we are inside a Batch script to do the query.
 msys64\usr\bin\bash -lc "set | grep -v '^PATH=' | awk -f .ci/sd4/msvcenv.awk > .ci/sd4/msvcenv"
 '@
-Set-Content -Path ".ci\sd4\get-msvcpath-into-msys2.cmd" -Encoding Default -Value $Content
+Set-Content -Path ".ci\sd4\get-msvcpath-into-msys2.bat" -Encoding Default -Value $Content
 
 msys64\usr\bin\bash -lc "sh .ci/sd4/run-checkout-code.sh PC_PROJECT_DIR '${env:PC_PROJECT_DIR}'"
 if ($LASTEXITCODE -ne 0) {
@@ -1743,9 +1797,11 @@ If ( "${env:VERBOSE}" -eq "true" ) {
 .ci\sd4\config-vsstudio.ps1
 msys64\usr\bin\bash -lc "dos2unix .ci/sd4/vsenv.sh"
 Get-Content .ci/sd4/vsenv.sh
+Get-Content .ci/sd4/vsenv.ps1
 
 # Capture Visual Studio compiler environment
-msys64\usr\bin\bash -lc ". .ci/sd4/vsenv.sh && cmd /c '.ci\sd4\get-msvcpath-into-msys2.cmd'"
+& .ci\sd4\vsenv.ps1
+& .ci\sd4\get-msvcpath-into-msys2.bat
 msys64\usr\bin\bash -lc "cat .ci/sd4/msvcpath | tr -d '\r' | cygpath --path -f - | awk -f .ci/sd4/msvcpath.awk >> .ci/sd4/msvcenv"    
 msys64\usr\bin\bash -lc "tail -n100 .ci/sd4/msvcpath .ci/sd4/msvcenv"
 
@@ -1770,6 +1826,6 @@ To continue your testing, run in PowerShell:
 Now you can use 'opamrun' to do opam commands like:
 
   msys64\usr\bin\bash -lc 'PATH="`$PWD/.ci/sd4/opamrun:`$PATH"; opamrun install XYZ.opam'
-  msys64\usr\bin\bash -lc 'PATH="`$PWD/.ci/sd4/opamrun:`$PATH"; opamrun -it exec -- bash'
-  msys64\usr\bin\bash -lc 'PATH="`$PWD/.ci/sd4/opamrun:`$PATH"; opamrun exec -- sh ci/build-test.sh'
+  msys64\usr\bin\bash -lc 'PATH="`$PWD/.ci/sd4/opamrun:`$PATH"; opamrun exec -- bash'
+  msys64\usr\bin\bash -lc 'sh ci/build-test.sh'
 "@
