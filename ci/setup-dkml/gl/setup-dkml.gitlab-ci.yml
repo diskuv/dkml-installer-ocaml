@@ -42,14 +42,14 @@ variables:
     expire_in: "1 days"
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "a_1_${CACHE_PREFIX}-1c64fee-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "a_1_${CACHE_PREFIX}-edabddd-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - ${opam_root_cacheable}/download-cache
 
 .common:setup-dkml-cache:
   # Only 4 caches allowed in GitLab CI
   cache:
-    - key: "b_1_${CACHE_PREFIX}-1c64fee-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
+    - key: "b_1_${CACHE_PREFIX}-edabddd-${abi_pattern}-${CI_COMMIT_REF_SLUG}"
       paths:
         - .ci/sd4/bs
         - ${opam_root_cacheable}/config
@@ -439,7 +439,7 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
       # Constants
       DKML_VERSION=1.2.0-prerel1
 
@@ -2241,7 +2241,7 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
       # Constants
       DKML_VERSION=1.2.0-prerel1
 
@@ -3823,7 +3823,7 @@ variables:
       # Constants
       SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
       #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=8bfc350adddfa323afe05b37054aaf2aa55f8808
+      DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=20d8fe9ec2c904529f9fb6092db778e57b4f42c2
       # Constants
       DKML_VERSION=1.2.0-prerel1
 
