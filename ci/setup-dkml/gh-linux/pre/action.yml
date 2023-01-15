@@ -355,9 +355,9 @@ runs:
         # Constants
         SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
         #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-        DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
+        DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=211fb6b29d0db8e4384343f025eb5659cfb3d843
         # Constants
-        DKML_VERSION=1.2.0-prerel3
+        DKML_VERSION=1.2.0-prerel4
 
         setup_WORKSPACE_VARNAME=$1
         shift
@@ -1289,22 +1289,31 @@ runs:
             # - ppx_expect; only patch is for v0.14.1. Need to upstream fix the problem.
             # - base; patches for v0.14.1/2/3. Need to upstream fix the problem.
             section_begin "opam-pins-$do_pins_NAME" "Opam pins for $do_pins_NAME switch"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest "${PIN_ALCOTEST}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-async "${PIN_ALCOTEST_ASYNC}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-js "${PIN_ALCOTEST_JS}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-lwt "${PIN_ALCOTEST_LWT}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-mirage "${PIN_ALCOTEST_MIRAGE}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version base "${PIN_BASE}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version base_bigstring "${PIN_BASE_BIGSTRING}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version bigstringaf "${PIN_BIGSTRINGAF}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version core "${PIN_CORE}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version core_kernel "${PIN_CORE_KERNEL}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes "${PIN_CTYPES}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes-foreign "${PIN_CTYPES_FOREIGN}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version curly "${PIN_CURLY}"
-            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version digestif "${PIN_DIGESTIF}"
+            opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action digestif # this used to be pinned, so any cached opamroot needs it unpinned
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-apps "${PIN_DKML_APPS}"
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe "${PIN_DKML_EXE}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune "${PIN_DUNE}"
             opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action dune-configurator # this used to be pinned, so any cached opamroot needs it unpinned
+            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version feather "${PIN_FEATHER}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlbuild "${PIN_OCAMLBUILD}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlfind "${PIN_OCAMLFIND}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocp-indent "${PIN_OCP_INDENT}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_expect "${PIN_PPX_EXPECT}"
-            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ptime "${PIN_PTIME}"
-            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version time_now "${PIN_TIME_NOW}"
+            opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action ptime # this used to be pinned, so any cached opamroot needs it unpinned
+            opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action time_now # this used to be pinned, so any cached opamroot needs it unpinned
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version with-dkml "${PIN_WITH_DKML}"
             section_end "opam-pins-$do_pins_NAME"
         }
@@ -1603,7 +1612,7 @@ runs:
       shell: bash
       run: |
         set -x
-        echo '9c745e-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
+        echo 'f1314f-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
         echo '${{ steps.full_matrix_vars.outputs.abi_pattern }}-${{ steps.full_matrix_vars.outputs.vsstudio_arch }}-${{ steps.full_matrix_vars.outputs.vsstudio_hostarch }}-${{ steps.full_matrix_vars.outputs.vsstudio_dir }}-${{ steps.full_matrix_vars.outputs.vsstudio_vcvarsver }}-${{ steps.full_matrix_vars.outputs.vsstudio_winsdkver }}-${{ steps.full_matrix_vars.outputs.vsstudio_msvspreference }}-${{ steps.full_matrix_vars.outputs.vsstudio_cmakegenerator }}' > .ci/sd4/cachekey.vsstudio
         echo '${{ inputs.OCAML_COMPILER }}-${{ inputs.DISKUV_OPAM_REPOSITORY }}-${{ inputs.DKML_COMPILER }}-${{ inputs.CONF_DKML_CROSS_TOOLCHAIN }}' > .ci/sd4/cachekey.ci.inputs
 
@@ -1702,23 +1711,28 @@ runs:
 
         # autogen from global_env_vars.
         DEFAULT_DKML_COMPILER: '4.14.0-v1.1.0-prerel15'
-        PIN_BASE: 'v0.14.3'
-        PIN_BIGSTRINGAF: '0.8.0'
-        PIN_CORE_KERNEL: 'v0.14.2'
-        PIN_CTYPES_FOREIGN: '0.19.2-windowssupport-r4'
-        PIN_CTYPES: '0.19.2-windowssupport-r4'
+        PIN_ALCOTEST: '1.6.0'
+        PIN_ALCOTEST_ASYNC: '1.6.0'
+        PIN_ALCOTEST_JS: '1.6.0'
+        PIN_ALCOTEST_LWT: '1.6.0'
+        PIN_ALCOTEST_MIRAGE: '1.6.0'
+        PIN_BASE: 'v0.15.1'
+        PIN_BASE_BIGSTRING: 'v0.15.0'
+        PIN_BIGSTRINGAF: '0.9.0+msvc'
+        PIN_CORE: 'v0.15.1'
+        PIN_CORE_KERNEL: 'v0.15.0'
+        PIN_CTYPES_FOREIGN: '0.19.2-windowssupport-r5'
+        PIN_CTYPES: '0.19.2-windowssupport-r5'
         PIN_CURLY: '0.2.1-windows-env_r2'
-        PIN_DIGESTIF: '1.0.1'
+        PIN_DKML_APPS: '1.2.0~prerel4'
+        PIN_DKML_EXE: '1.2.0~prerel4'
         PIN_DUNE: '3.6.2'
-        PIN_DKML_APPS: '1.2.0~prerel3'
-        PIN_DKML_EXE: '1.2.0~prerel3'
+        PIN_FEATHER: '0.3.0'
         PIN_OCAMLBUILD: '0.14.0'
         PIN_OCAMLFIND: '1.9.1'
         PIN_OCP_INDENT: '1.8.2-windowssupport'
-        PIN_PPX_EXPECT: 'v0.14.1'
-        PIN_PTIME: '0.8.6-msvcsupport'
-        PIN_TIME_NOW: 'v0.14.0'
-        PIN_WITH_DKML: '1.2.0~prerel3'
+        PIN_PPX_EXPECT: 'v0.15.1'
+        PIN_WITH_DKML: '1.2.0~prerel4'
       run: |
         sh .ci/sd4/run-setup-dkml.sh GITHUB_WORKSPACE "$GITHUB_WORKSPACE"
 

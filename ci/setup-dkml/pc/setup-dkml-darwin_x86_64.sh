@@ -20,23 +20,28 @@ export DISKUV_OPAM_REPOSITORY=
 export DKML_HOME=
 # autogen from global_env_vars.
 export DEFAULT_DKML_COMPILER='4.14.0-v1.1.0-prerel15'
-export PIN_BASE='v0.14.3'
-export PIN_BIGSTRINGAF='0.8.0'
-export PIN_CORE_KERNEL='v0.14.2'
-export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r4'
-export PIN_CTYPES='0.19.2-windowssupport-r4'
+export PIN_ALCOTEST='1.6.0'
+export PIN_ALCOTEST_ASYNC='1.6.0'
+export PIN_ALCOTEST_JS='1.6.0'
+export PIN_ALCOTEST_LWT='1.6.0'
+export PIN_ALCOTEST_MIRAGE='1.6.0'
+export PIN_BASE='v0.15.1'
+export PIN_BASE_BIGSTRING='v0.15.0'
+export PIN_BIGSTRINGAF='0.9.0+msvc'
+export PIN_CORE='v0.15.1'
+export PIN_CORE_KERNEL='v0.15.0'
+export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r5'
+export PIN_CTYPES='0.19.2-windowssupport-r5'
 export PIN_CURLY='0.2.1-windows-env_r2'
-export PIN_DIGESTIF='1.0.1'
+export PIN_DKML_APPS='1.2.0~prerel4'
+export PIN_DKML_EXE='1.2.0~prerel4'
 export PIN_DUNE='3.6.2'
-export PIN_DKML_APPS='1.2.0~prerel3'
-export PIN_DKML_EXE='1.2.0~prerel3'
+export PIN_FEATHER='0.3.0'
 export PIN_OCAMLBUILD='0.14.0'
 export PIN_OCAMLFIND='1.9.1'
 export PIN_OCP_INDENT='1.8.2-windowssupport'
-export PIN_PPX_EXPECT='v0.14.1'
-export PIN_PTIME='0.8.6-msvcsupport'
-export PIN_TIME_NOW='v0.14.0'
-export PIN_WITH_DKML='1.2.0~prerel3'
+export PIN_PPX_EXPECT='v0.15.1'
+export PIN_WITH_DKML='1.2.0~prerel4'
 
 usage() {
   echo 'Setup Diskuv OCaml (DKML) compiler on a desktop PC.' >&2
@@ -58,22 +63,27 @@ usage() {
 
   # autogen from global_env_vars.
   echo "  --DEFAULT_DKML_COMPILER=<value>. Defaults to: ${DEFAULT_DKML_COMPILER}" >&2
+  echo "  --PIN_ALCOTEST=<value>. Defaults to: ${PIN_ALCOTEST}" >&2
+  echo "  --PIN_ALCOTEST_ASYNC=<value>. Defaults to: ${PIN_ALCOTEST_ASYNC}" >&2
+  echo "  --PIN_ALCOTEST_JS=<value>. Defaults to: ${PIN_ALCOTEST_JS}" >&2
+  echo "  --PIN_ALCOTEST_LWT=<value>. Defaults to: ${PIN_ALCOTEST_LWT}" >&2
+  echo "  --PIN_ALCOTEST_MIRAGE=<value>. Defaults to: ${PIN_ALCOTEST_MIRAGE}" >&2
   echo "  --PIN_BASE=<value>. Defaults to: ${PIN_BASE}" >&2
+  echo "  --PIN_BASE_BIGSTRING=<value>. Defaults to: ${PIN_BASE_BIGSTRING}" >&2
   echo "  --PIN_BIGSTRINGAF=<value>. Defaults to: ${PIN_BIGSTRINGAF}" >&2
+  echo "  --PIN_CORE=<value>. Defaults to: ${PIN_CORE}" >&2
   echo "  --PIN_CORE_KERNEL=<value>. Defaults to: ${PIN_CORE_KERNEL}" >&2
   echo "  --PIN_CTYPES_FOREIGN=<value>. Defaults to: ${PIN_CTYPES_FOREIGN}" >&2
   echo "  --PIN_CTYPES=<value>. Defaults to: ${PIN_CTYPES}" >&2
   echo "  --PIN_CURLY=<value>. Defaults to: ${PIN_CURLY}" >&2
-  echo "  --PIN_DIGESTIF=<value>. Defaults to: ${PIN_DIGESTIF}" >&2
-  echo "  --PIN_DUNE=<value>. Defaults to: ${PIN_DUNE}" >&2
   echo "  --PIN_DKML_APPS=<value>. Defaults to: ${PIN_DKML_APPS}" >&2
   echo "  --PIN_DKML_EXE=<value>. Defaults to: ${PIN_DKML_EXE}" >&2
+  echo "  --PIN_DUNE=<value>. Defaults to: ${PIN_DUNE}" >&2
+  echo "  --PIN_FEATHER=<value>. Defaults to: ${PIN_FEATHER}" >&2
   echo "  --PIN_OCAMLBUILD=<value>. Defaults to: ${PIN_OCAMLBUILD}" >&2
   echo "  --PIN_OCAMLFIND=<value>. Defaults to: ${PIN_OCAMLFIND}" >&2
   echo "  --PIN_OCP_INDENT=<value>. Defaults to: ${PIN_OCP_INDENT}" >&2
   echo "  --PIN_PPX_EXPECT=<value>. Defaults to: ${PIN_PPX_EXPECT}" >&2
-  echo "  --PIN_PTIME=<value>. Defaults to: ${PIN_PTIME}" >&2
-  echo "  --PIN_TIME_NOW=<value>. Defaults to: ${PIN_TIME_NOW}" >&2
   echo "  --PIN_WITH_DKML=<value>. Defaults to: ${PIN_WITH_DKML}" >&2
   exit 2
 }
@@ -109,10 +119,24 @@ while getopts :h-: option; do
     # autogen from global_env_vars.
     DEFAULT_DKML_COMPILER) fail "Option \"$OPTARG\" missing argument" ;;
     DEFAULT_DKML_COMPILER=*) DEFAULT_DKML_COMPILER=${OPTARG#*=} ;;
+    PIN_ALCOTEST) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ALCOTEST=*) PIN_ALCOTEST=${OPTARG#*=} ;;
+    PIN_ALCOTEST_ASYNC) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ALCOTEST_ASYNC=*) PIN_ALCOTEST_ASYNC=${OPTARG#*=} ;;
+    PIN_ALCOTEST_JS) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ALCOTEST_JS=*) PIN_ALCOTEST_JS=${OPTARG#*=} ;;
+    PIN_ALCOTEST_LWT) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ALCOTEST_LWT=*) PIN_ALCOTEST_LWT=${OPTARG#*=} ;;
+    PIN_ALCOTEST_MIRAGE) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ALCOTEST_MIRAGE=*) PIN_ALCOTEST_MIRAGE=${OPTARG#*=} ;;
     PIN_BASE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_BASE=*) PIN_BASE=${OPTARG#*=} ;;
+    PIN_BASE_BIGSTRING) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_BASE_BIGSTRING=*) PIN_BASE_BIGSTRING=${OPTARG#*=} ;;
     PIN_BIGSTRINGAF) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_BIGSTRINGAF=*) PIN_BIGSTRINGAF=${OPTARG#*=} ;;
+    PIN_CORE) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_CORE=*) PIN_CORE=${OPTARG#*=} ;;
     PIN_CORE_KERNEL) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CORE_KERNEL=*) PIN_CORE_KERNEL=${OPTARG#*=} ;;
     PIN_CTYPES_FOREIGN) fail "Option \"$OPTARG\" missing argument" ;;
@@ -121,14 +145,14 @@ while getopts :h-: option; do
     PIN_CTYPES=*) PIN_CTYPES=${OPTARG#*=} ;;
     PIN_CURLY) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CURLY=*) PIN_CURLY=${OPTARG#*=} ;;
-    PIN_DIGESTIF) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_DIGESTIF=*) PIN_DIGESTIF=${OPTARG#*=} ;;
-    PIN_DUNE) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_DUNE=*) PIN_DUNE=${OPTARG#*=} ;;
     PIN_DKML_APPS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_APPS=*) PIN_DKML_APPS=${OPTARG#*=} ;;
     PIN_DKML_EXE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_EXE=*) PIN_DKML_EXE=${OPTARG#*=} ;;
+    PIN_DUNE) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DUNE=*) PIN_DUNE=${OPTARG#*=} ;;
+    PIN_FEATHER) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_FEATHER=*) PIN_FEATHER=${OPTARG#*=} ;;
     PIN_OCAMLBUILD) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_OCAMLBUILD=*) PIN_OCAMLBUILD=${OPTARG#*=} ;;
     PIN_OCAMLFIND) fail "Option \"$OPTARG\" missing argument" ;;
@@ -137,10 +161,6 @@ while getopts :h-: option; do
     PIN_OCP_INDENT=*) PIN_OCP_INDENT=${OPTARG#*=} ;;
     PIN_PPX_EXPECT) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PPX_EXPECT=*) PIN_PPX_EXPECT=${OPTARG#*=} ;;
-    PIN_PTIME) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_PTIME=*) PIN_PTIME=${OPTARG#*=} ;;
-    PIN_TIME_NOW) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_TIME_NOW=*) PIN_TIME_NOW=${OPTARG#*=} ;;
     PIN_WITH_DKML) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_WITH_DKML=*) PIN_WITH_DKML=${OPTARG#*=} ;;
     help) usage ;;
@@ -411,9 +431,9 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=5f657dd7ba01180f702f5402ad485a49a3689801
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=211fb6b29d0db8e4384343f025eb5659cfb3d843
 # Constants
-DKML_VERSION=1.2.0-prerel3
+DKML_VERSION=1.2.0-prerel4
 
 setup_WORKSPACE_VARNAME=$1
 shift
@@ -1345,22 +1365,31 @@ do_pins() {
     # - ppx_expect; only patch is for v0.14.1. Need to upstream fix the problem.
     # - base; patches for v0.14.1/2/3. Need to upstream fix the problem.
     section_begin "opam-pins-$do_pins_NAME" "Opam pins for $do_pins_NAME switch"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest "${PIN_ALCOTEST}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-async "${PIN_ALCOTEST_ASYNC}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-js "${PIN_ALCOTEST_JS}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-lwt "${PIN_ALCOTEST_LWT}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version alcotest-mirage "${PIN_ALCOTEST_MIRAGE}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version base "${PIN_BASE}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version base_bigstring "${PIN_BASE_BIGSTRING}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version bigstringaf "${PIN_BIGSTRINGAF}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version core "${PIN_CORE}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version core_kernel "${PIN_CORE_KERNEL}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes "${PIN_CTYPES}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes-foreign "${PIN_CTYPES_FOREIGN}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version curly "${PIN_CURLY}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version digestif "${PIN_DIGESTIF}"
+    opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action digestif # this used to be pinned, so any cached opamroot needs it unpinned
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-apps "${PIN_DKML_APPS}"
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe "${PIN_DKML_EXE}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune "${PIN_DUNE}"
     opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action dune-configurator # this used to be pinned, so any cached opamroot needs it unpinned
+    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version feather "${PIN_FEATHER}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlbuild "${PIN_OCAMLBUILD}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlfind "${PIN_OCAMLFIND}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocp-indent "${PIN_OCP_INDENT}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_expect "${PIN_PPX_EXPECT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ptime "${PIN_PTIME}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version time_now "${PIN_TIME_NOW}"
+    opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action ptime # this used to be pinned, so any cached opamroot needs it unpinned
+    opamrun pin remove --switch "$do_pins_NAME"  --yes --no-action time_now # this used to be pinned, so any cached opamroot needs it unpinned
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version with-dkml "${PIN_WITH_DKML}"
     section_end "opam-pins-$do_pins_NAME"
 }
