@@ -10,8 +10,8 @@ fail() {
   exit 3
 }
 
-OPAM_PACKAGE=
-PROGRAM_NAME_KEBAB=
+export OPAM_PACKAGE=
+export PROGRAM_NAME_KEBAB=
 
 OPTIND=1
 while getopts :h-: option; do
@@ -49,6 +49,8 @@ build-test.sh
 ---------
 Arguments
 ---------
+OPAM_PACKAGE=${OPAM_PACKAGE}
+PROGRAM_NAME_KEBAB=${PROGRAM_NAME_KEBAB}
 .
 ------
 Matrix
@@ -87,10 +89,6 @@ opamrun exec -- ocamlc -config
 
 # Update
 opamrun update
-
-# Make your own build logic! It may look like ...
-opamrun install . --deps-only --with-test
-opamrun exec -- dune runtest
 
 # Build the installer
 case "$dkml_host_abi" in
