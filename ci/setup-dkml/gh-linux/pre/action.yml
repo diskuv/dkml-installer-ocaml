@@ -355,9 +355,9 @@ runs:
         # Constants
         SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
         #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-        DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=c723d2b1d8a15ef31576432bd7839de0ddf05a01
+        DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=f3524ea53e3755a941c5ed75054a6bbdeb360191
         # Constants
-        DKML_VERSION=1.2.0-prerel6
+        DKML_VERSION=1.2.0-prerel7
 
         setup_WORKSPACE_VARNAME=$1
         shift
@@ -1618,7 +1618,7 @@ runs:
       shell: bash
       run: |
         set -x
-        echo 'f38996-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
+        echo '1d1ce3-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
         echo '${{ steps.full_matrix_vars.outputs.abi_pattern }}-${{ steps.full_matrix_vars.outputs.vsstudio_arch }}-${{ steps.full_matrix_vars.outputs.vsstudio_hostarch }}-${{ steps.full_matrix_vars.outputs.vsstudio_dir }}-${{ steps.full_matrix_vars.outputs.vsstudio_vcvarsver }}-${{ steps.full_matrix_vars.outputs.vsstudio_winsdkver }}-${{ steps.full_matrix_vars.outputs.vsstudio_msvspreference }}-${{ steps.full_matrix_vars.outputs.vsstudio_cmakegenerator }}' > .ci/sd4/cachekey.vsstudio
         echo '${{ inputs.OCAML_COMPILER }}-${{ inputs.DISKUV_OPAM_REPOSITORY }}-${{ inputs.DKML_COMPILER }}-${{ inputs.CONF_DKML_CROSS_TOOLCHAIN }}' > .ci/sd4/cachekey.ci.inputs
 
@@ -1730,15 +1730,15 @@ runs:
         PIN_CTYPES_FOREIGN: '0.19.2-windowssupport-r5'
         PIN_CTYPES: '0.19.2-windowssupport-r5'
         PIN_CURLY: '0.2.1-windows-env_r2'
-        PIN_DKML_APPS: '1.2.0~prerel6'
-        PIN_DKML_EXE: '1.2.0~prerel6'
+        PIN_DKML_APPS: '1.2.0~prerel7'
+        PIN_DKML_EXE: '1.2.0~prerel7'
         PIN_DUNE: '3.6.2'
         PIN_FEATHER: '0.3.0'
         PIN_OCAMLBUILD: '0.14.0'
         PIN_OCAMLFIND: '1.9.1'
         PIN_OCP_INDENT: '1.8.2-windowssupport'
         PIN_PPX_EXPECT: 'v0.15.1'
-        PIN_WITH_DKML: '1.2.0~prerel6'
+        PIN_WITH_DKML: '1.2.0~prerel7'
       run: |
         sh .ci/sd4/run-setup-dkml.sh GITHUB_WORKSPACE "$GITHUB_WORKSPACE"
 
