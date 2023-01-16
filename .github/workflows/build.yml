@@ -153,16 +153,19 @@ jobs:
       - name: View release notes
         run: |
           notes=diskuv-ocaml/contributors/changes/v${MAJMINPAT}.md
-          cat > footer.md <<EOF
+          cat > footer-top.md <<EOF
           ## Asset Listing
           | Asset                                                 | Supported? | Description                                                                         |
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
+          EOF
+          cat /dev/null > footer-mid-prerelease.md
+          cat > footer-mid-release.md <<EOF
           | [setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
           | [setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
           | [uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
           | [uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/uninstall-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
-          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe) | Yes        | Unsigned installer. Use when you want to verify you can reproduce the installer ... |
-          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)    | Partial    | ... directly from source code. Reproducibility is not yet 100%                      |
+          EOF
+          cat > footer-bottom.md <<EOF
           | [diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-darwin_x86_64-i-$OPAMMAJMINPAT.tar.gz)        | No         | Unsigned macOS on Intel binary distribution                                         |
           | [diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86_64-i-$OPAMMAJMINPAT.tar.gz)         | No         | Linux distribution compatible with CentOS 7, CentOS 8, Fedora 32+, Mageia 8+, ...   |
           | [diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/diskuv-ocaml-linux_x86-i-$OPAMMAJMINPAT.tar.gz)            | No         | ... openSUSE 15.3+, Photon OS 4.0+ (3.0+ with updates), Ubuntu 20.04+Linux          |
@@ -173,15 +176,19 @@ jobs:
           echo > emptyline
           if [ -e "$notes" ]; then
             RELEASEDATE=$(date -u +%Y-%m-%d)
-            cat "$notes" emptyline footer.md | sed "s/@@YYYYMMDD@@/$RELEASEDATE/" > notes.md
+            cat "$notes" emptyline footer-top.md footer-mid-prerelease.md footer-bottom.md | sed "s/@@YYYYMMDD@@/$RELEASEDATE/" > notes-prerelease.md
+            cat "$notes" emptyline footer-top.md footer-mid-release.md    footer-bottom.md | sed "s/@@YYYYMMDD@@/$RELEASEDATE/" > notes-release.md
           else
-            cp footer.md notes.md
+            cat footer-top.md footer-mid-prerelease.md footer-bottom.md > notes-prerelease.md
+            cat footer-top.md footer-mid-release.md    footer-bottom.md > notes-release.md
           fi
-          cat notes.md # Just for troubleshooting
+          tail -n200 notes-prerelease.md notes-release.md # Just for troubleshooting
       - uses: actions/upload-artifact@v3
         with:
           name: release-notes
-          path: notes.md
+          path: |
+            notes-prerelease.md
+            notes-release.md
 
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
   # For example, found missing vcruntime140.dll with Vagrant testing.
@@ -309,11 +316,24 @@ jobs:
         run: ls -R
         working-directory: _release
 
-      - name: Release (only when Git tag pushed)
+      - name: Pre-release (only when Git tag pushed)
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && contains(github.ref, '-prerel')
         with:
-          prerelease: true # becomes a real release after it is signed externally
-          body_path: release-notes/notes.md
+          prerelease: true
+          # [draft] should make it not visible on the GitHub releases page
+          draft: true
+          body_path: release-notes/notes-prerelease.md
+          files: |
+            _release/*
+
+      - name: Full release (only when Git tag pushed)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') && !contains(github.ref, '-prerel')
+        with:
+          # [draft] should make it not visible on the GitHub releases page.
+          # definitely should not be visible until signed.
+          draft: true
+          body_path: release-notes/notes-release.md
           files: |
             _release/*
