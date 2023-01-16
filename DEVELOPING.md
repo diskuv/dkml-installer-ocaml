@@ -1,6 +1,12 @@
 # Development
 
-## Upgrading
+## Upgrading after a DKML (pre)release
+
+```powershell
+$workflowref = git ls-remote -q https://github.com/diskuv/dkml-workflows-prerelease.git refs/heads/v1 | foreach-object { echo $_.split()[0] } ; opam pin dkml-workflows git+https://github.com/diskuv/dkml-workflows-prerelease.git#$workflowref --yes ; opam exec -- generate-setup-dkml-scaffold ; echo "" > installer\bin\dune.inc ; opam exec -- dune clean ; opam exec -- dune build '@gen-dkml' --auto-promote
+```
+
+## Quick Upgrading
 
 ```powershell
 dune clean

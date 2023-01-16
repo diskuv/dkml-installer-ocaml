@@ -163,15 +163,15 @@ param (
   ,[Parameter()] [string] $PIN_CTYPES_FOREIGN = "0.19.2-windowssupport-r5"
   ,[Parameter()] [string] $PIN_CTYPES = "0.19.2-windowssupport-r5"
   ,[Parameter()] [string] $PIN_CURLY = "0.2.1-windows-env_r2"
-  ,[Parameter()] [string] $PIN_DKML_APPS = "1.2.0~prerel5"
-  ,[Parameter()] [string] $PIN_DKML_EXE = "1.2.0~prerel5"
+  ,[Parameter()] [string] $PIN_DKML_APPS = "1.2.0~prerel6"
+  ,[Parameter()] [string] $PIN_DKML_EXE = "1.2.0~prerel6"
   ,[Parameter()] [string] $PIN_DUNE = "3.6.2"
   ,[Parameter()] [string] $PIN_FEATHER = "0.3.0"
   ,[Parameter()] [string] $PIN_OCAMLBUILD = "0.14.0"
   ,[Parameter()] [string] $PIN_OCAMLFIND = "1.9.1"
   ,[Parameter()] [string] $PIN_OCP_INDENT = "1.8.2-windowssupport"
   ,[Parameter()] [string] $PIN_PPX_EXPECT = "v0.15.1"
-  ,[Parameter()] [string] $PIN_WITH_DKML = "1.2.0~prerel5"
+  ,[Parameter()] [string] $PIN_WITH_DKML = "1.2.0~prerel6"
 )
 
 $ErrorActionPreference = "Stop"
@@ -544,9 +544,9 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=0a443712efba938441bd557937a39c391b1af8e8
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=c723d2b1d8a15ef31576432bd7839de0ddf05a01
 # Constants
-DKML_VERSION=1.2.0-prerel5
+DKML_VERSION=1.2.0-prerel6
 
 setup_WORKSPACE_VARNAME=$1
 shift
