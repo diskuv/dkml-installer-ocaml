@@ -158,7 +158,12 @@ jobs:
           | Asset                                                 | Supported? | Description                                                                         |
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
           EOF
-          cat /dev/null > footer-mid-prerelease.md
+          cat > footer-mid-prerelease.md <<EOF
+          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
+          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
+          | [unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
+          | [unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
+          EOF
           cat > footer-mid-release.md <<EOF
           | [setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
           | [setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
