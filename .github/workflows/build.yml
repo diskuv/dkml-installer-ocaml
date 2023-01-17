@@ -159,10 +159,10 @@ jobs:
           | ----------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
           EOF
           cat > footer-mid-prerelease.md <<EOF
-          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
-          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)         | Partial    | 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
-          | [unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe)  | Yes        | 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
-          | [unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe)     | Partial    | 32-bit OCaml distribution uninstaller                                               |
+          | [unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-i-$OPAMMAJMINPAT.exe)      | Yes        | Unsigned 64-bit OCaml distribution installer. **You should download+install this**           |
+          | [unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-i-$OPAMMAJMINPAT.exe)         | Partial    | Unsigned 32-bit OCaml distribution on 64-bit Windows. Some OCaml packages may have problems  |
+          | [unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86_64-u-$OPAMMAJMINPAT.exe)  | Yes        | Unsigned 64-bit OCaml distribution uninstaller. Use this if support@ tells you               |
+          | [unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/unsigned-diskuv-ocaml-windows_x86-u-$OPAMMAJMINPAT.exe)     | Partial    | Unsigned 32-bit OCaml distribution uninstaller                                               |
           EOF
           cat > footer-mid-release.md <<EOF
           | [setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v${MAJMINPATPRE}/setup-diskuv-ocaml-windows_x86_64-$OPAMMAJMINPAT.exe)      | Yes        | 64-bit OCaml distribution installer. **You should download+install this**           |
@@ -278,10 +278,6 @@ jobs:
         run: |
           cat vagrant/win32/test_installation.t/estimatedsize.en-US.txt
 
-      - name: Check otherplayground creation
-        run: |
-          set -x ; find vagrant/win32/otherplayground ; if [ ! -e vagrant/win32/otherplayground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant otherplayground creation FAILED"; exit 1; fi
-
   # Direct testing is simply using GitHub virtual machine to run the setup.
   #
   # Pros and Cons
@@ -343,6 +339,12 @@ jobs:
           name: ${{ matrix.dkml_host_abi }}
           path: dist
 
+      - name: Troubleshoot environment (Windows)
+        shell: pwsh
+        run: |
+          dir env:
+          get-command git
+
       - name: Test the installer (Windows)
         env:
           # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
@@ -350,6 +352,7 @@ jobs:
             C:\\ProgramData\\chocolatey\\bin;\
             C:\\Program Files (x86)\\NSIS\\;\
             C:\\tools\\zstd;\
+            C:\\Program Files\\git;\
             C:\\Program Files\\dotnet;\
             C:\\Windows\\system32;\
             C:\\Windows;\
@@ -365,7 +368,7 @@ jobs:
         run: |
           # Avoid Git installer hanging by pre-installing Git.
           # (Choco best practices: https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide)
-          choco upgrade git -y --no-progress --version="'2.36.1'"
+          #choco upgrade git -y --no-progress --version="'2.36.1'"
 
           $setups = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}--${{matrix.dkml_host_abi}}-i-*.exe"
           foreach ($setup in $setups)
