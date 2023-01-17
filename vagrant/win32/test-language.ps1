@@ -79,7 +79,6 @@ $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml"
 
 Write-Output "Printing installation ..."
 opam var
-$opamroot = opam var root
 
 Write-Output "Testing installation ..."
 # Clean, run test for installation and save results
@@ -89,28 +88,6 @@ if (Test-Path C:\vagrant\test_installation.t\_build) {
 dune runtest --root C:\vagrant\test_installation.t --display=short
 if ($lastexitcode -ne 0) { throw ("FATAL: dune runtest failed") }
 Set-Content -Path "C:\vagrant\test_installation.t\exitcode.$SystemLocale.txt" -Value $LastExitCode -NoNewline -Encoding Ascii
-
-Write-Output "Testing otherplayground ..."
-# Run through a simple playground ... different from the auto-installed 'playground' switch ...
-# where we can test a new switch being created
-(Test-Path -Path C:\vagrant\otherplayground) -or $(New-Item C:\vagrant\otherplayground -ItemType Directory)
-Set-Location C:\vagrant\otherplayground     # aka. cd playground
-$env:DKML_BUILD_TRACE = "ON"                # enable tracing
-$env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
-$env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
-dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of dkml init
-if ($lastexitcode -ne 0) { throw ("FATAL: dkml init failed") }
-opam install graphics --yes       # install something with a low number of dependencies, that sufficiently exercises Opam
-if ($lastexitcode -ne 0) {
-  Write-Output "----- TROUBLESHOOTING: dune-*-*.out ----"
-  Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Output "[BEGIN $_]" ; Get-Content $_; Write-Output "[END $_]`n" }
-  throw ("FATAL: opam install graphics failed")
-}
-opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
-#opam install pyml --yes           # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/12
-opam install ocaml-lsp-server merlin --yes # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/21
-opam install ocamlformat --yes
-if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
 
 Write-Output "Done tests."
 

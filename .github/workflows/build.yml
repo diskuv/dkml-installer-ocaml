@@ -197,6 +197,11 @@ jobs:
 
   # Vagrant testing uncovers bugs that only appear on a fresh Windows installation.
   # For example, found missing vcruntime140.dll with Vagrant testing.
+  #
+  # However Vagrant uses UNC paths for its shared drive which sometimes gets
+  # resolved as \\xxx\y rather than C:\vagrant. UNC paths are not supported well
+  # in OCaml ecosystem. So we only test the installer and uninstaller and some
+  # very light Dune-based tests in Vagrant.
   vagrant-testing:
     timeout-minutes: 180 # 3.0 hours
     if: |
@@ -217,8 +222,8 @@ jobs:
           - windows_x86_64
         virtualbox:
           - windows-10-enterprise
-          - windows-10-21h2-enterprise
-          - windows-10-22h2-enterprise-nocm
+          # - windows-10-21h2-enterprise
+          # - windows-10-22h2-enterprise-nocm
           - windows-11-21h2-enterprise
 
     # macOS-12 is only GitHub CI runner that supports VirtualBox
@@ -276,6 +281,166 @@ jobs:
       - name: Check otherplayground creation
         run: |
           set -x ; find vagrant/win32/otherplayground ; if [ ! -e vagrant/win32/otherplayground/_opam/lib/graphics/graphics.cmx ]; then echo "FATAL: Vagrant otherplayground creation FAILED"; exit 1; fi
+
+  # Direct testing is simply using GitHub virtual machine to run the setup.
+  #
+  # Pros and Cons
+  #   Because GitHub virtual machine already has Visual Studio and several other
+  #   tools, it doesn't exercise all the paths that vagrant-testing covers.
+  #   However, it is quicker and it can find issues with conflicting Cygwin
+  #   (or any other of the many programs that are installed on a GitHub machine).
+  #   In addition, windows-2019 (somewhat older Windows) and windows-latest (2022, or
+  #   which is the latest) is tested ... Vagrant is closer to windows-latest
+  #   as of Apr 2022.
+  #
+  # Matrix
+  #   Instead of all 4 combinations of (2019,latest) x (32bit,64bit), we half
+  #   the matrix so save compute cycles.
+  #
+  # Tricky Issues
+  #   [Git installer hangs]
+  #
+  #   The move for both windows-2019 and windows-latest from
+  #     Image Release: https://github.com/actions/virtual-environments/releases/tag/win19%2F20220606.1
+  #   to:
+  #     Image Release: https://github.com/actions/virtual-environments/releases/tag/win19%2F20220614.0
+  #   causes the Git for Windows 2.36.0 installer to hang.
+  #
+  #   Root cause? It is likely antivirus
+  #   (https://github.com/git-for-windows/msys2-runtime/pull/37) or a slightly
+  #   different UAC environment.
+  #
+  #   Mitigation: Pre-install Git for Windows from Chocolatey. Also Vagrant still
+  #   tests the Git installer successfully.
+  direct-testing:
+    # Disabled until "Tricky Issues" is fixed
+    #if: false
+    if: |
+      github.event.inputs.test-filter != 'no-tests' &&
+      github.event.inputs.test-filter != 'no-direct-tests' &&
+      !endsWith(github.ref_name, '_no_test')
+    timeout-minutes: 90 # 1.5 hours
+    # Wait for build
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2019
+            dkml_host_abi: windows_x86
+          - os: windows-latest
+            dkml_host_abi: windows_x86_64
+
+    runs-on: ${{ matrix.os }}
+    name: direct / ${{ matrix.os }} ${{ matrix.dkml_host_abi }}
+
+    steps:
+      - name: Download and unpack ${{ matrix.dkml_host_abi }} artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.dkml_host_abi }}
+          path: dist
+
+      - name: Test the installer (Windows)
+        env:
+          # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
+          PATH: "C:\\Program Files\\PowerShell\\7;\
+            C:\\ProgramData\\chocolatey\\bin;\
+            C:\\Program Files (x86)\\NSIS\\;\
+            C:\\tools\\zstd;\
+            C:\\Program Files\\dotnet;\
+            C:\\Windows\\system32;\
+            C:\\Windows;\
+            C:\\Windows\\System32\\Wbem;\
+            C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;\
+            C:\\Program Files\\Docker;\
+            C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit"
+        # If we don't change the shell then msys2/setup-msys2@v2 will conflict with
+        # the dkml-component-unixutils' MSYS2 ... you get:
+        #    *** fatal error - cygheap base mismatch detected - 0x180348408/0x180349408.
+        #   This problem is probably due to using incompatible versions of the cygwin DLL.
+        shell: pwsh
+        run: |
+          # Avoid Git installer hanging by pre-installing Git.
+          # (Choco best practices: https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide)
+          choco upgrade git -y --no-progress --version="'2.36.1'"
+
+          $setups = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}--${{matrix.dkml_host_abi}}-i-*.exe"
+          foreach ($setup in $setups)
+          {
+            # --------- INSTALL ---------
+
+            Write-Host "Running $($setup.FullName) ..."
+            & $setup.FullName -v -v --color=always
+            if ($LastExitCode -ne 0) { throw "setup failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\usr\bin\ocamlopt.exe" -config
+            if ($LastExitCode -ne 0) { throw "ocamlopt.exe -config failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" --version
+            if ($LastExitCode -ne 0) { throw "opam.exe --version failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" var
+            if ($LastExitCode -ne 0) { throw "opam.exe var failed! Exited with $LastExitCode" }
+
+            # --------- TESTING SWITCH ---------
+
+            # Refresh the PATH with newly installed User entries
+            $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.Path]::PathSeparator + $env:Path
+            # Mimic $DiskuvOCamlHome
+            $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml"
+            $opamroot = opam var root
+
+            Write-Output "Testing otherplayground ..."
+            # Run through a simple playground ... different from the auto-installed 'playground' switch ...
+            # where we can test a new switch being created
+            (Test-Path -Path otherplayground) -or $(New-Item otherplayground -ItemType Directory)
+            Set-Location otherplayground                # aka. cd playground
+            $env:DKML_BUILD_TRACE = "ON"                # enable tracing
+            $env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
+            $env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
+            dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of dkml init
+            if ($lastexitcode -ne 0) { throw ("FATAL: dkml init failed") }
+            $env:DKML_BUILD_TRACE = "OFF"               # disable tracing
+            $env:DKML_BUILD_TRACE_LEVEL = "0"           # no trace
+            opam install graphics --yes       # install something with a low number of dependencies, that sufficiently exercises Opam
+            if ($lastexitcode -ne 0) {
+              Write-Output "----- TROUBLESHOOTING: dune-*-*.out ----"
+              Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Output "[BEGIN $_]" ; Get-Content $_; Write-Output "[END $_]`n" }
+              throw ("FATAL: opam install graphics failed")
+            }
+            opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
+            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
+            #opam install pyml --yes           # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/12
+            #if ($lastexitcode -ne 0) { throw ("FATAL: opam install pyml failed") }
+            opam install ocaml-lsp-server merlin --yes # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/21
+            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocaml-lsp-server merlin failed") }
+            opam install ocamlformat --yes
+            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocamlformat failed") }
+            Set-Location ..
+
+            # -------- TEST PACMAN ---------
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --init
+            if ($LastExitCode -ne 0) { throw "pacman-key --init failed! Exited with $LastExitCode" }
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --populate
+            if ($LastExitCode -ne 0) { throw "pacman-key --populate failed! Exited with $LastExitCode" }
+
+            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman -Q
+            if ($LastExitCode -ne 0) { throw "pacman -Q failed! Exited with $LastExitCode" }
+          }
+
+          $uninstalls = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}--${{matrix.dkml_host_abi}}-u-*.exe"
+          foreach ($uninstall in $uninstalls)
+          {
+            # --------- UNINSTALL ---------
+
+            Write-Host "Running $($uninstall.FullName) ..."
+            & $uninstall.FullName -v -v --color=always
+            if ($LastExitCode -ne 0) { throw "uninstall failed! Exited with $LastExitCode" }
+          }
 
   #--------
   # Release
