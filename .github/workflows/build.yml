@@ -370,80 +370,76 @@ jobs:
           # (Choco best practices: https://docs.chocolatey.org/en-us/choco/commands/#scripting-integration-best-practices-style-guide)
           #choco upgrade git -y --no-progress --version="'2.36.1'"
 
-          $setups = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}--${{matrix.dkml_host_abi}}-i-*.exe"
-          foreach ($setup in $setups)
-          {
-            # --------- INSTALL ---------
+          # --------- INSTALL ---------
 
-            Write-Host "Running $($setup.FullName) ..."
-            & $setup.FullName -v -v --color=always
-            if ($LastExitCode -ne 0) { throw "setup failed! Exited with $LastExitCode" }
+          $setup = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}-${{matrix.dkml_host_abi}}-i-*.exe" | Select-Object -First 1
 
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\usr\bin\ocamlopt.exe" -config
-            if ($LastExitCode -ne 0) { throw "ocamlopt.exe -config failed! Exited with $LastExitCode" }
+          Write-Host "Running $($setup.FullName) ..."
+          & $setup.FullName -v -v --color=always
+          if ($LastExitCode -ne 0) { throw "setup failed! Exited with $LastExitCode" }
 
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" --version
-            if ($LastExitCode -ne 0) { throw "opam.exe --version failed! Exited with $LastExitCode" }
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\usr\bin\ocamlopt.exe" -config
+          if ($LastExitCode -ne 0) { throw "ocamlopt.exe -config failed! Exited with $LastExitCode" }
 
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" var
-            if ($LastExitCode -ne 0) { throw "opam.exe var failed! Exited with $LastExitCode" }
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" --version
+          if ($LastExitCode -ne 0) { throw "opam.exe --version failed! Exited with $LastExitCode" }
 
-            # --------- TESTING SWITCH ---------
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\opam.exe" var
+          if ($LastExitCode -ne 0) { throw "opam.exe var failed! Exited with $LastExitCode" }
 
-            # Refresh the PATH with newly installed User entries
-            $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.Path]::PathSeparator + $env:Path
-            # Mimic $DiskuvOCamlHome
-            $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml"
-            $opamroot = opam var root
+          # --------- TESTING SWITCH ---------
 
-            Write-Output "Testing otherplayground ..."
-            # Run through a simple playground ... different from the auto-installed 'playground' switch ...
-            # where we can test a new switch being created
-            (Test-Path -Path otherplayground) -or $(New-Item otherplayground -ItemType Directory)
-            Set-Location otherplayground                # aka. cd playground
-            $env:DKML_BUILD_TRACE = "ON"                # enable tracing
-            $env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
-            $env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
-            dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of dkml init
-            if ($lastexitcode -ne 0) { throw ("FATAL: dkml init failed") }
-            $env:DKML_BUILD_TRACE = "OFF"               # disable tracing
-            $env:DKML_BUILD_TRACE_LEVEL = "0"           # no trace
-            opam install graphics --yes       # install something with a low number of dependencies, that sufficiently exercises Opam
-            if ($lastexitcode -ne 0) {
-              Write-Output "----- TROUBLESHOOTING: dune-*-*.out ----"
-              Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Output "[BEGIN $_]" ; Get-Content $_; Write-Output "[END $_]`n" }
-              throw ("FATAL: opam install graphics failed")
-            }
-            opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
-            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
-            #opam install pyml --yes           # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/12
-            #if ($lastexitcode -ne 0) { throw ("FATAL: opam install pyml failed") }
-            opam install ocaml-lsp-server merlin --yes # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/21
-            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocaml-lsp-server merlin failed") }
-            opam install ocamlformat --yes
-            if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocamlformat failed") }
-            Set-Location ..
+          # Refresh the PATH with newly installed User entries
+          $env:Path = [Environment]::GetEnvironmentVariable('PATH', 'User') + [System.IO.Path]::PathSeparator + $env:Path
+          # Mimic $DiskuvOCamlHome
+          $env:DiskuvOCamlHome = "$env:LOCALAPPDATA\Programs\DiskuvOCaml"
+          $opamroot = opam var root
 
-            # -------- TEST PACMAN ---------
-
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --init
-            if ($LastExitCode -ne 0) { throw "pacman-key --init failed! Exited with $LastExitCode" }
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --populate
-            if ($LastExitCode -ne 0) { throw "pacman-key --populate failed! Exited with $LastExitCode" }
-
-            & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman -Q
-            if ($LastExitCode -ne 0) { throw "pacman -Q failed! Exited with $LastExitCode" }
+          Write-Output "Testing otherplayground ..."
+          # Run through a simple playground ... different from the auto-installed 'playground' switch ...
+          # where we can test a new switch being created
+          (Test-Path -Path otherplayground) -or $(New-Item otherplayground -ItemType Directory)
+          Set-Location otherplayground                # aka. cd playground
+          $env:DKML_BUILD_TRACE = "ON"                # enable tracing
+          $env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
+          $env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
+          dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of dkml init
+          if ($lastexitcode -ne 0) { throw ("FATAL: dkml init failed") }
+          $env:DKML_BUILD_TRACE = "OFF"               # disable tracing
+          $env:DKML_BUILD_TRACE_LEVEL = "0"           # no trace
+          opam install graphics --yes       # install something with a low number of dependencies, that sufficiently exercises Opam
+          if ($lastexitcode -ne 0) {
+            Write-Output "----- TROUBLESHOOTING: dune-*-*.out ----"
+            Get-ChildItem "$opamroot\log" -Filter "dune-*-*.out" | ForEach-Object { Write-Output "[BEGIN $_]" ; Get-Content $_; Write-Output "[END $_]`n" }
+            throw ("FATAL: opam install graphics failed")
           }
+          opam install ppx_jane --yes       # regression test: https://discuss.ocaml.org/t/ann-diskuv-ocaml-1-x-x-windows-ocaml-installer-no-longer-in-preview/10309/8?u=jbeckford
+          if ($lastexitcode -ne 0) { throw ("FATAL: opam install ppx_jane failed") }
+          #opam install pyml --yes           # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/12
+          #if ($lastexitcode -ne 0) { throw ("FATAL: opam install pyml failed") }
+          opam install ocaml-lsp-server merlin --yes # regression test: https://github.com/diskuv/dkml-installer-ocaml/issues/21
+          if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocaml-lsp-server merlin failed") }
+          opam install ocamlformat --yes
+          if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocamlformat failed") }
+          Set-Location ..
 
-          $uninstalls = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}--${{matrix.dkml_host_abi}}-u-*.exe"
-          foreach ($uninstall in $uninstalls)
-          {
-            # --------- UNINSTALL ---------
+          # -------- TEST PACMAN ---------
 
-            Write-Host "Running $($uninstall.FullName) ..."
-            & $uninstall.FullName -v -v --color=always
-            if ($LastExitCode -ne 0) { throw "uninstall failed! Exited with $LastExitCode" }
-          }
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --init
+          if ($LastExitCode -ne 0) { throw "pacman-key --init failed! Exited with $LastExitCode" }
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman-key --populate
+          if ($LastExitCode -ne 0) { throw "pacman-key --populate failed! Exited with $LastExitCode" }
+
+          & "$env:LOCALAPPDATA\Programs\DiskuvOCaml\bin\with-dkml.exe" pacman -Q
+          if ($LastExitCode -ne 0) { throw "pacman -Q failed! Exited with $LastExitCode" }
+
+          # --------- UNINSTALL ---------
+
+          $uninstall = Get-ChildItem -Path dist -Filter "unsigned-${{ env.PROGRAM_NAME_KEBAB }}-${{matrix.dkml_host_abi}}-u-*.exe" | Select-Object -First 1
+
+          Write-Host "Running $($uninstall.FullName) ..."
+          & $uninstall.FullName -v -v --color=always
+          if ($LastExitCode -ne 0) { throw "uninstall failed! Exited with $LastExitCode" }
 
   #--------
   # Release
