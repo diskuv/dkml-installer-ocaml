@@ -344,15 +344,20 @@ jobs:
         run: |
           dir env:
           get-command git
+          dir "C:\Program Files\git\bin"
+          dir "C:\Program Files\git\cmd"
+          Get-ChildItem -Recurse -Depth 3 "C:\Program Files\git"
 
       - name: Test the installer (Windows)
         env:
-          # Fix PATH so that C:\Program Files\Git\usr\bin\cygpath.exe is gone
+          # Fix PATH so that `C:\Program Files\Git\usr\bin\cygpath.exe` and
+          # `C:\Program Files\Git\bin\bash.exe` are gone. GitHub Actions
+          # seems to put Git Bash entirely in the PATH!
           PATH: "C:\\Program Files\\PowerShell\\7;\
             C:\\ProgramData\\chocolatey\\bin;\
             C:\\Program Files (x86)\\NSIS\\;\
             C:\\tools\\zstd;\
-            C:\\Program Files\\git;\
+            C:\\Program Files\\git\\cmd;\
             C:\\Program Files\\dotnet;\
             C:\\Windows\\system32;\
             C:\\Windows;\
