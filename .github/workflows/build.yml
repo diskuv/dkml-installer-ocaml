@@ -344,9 +344,12 @@ jobs:
         run: |
           dir env:
           get-command git
+
+          echo dir "C:\Program Files\git\bin"
           dir "C:\Program Files\git\bin"
+
+          echo dir "C:\Program Files\git\cmd"
           dir "C:\Program Files\git\cmd"
-          Get-ChildItem -Recurse -Depth 3 "C:\Program Files\git"
 
       - name: Test the installer (Windows)
         env:
