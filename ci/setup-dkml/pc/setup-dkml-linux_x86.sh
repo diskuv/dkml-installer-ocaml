@@ -18,6 +18,7 @@ export FDOPEN_OPAMEXE_BOOTSTRAP=false
 export CACHE_PREFIX=v1
 export OCAML_COMPILER=
 export DKML_COMPILER=
+export PRIMARY_SWITCH_SKIP_INSTALL=false
 export SECONDARY_SWITCH=false
 export CONF_DKML_CROSS_TOOLCHAIN=@repository@
 export DISKUV_OPAM_REPOSITORY=
@@ -37,15 +38,15 @@ export PIN_CORE_KERNEL='v0.15.0'
 export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r5'
 export PIN_CTYPES='0.19.2-windowssupport-r5'
 export PIN_CURLY='0.2.1-windows-env_r2'
-export PIN_DKML_APPS='1.2.0~prerel8'
-export PIN_DKML_EXE='1.2.0~prerel8'
+export PIN_DKML_APPS='1.2.0~prerel10'
+export PIN_DKML_EXE='1.2.0~prerel10'
 export PIN_DUNE='3.6.2'
 export PIN_FEATHER='0.3.0'
 export PIN_OCAMLBUILD='0.14.0'
 export PIN_OCAMLFIND='1.9.1'
 export PIN_OCP_INDENT='1.8.2-windowssupport'
 export PIN_PPX_EXPECT='v0.15.1'
-export PIN_WITH_DKML='1.2.0~prerel8'
+export PIN_WITH_DKML='1.2.0~prerel10'
 
 usage() {
   echo 'Setup Diskuv OCaml (DKML) compiler on a desktop PC.' >&2
@@ -60,6 +61,7 @@ usage() {
   echo "  --CACHE_PREFIX=<value>. Defaults to: ${CACHE_PREFIX}" >&2
   echo "  --OCAML_COMPILER=<value>. --DKML_COMPILER takes priority. If --DKML_COMPILER is not set and --OCAML_COMPILER is set, then the specified OCaml version tag of dkml-compiler (ex. 4.12.1) is used. Defaults to: ${OCAML_COMPILER}" >&2
   echo "  --DKML_COMPILER=<value>. Unspecified or blank is the latest from the default branch (main) of dkml-compiler. Defaults to: ${DKML_COMPILER}" >&2
+  echo "  --PRIMARY_SWITCH_SKIP_INSTALL=true|false. If true no dkml-base-compiler will be installed in the 'dkml' switch. Defaults to: ${PRIMARY_SWITCH_SKIP_INSTALL}" >&2
   echo "  --SECONDARY_SWITCH=true|false. If true then the secondary switch named 'two' is created, in addition to the always-present 'dkml' switch. Defaults to: ${SECONDARY_SWITCH}" >&2
   echo "  --CONF_DKML_CROSS_TOOLCHAIN=<value>. Unspecified or blank is the latest from the default branch (main) of conf-dkml-cross-toolchain. @repository@ is the latest from Opam. Defaults to: ${CONF_DKML_CROSS_TOOLCHAIN}" >&2
   echo "  --DISKUV_OPAM_REPOSITORY=<value>. Defaults to the value of --DEFAULT_DISKUV_OPAM_REPOSITORY_TAG (see below)" >&2
@@ -112,6 +114,8 @@ while getopts :h-: option; do
     OCAML_COMPILER=*) OCAML_COMPILER=${OPTARG#*=} ;;
     DKML_COMPILER) fail "Option \"$OPTARG\" missing argument" ;;
     DKML_COMPILER=*) DKML_COMPILER=${OPTARG#*=} ;;
+    PRIMARY_SWITCH_SKIP_INSTALL) fail "Option \"$OPTARG\" missing argument" ;;
+    PRIMARY_SWITCH_SKIP_INSTALL=*) PRIMARY_SWITCH_SKIP_INSTALL=${OPTARG#*=} ;;
     SECONDARY_SWITCH) fail "Option \"$OPTARG\" missing argument" ;;
     SECONDARY_SWITCH=*) SECONDARY_SWITCH=${OPTARG#*=} ;;
     CONF_DKML_CROSS_TOOLCHAIN) fail "Option \"$OPTARG\" missing argument" ;;
@@ -439,9 +443,9 @@ set -euf
 # Constants
 SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 #   Edited by https://gitlab.com/diskuv/diskuv-ocaml/contributors/release.sh
-DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=638195f6db6f54f121a7211515f26d946494eb95
+DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=7841d9d7e42f1651b1766d3d86f83d7f15e5bae1
 # Constants
-DKML_VERSION=1.2.0-prerel8
+DKML_VERSION=1.2.0-prerel10
 
 setup_WORKSPACE_VARNAME=$1
 shift
@@ -511,6 +515,7 @@ DISKUV_OPAM_REPOSITORY=${DISKUV_OPAM_REPOSITORY:-}
 DKML_COMPILER=${DKML_COMPILER:-}
 OCAML_COMPILER=${OCAML_COMPILER:-}
 CONF_DKML_CROSS_TOOLCHAIN=${CONF_DKML_CROSS_TOOLCHAIN:-}
+PRIMARY_SWITCH_SKIP_INSTALL=${PRIMARY_SWITCH_SKIP_INSTALL:-}
 SECONDARY_SWITCH=${SECONDARY_SWITCH:-}
 MANYLINUX=${MANYLINUX:-}
 DKML_HOME=${DKML_HOME:-}
@@ -1551,7 +1556,9 @@ do_install_compiler() {
     opamrun upgrade --switch "$do_install_compiler_NAME" --yes dkml-base-compiler conf-dkml-cross-toolchain ${ocaml_options:-}
     section_end "install-compiler-$do_install_compiler_NAME"
 }
-do_install_compiler dkml
+if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
+    do_install_compiler dkml
+fi
 if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
     do_install_compiler two
 fi
