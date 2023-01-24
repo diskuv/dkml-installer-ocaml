@@ -411,7 +411,7 @@ jobs:
           $env:DKML_BUILD_TRACE = "ON"                # enable tracing
           $env:DKML_BUILD_TRACE_LEVEL = "2"           # verbose trace
           $env:OCAMLRUNPARAM = "b"                    # stacktrace on failure
-          dkml init --build-type=Release --yes # `Release` option is present simply to test CLI option handling of dkml init
+          dkml init --yes                             # create switch
           if ($lastexitcode -ne 0) { throw ("FATAL: dkml init failed") }
           $env:DKML_BUILD_TRACE = "OFF"               # disable tracing
           $env:DKML_BUILD_TRACE_LEVEL = "0"           # no trace
