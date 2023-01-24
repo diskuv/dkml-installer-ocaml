@@ -6,6 +6,10 @@
 $workflowref = git ls-remote -q https://github.com/diskuv/dkml-workflows-prerelease.git refs/heads/v1 | foreach-object { echo $_.split()[0] } ; opam pin dkml-workflows git+https://github.com/diskuv/dkml-workflows-prerelease.git#$workflowref --yes ; opam exec -- generate-setup-dkml-scaffold ; echo "" > installer\bin\dune.inc ; opam exec -- dune clean ; opam exec -- dune build '@gen-dkml' --auto-promote
 ```
 
+For a release (not a prerelease) you must also:
+1. Increase the version in `dune-project`
+2. Run `dune build *.opam`
+
 Then `git commit` and `git tag`.
 
 Finally `git push` and `git push origin NEWTAG`.
