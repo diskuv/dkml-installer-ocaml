@@ -142,11 +142,11 @@ jobs:
       - name: Checkout diskuv-ocaml at semver tags
         run: |
           git clone https://gitlab.com/diskuv-ocaml/distributions/dkml.git
-          if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPATPRE}"; then
+          if ! git -C dkml -c advice.detachedHead=false checkout "${MAJMINPATPRE}"; then
             # If there is no prerelease tag, perhaps there is a maj/min/patch tag?
-            if ! git -C diskuv-ocaml -c advice.detachedHead=false checkout "${MAJMINPAT}"; then
-              # If there is a maj/min/patch tag, don't let next step grab notes from HEAD
-              rm -rf diskuv-ocaml
+            if ! git -C dkml -c advice.detachedHead=false checkout "${MAJMINPAT}"; then
+              # If there is no maj/min/patch tag, don't let next step grab notes from HEAD
+              rm -rf dkml
             fi
           fi
 
