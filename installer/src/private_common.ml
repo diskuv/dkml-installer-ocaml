@@ -34,11 +34,11 @@ let program_info =
       Some "https://gitlab.com/diskuv/diskuv-ocaml/-/blob/main/CHANGES.md";
     help_link_opt = Some "https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction";
     (*
-        1698886537L bytes (1.6 GB) in DKML 1.1.0
+        2116259083L bytes (2.1 GB) in DKML 1.2.0
       - "{0} B" -f (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
       - available from GitHub Actions / package.yml / vagrant-testing / "estimated_byte_size_opt=Some ..."
      *)
-    estimated_byte_size_opt = Some 1_698_886_537L;
+    estimated_byte_size_opt = Some 2_116_259_083L;
     windows_language_code_id_opt = Some 0x00000409;
     embeds_32bit_uninstaller = true;
     embeds_64bit_uninstaller = true;
