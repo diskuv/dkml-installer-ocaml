@@ -31,9 +31,11 @@ For news about Diskuv OCaml,
 
 Briefly review the following:
 
-> You need to **stay at your computer** and press "Yes" for any Windows security popups;
-> after the DKML installer finishes with two programs (`Visual Studio Installer`
-> and `Git for Windows`) you can leave your computer for the remaining two (2) hours.
+> You need to **stay at your computer for 15 minutes** and press "Yes" if either
+> `Visual Studio Installer` or `Git for Windows` or both programs ask you to
+> allow installation.
+> After 15 minutes, you can go have lunch or do other work for the
+> **remaining hour**.
 
 > First time installations may get a notification printed in red. If you see it, reboot your
 > computer and then restart your installation so that Visual Studio Installer
@@ -83,6 +85,9 @@ to generate installers from the following Opam packages:
 
 * [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlcompiler)
 * [dkml-component-ocamlcompiler](http://github.com/diskuv/dkml-component-ocamlcompiler)
+* [dkml-component-opam](http://github.com/diskuv/dkml-component-opam)
+* [dkml-component-desktop](http://github.com/diskuv/dkml-component-desktop)
+* [dkml-component-unixutils](http://github.com/diskuv/dkml-component-unixutils)
 
 ## Building from Source
 
@@ -104,12 +109,6 @@ dune build
 
 The installer makes heavy use of the dkml-install-api.
 See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkml-install-api/blob/main/contributors/README.md).
-
-Any new dkml-components used by this installer will need an access token
-(`repo public_repo`)
-to automatically trigger builds, which you'll save as a repository secret
-in your component. Create an issue to get access if you have a new
-component that you would like to get distributed.
 
 In addition, there are
 
