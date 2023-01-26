@@ -3,6 +3,7 @@
 The Diskuv OCaml distribution is an open-source set of software
 that supports software development in pure OCaml. The distribution's
 strengths are its:
+
 * full compatibility with OCaml standards like Opam, Dune and ocamlfind
 * laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
   and Xcode
@@ -11,6 +12,7 @@ strengths are its:
 * security through reproducibility, versioning and from-source builds
 
 These alternatives may be better depending on your use case:
+
 * Developing in a Javascript first environment? Have a look at [Esy and Reason](https://esy.sh/)
 * Developing operating system kernels? Have a look at [Mirage OS](https://mirage.io/)
 * Developing Linux server software like web servers? Plain old [OCaml on Debian, etc.](https://ocaml.org/docs/up-and-running) works well
@@ -114,7 +116,7 @@ In addition, there are
 
 * [code signing documents](contributors/BINARY_SIGNING.md)
 * [winget package submission documents](installer/winget/README.md)
- 
+
 ## Status
 
 | What                     | Branch/Tag | Status                                                                                                                                                                                          |
