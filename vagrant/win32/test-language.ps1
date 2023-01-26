@@ -36,11 +36,7 @@ $opts = "--ci"
 
 if (Test-Path $HereDir\setup.exe) {
   Write-Output "Running supplied setup.exe ..."
-  & "$HereDir\setup.exe" $opts
-  if ($lastexitcode -ne 0) {
-    throw ("FATAL: setup.exe failed")
-  }
-
+  $SetupExe = "$HereDir\setup.exe"
 } else {
   # Get the versions which can't be embedded in this UTF-16 BE file
   # (ex. UTF-16 BE encoding not supported by `bumpversion`)
@@ -57,12 +53,15 @@ if (Test-Path $HereDir\setup.exe) {
   Write-Output "Downloading from $url ..."
   Invoke-WebRequest $url -OutFile "$env:TEMP\setup.exe"
 
-  Write-Output "Running setup.exe ..."
-  & "$env:TEMP\setup.exe" $opts
-  if ($lastexitcode -ne 0) {
-    throw ("FATAL: setup.exe failed")
-  }
+  Write-Output "Running downloaded setup.exe ..."
+  $SetupExe = "$env:TEMP\setup.exe"
 }
+
+& "$SetupExe" $opts
+if ($lastexitcode -ne 0) {
+  throw ("FATAL: setup.exe failed")
+}
+
 
 Write-Output "Done installation."
 
@@ -113,6 +112,26 @@ Set-Content -Path "C:\vagrant\test_installation.t\estimatedsize.$SystemLocale.tx
 
 # END stats
 # ========================
+
+# ========================
+# START installer for the second time
+#
+# We run the installer twice to make sure it can recover from partial
+# attempts. It should be quicker (no Visual Studio install, no Git install)
+# but still will be slow because setup-userprofile.ps1 is currently slow.
+
+Write-Output "Rerunning setup.exe ..."
+
+& "$SetupExe" $opts
+if ($lastexitcode -ne 0) {
+  throw ("FATAL: setup.exe rerun failed")
+}
+
+Write-Output "Done reinstallation."
+
+# END uninstaller for the second time
+# ========================
+
 
 # ========================
 # START uninstaller
