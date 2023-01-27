@@ -7,6 +7,7 @@ $workflowref = git ls-remote -q https://github.com/diskuv/dkml-workflows-prerele
 ```
 
 For a release (not a prerelease) you must also:
+
 1. Increase the version in `dune-project`
 2. Run `dune build *.opam`
 

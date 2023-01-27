@@ -7,3 +7,18 @@
 (library
  (name private_common)
  (libraries dkml-package-console.common))
+
+(rule
+ (target version.ml)
+ (action
+  (with-stdout-to
+   %{target}
+   (progn
+    ;  https://opam.ocaml.org/doc/Manual.html#opamfield-build-env
+    (echo
+     "let opam_package_version = {oversion|%{env:OPAM_PACKAGE_VERSION=}|oversion}\n")
+    (echo "let program_version =\n")
+    (echo "  if String.equal opam_package_version \"\" then\n")
+    (echo "    {dcoo|%{version:dkml-runtime-distribution}|dcoo}\n")
+    (echo "  else\n")
+    (echo "    opam_package_version\n")))))
