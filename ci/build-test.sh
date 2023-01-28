@@ -96,6 +96,10 @@ case "$dkml_host_abi" in
   *) opamrun install "./${OPAM_PACKAGE}.opam" --with-test --yes ;;
 esac
 
+# Generate and print a .locked file
+opamrun lock "${OPAM_PACKAGE}"
+cat "${OPAM_PACKAGE}.opam.locked"
+
 # Examine the installer
 _share=$(opamrun var "${OPAM_PACKAGE}:share")
 opamrun install diskuvbox --yes
