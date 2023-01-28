@@ -58,12 +58,12 @@ pin-depends: [
   ]
 
   [
-    "dkml-runtime-common.1.2.0~prerel1"
-    "git+https://github.com/diskuv/dkml-runtime-common.git"
+    "dkml-runtime-common.1.2.1-prerel1"
+    "git+https://github.com/diskuv/dkml-runtime-common.git#1.2.1-prerel1"
   ]
   [
-    "dkml-runtime-distribution.1.2.0~prerel1"
-    "git+https://github.com/diskuv/dkml-runtime-distribution.git"
+    "dkml-runtime-distribution.1.2.1-prerel1"
+    "git+https://github.com/diskuv/dkml-runtime-distribution.git#1.2.1-prerel1"
   ]
   [
     "dkml-component-staging-ocamlrun.4.14.0~v1.0.2~prerel33"
