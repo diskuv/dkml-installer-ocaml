@@ -11,7 +11,7 @@ bug-reports: "https://github.com/diskuv/dkml-installer-ocaml/issues"
 depends: [
   "dune" {>= "2.9"}
   "odoc" {>= "1.5.3" & with-doc}
-  "ppx_expect" {= "v0.14.1" | = "v0.14.2" | = "v0.15.1"}
+  "ppx_expect" {= "v0.15.1"}
   "ocaml" {>= "4.12.1~"}
   "dkml-component-network-ocamlcompiler" {>= "4.14.0~" & < "4.14.1~"}
   "dkml-component-offline-desktop-full" {>= "0.1.0"}
