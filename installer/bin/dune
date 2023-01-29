@@ -32,6 +32,8 @@
   (progn
    (run
     dune-of-installer-generator
+    --package-name
+    dkml-installer-network-ocaml
     --project-root
     %{project_root}
     %{target}))))

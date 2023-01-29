@@ -1,5 +1,10 @@
 open Dkml_package_console_common
 
+let build_info =
+  {
+    Author_types.package_name = "dkml-installer-network-ocaml"
+  }
+
 let organization =
   {
     Author_types.legal_name = "Diskuv, Inc.";
