@@ -106,19 +106,19 @@ pin-depends: [
 
   [
     "dkml-install-installer.0.4.0"
-    "git+https://github.com/diskuv/dkml-install-api.git#0.4"
+    "git+https://github.com/diskuv/dkml-install-api.git#c6b1d9af805bf06846f2905a4e6b8859a11a8122"
   ]
   [
     "dkml-install-runner.0.4.0"
-    "git+https://github.com/diskuv/dkml-install-api.git#0.4"
+    "git+https://github.com/diskuv/dkml-install-api.git#c6b1d9af805bf06846f2905a4e6b8859a11a8122"
   ]
   [
     "dkml-install.0.4.0"
-    "git+https://github.com/diskuv/dkml-install-api.git#0.4"
+    "git+https://github.com/diskuv/dkml-install-api.git#c6b1d9af805bf06846f2905a4e6b8859a11a8122"
   ]
   [
     "dkml-package-console.0.4.0"
-    "git+https://github.com/diskuv/dkml-install-api.git#0.4"
+    "git+https://github.com/diskuv/dkml-install-api.git#c6b1d9af805bf06846f2905a4e6b8859a11a8122"
   ]
 
   [
