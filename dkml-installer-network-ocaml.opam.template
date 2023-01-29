@@ -8,7 +8,7 @@ install: [
   # small.
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
-    "_build/install/default/bin/dkml-install-create-installers%{exe}%"
+    "_build/install/default/bin/dkml-installer-network-ocaml-create-installers%{exe}%"
     #   Debug logs
     "-vv"
     "--program-version"
@@ -33,18 +33,18 @@ install: [
     "%{_:share}%/t"
 
     "--runner-admin-exe"
-    "_build/install/$(dune-context)/bin/dkml-install-admin-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-admin-runner%{exe}%"
     "--runner-user-exe"
-    "_build/install/$(dune-context)/bin/dkml-install-user-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-user-runner%{exe}%"
 
     "--packager-install-exe"
-    "_build/install/$(dune-context)/bin/dkml-install-package-install%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-package-install%{exe}%"
     "--packager-uninstall-exe"
-    "_build/install/$(dune-context)/bin/dkml-install-package-uninstall%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-package-uninstall%{exe}%"
     "--packager-setup-bytecode"
-    "_build/install/$(dune-context)/bin/dkml-install-package-setup.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"
-    "_build/install/$(dune-context)/bin/dkml-install-package-uninstaller.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-network-ocaml-package-uninstaller.bc%{exe}%"
   ]
 ]
 pin-depends: [
