@@ -16,6 +16,21 @@
 
 (rule
  (alias gen-dkml)
+ (target dune-common.gen.inc)
+ (deps
+  discover.ml
+  entry_assembly_manifest.ml
+  entry-application.manifest)
+ (action
+  (progn
+   (run
+    common-dune-of-installer-generator
+    --project-root
+    %{project_root}
+    %{target}))))
+
+(rule
+ (alias gen-dkml)
  (target dune.gen.inc)
  (deps
   create_installers.ml
@@ -31,7 +46,7 @@
  (action
   (progn
    (run
-    dune-of-installer-generator
+    package-dune-of-installer-generator
     --package-name
     dkml-installer-network-ocaml
     --project-root
@@ -41,6 +56,12 @@
 (rule
   (alias gen-dkml)
   (action
+    (diff dune-common.inc dune-common.gen.inc)))
+
+(rule
+  (alias gen-dkml)
+  (action
     (diff dune.inc dune.gen.inc)))
 
+(include dune-common.inc)
 (include dune.inc)
