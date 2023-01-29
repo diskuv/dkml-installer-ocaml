@@ -57,6 +57,12 @@ pin-depends: [
     "git+https://erratique.ch/repos/cmdliner.git#v1.1.1"
   ]
 
+  # Needs readonly Win32 fix for copy_file
+  [
+    "diskuvbox.0.2.0~dev"
+    "git+https://github.com/diskuv/diskuvbox.git#58f2fc668912150ec23fec6727e3f535e4a5674c"
+  ]
+
   [
     "dkml-install-installer.0.4.0"
     "git+https://github.com/diskuv/dkml-install-api.git#0.4"
