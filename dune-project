@@ -18,9 +18,6 @@
   "The DKML Installer for OCaml generates installers for OCaml")
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
-  ; Only patches in Diskuv repository are for v0.14.1, v0.14.2 and v0.15.1.
-  ; Need to upstream fix the problem.
-  (ppx_expect                             (= v0.15.1))
   (ocaml                                  (>= 4.12.1~))
   (dkml-component-network-ocamlcompiler   (and (>= 4.14.0~) (< 4.14.1~)))
   (dkml-component-offline-desktop-full    (>= 0.1.0))
