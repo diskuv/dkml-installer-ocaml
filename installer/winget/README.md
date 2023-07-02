@@ -40,12 +40,12 @@ winget install --manifest installer/winget/manifest
 
 > Never use Windows Sandbox as your final test before releasing to end-users.
 > Instead run the installer on your own machine.
-> 
+>
 > And if you don't want to install it on your local machine:
 > why would you be comfortable asking other Windows users to install it?
 
-The instructions below are from https://github.com/microsoft/winget-pkgs and
-include some suggestions from https://github.com/microsoft/winget-pkgs/pull/69112:
+The instructions below are from <https://github.com/microsoft/winget-pkgs> and
+include some suggestions from <https://github.com/microsoft/winget-pkgs/pull/69112>:
 
 FIRST clone the `winget-pkgs` repository alongside the `dkml-installer-ocaml`
 directory with:

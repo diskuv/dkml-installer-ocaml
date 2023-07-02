@@ -6,9 +6,9 @@ Install VirtualBox if you haven't already. **Apple Silicon (M1) is not supported
 
 Install Vagrant if you haven't already.
 
-On macOS, use `brew install vagrant` and then "enable system extensions" as documented on https://scriptcrunch.com/solved-vboxmanage-error-component-machinewrap/.
+On macOS, use `brew install vagrant` and then "enable system extensions" as documented on <https://scriptcrunch.com/solved-vboxmanage-error-component-machinewrap/>.
 
-Other operating system instructions can be found at https://www.vagrantup.com/downloads
+Other operating system instructions can be found at <https://www.vagrantup.com/downloads>
 
 ## Running Vagrant machines
 
@@ -31,7 +31,7 @@ vagrant up
 FIRST, to get the language packs needed for non-English Windows testing:
 
 - Download the `Windows 10, version 2004, 20H2 or 21H1 Language Pack ISO`, or whichever Windows version correspnds to
-the value of `config.vm.box` in Vagrantfile, from https://docs.microsoft.com/en-us/azure/virtual-desktop/language-packs
+the value of `config.vm.box` in Vagrantfile, from <https://docs.microsoft.com/en-us/azure/virtual-desktop/language-packs>
 - Place it in this directory (`vagrant/win32`) with the new name `CLIENTLANGPACKDVD_OEM_MULTI.iso`
 
 SECOND, to start the Windows virtual machines you can use the following PowerShell script:

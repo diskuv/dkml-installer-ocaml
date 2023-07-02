@@ -38,7 +38,7 @@ Briefly review the following:
 > allow installation.
 > After 15 minutes, you can go have lunch or do other work for the
 > **remaining hour**.
-
+>
 > First time installations may get a notification printed in red. If you see it, reboot your
 > computer and then restart your installation so that Visual Studio Installer
 > can complete. The notification looks like:
@@ -53,7 +53,7 @@ Briefly review the following:
 > -         ...
 > -         >>> A transient failure occurred. <<<
 > ```
-
+>
 > You may be asked to accept a certificate from
 > `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
 > that was issued by
@@ -67,16 +67,16 @@ documentation.
 
 ---
 
-The full set of releases is at https://github.com/diskuv/dkml-installer-ocaml/releases
+The full set of releases is at <https://github.com/diskuv/dkml-installer-ocaml/releases>
 
-The full documentation is at https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction
+The full documentation is at <https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction>
 
 ## Sponsor
 
 <a href="https://ocaml-sf.org">
 <img align="left" alt="OCSF logo" src="https://ocaml-sf.org/assets/ocsf_logo.svg"/>
 </a>
-Thanks to the <a href="https://ocaml-sf.org">OCaml Software Foundation</a>
+Thanks to the [OCaml Software Foundation](https://ocaml-sf.org)
 for economic support to the development of DkML.
 <p/>
 
