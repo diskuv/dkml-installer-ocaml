@@ -261,11 +261,11 @@ jobs:
           #!/bin/sh
           set -eufx
 
-          awk '$1=="version:"{print $2}' ${OPAM_PACKAGE}.opam | tr -d '"' | tee vagrant/win32/opamversion.txt
+           awk 'BEGIN{FS="="} /let +arp_version *= */{print $NF}' installer/src/version.ml | tr -d '"' | tee vagrant/win32/arpversion.txt
 
           # Move artifacts into the Vagrant filesystem as "setup.exe" and "uninstall.exe"
-          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-i-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/setup.exe
-          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-u-$(cat vagrant/win32/opamversion.txt).exe vagrant/win32/uninstall.exe
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-i-$(cat vagrant/win32/arpversion.txt).exe vagrant/win32/setup.exe
+          mv dist/unsigned-${PROGRAM_NAME_KEBAB}-${{matrix.dkml_host_abi}}-u-$(cat vagrant/win32/arpversion.txt).exe vagrant/win32/uninstall.exe
 
           cd vagrant/win32
           vagrant up "${{ matrix.dkml_host_abi }}-${{ matrix.virtualbox }}"

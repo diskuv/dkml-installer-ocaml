@@ -52,7 +52,7 @@ install: [
     #   Debug logs
     "-vv"
     "--program-version"
-    version
+    "1.2.1-10"
     "--component"
     "network-ocamlcompiler"
     "--component"

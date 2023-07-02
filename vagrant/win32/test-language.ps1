@@ -40,16 +40,16 @@ if (Test-Path $HereDir\setup.exe) {
 } else {
   # Get the versions which can't be embedded in this UTF-16 BE file
   # (ex. UTF-16 BE encoding not supported by `bumpversion`)
-  if (!(Test-Path -Path $HereDir\opamversion.txt)) {
-    throw "Could not locate opamversion.txt in $HereDir"
+  if (!(Test-Path -Path $HereDir\arpversion.txt)) {
+    throw "Could not locate arpversion.txt in $HereDir"
   }
-  $OpamVersion = (Get-Content $HereDir\opamversion.txt -TotalCount 1).Trim()
+  $ArpVersion = (Get-Content $HereDir\arpversion.txt -TotalCount 1).Trim()
   if (!(Test-Path -Path $HereDir\tagversion.txt)) {
     throw "Could not locate tagversion.txt in $HereDir"
   }
   $TagVersion = (Get-Content $HereDir\tagversion.txt -TotalCount 1).Trim()
 
-  $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/setup-diskuv-ocaml-windows_x86_64-$OpamVersion.exe"
+  $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/setup-diskuv-ocaml-windows_x86_64-$ArpVersion.exe"
   Write-Output "Downloading from $url ..."
   Invoke-WebRequest $url -OutFile "$env:TEMP\setup.exe"
 
@@ -143,16 +143,16 @@ if (Test-Path $HereDir\uninstall.exe) {
 } else {
   # Get the versions which can't be embedded in this UTF-16 BE file
   # (ex. UTF-16 BE encoding not supported by `bumpversion`)
-  if (!(Test-Path -Path $HereDir\opamversion.txt)) {
-    throw "Could not locate opamversion.txt in $HereDir"
+  if (!(Test-Path -Path $HereDir\arpversion.txt)) {
+    throw "Could not locate arpversion.txt in $HereDir"
   }
-  $OpamVersion = (Get-Content $HereDir\opamversion.txt -TotalCount 1).Trim()
+  $ArpVersion = (Get-Content $HereDir\arpversion.txt -TotalCount 1).Trim()
   if (!(Test-Path -Path $HereDir\tagversion.txt)) {
     throw "Could not locate tagversion.txt in $HereDir"
   }
   $TagVersion = (Get-Content $HereDir\tagversion.txt -TotalCount 1).Trim()
 
-  $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/uninstall-diskuv-ocaml-windows_x86_64-$OpamVersion.exe"
+  $url = "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$TagVersion/uninstall-diskuv-ocaml-windows_x86_64-$ArpVersion.exe"
   Write-Output "Downloading from $url ..."
   Invoke-WebRequest $url -OutFile "$env:TEMP\uninstall.exe"
 
