@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
 
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: "1.1.0" # BUMP
+PackageVersion: "1.2.1-1" # AUTO-BUMP
 PackageLocale: en-US
 #   Publisher
 #     Keep in sync with installer\src\private_common.ml "organization" which is used by
@@ -14,7 +14,7 @@ PackageName: Diskuv OCaml
 PackageUrl: https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction
 License: Apache License, Version 2.0
 LicenseUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
-Copyright: Copyright 2022 Diskuv, Inc. # BUMP
+Copyright: Copyright 2022 Diskuv, Inc. # AUTO-BUMP
 CopyrightUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 PublisherSupportUrl: https://github.com/diskuv/dkml-installer-ocaml/issues
 ShortDescription: The Windows-friendly distribution of OCaml.
