@@ -1,18 +1,24 @@
 (rule
  (targets
   create_installers.ml
-  discover.ml
-  entry_assembly_manifest.ml
   entry_install.ml
   entry_uninstall.ml
-  entry-application.manifest
   package_setup.ml
   package_uninstaller.ml
   runner_admin.ml
   runner_user.ml)
  (action
   (progn
-   (run ml-of-installer-generator))))
+   (run package-ml-of-installer-generator))))
+
+(rule
+ (targets
+  discover.ml
+  entry_assembly_manifest.ml
+  entry-application.manifest)
+ (action
+  (progn
+   (run common-ml-of-installer-generator))))
 
 (rule
  (alias gen-dkml)
