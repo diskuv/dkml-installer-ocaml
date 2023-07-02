@@ -1,6 +1,6 @@
-# DKML Installer for Diskuv OCaml
+# DkML Installer
 
-The Diskuv OCaml distribution is an open-source set of software
+The DkML distribution is an open-source set of software
 that supports software development in pure OCaml. The distribution's
 strengths are its:
 
@@ -17,14 +17,14 @@ These alternatives may be better depending on your use case:
 * Developing operating system kernels? Have a look at [Mirage OS](https://mirage.io/)
 * Developing Linux server software like web servers? Plain old [OCaml on Debian, etc.](https://ocaml.org/docs/up-and-running) works well
 * Writing compilers or proofs? Plain old OCaml works really well
-* Wanting quick installations? *Use anything but Diskuv OCaml!* Diskuv OCaml will conduct
+* Wanting quick installations? *Use anything but DkML!* DkML will conduct
   from-source builds unless it can guarantee (and code sign) the binaries are
   reproducible. Today that means a lot of compiling.
 
-The DKML Installer for OCaml generates and distributes installers for 
-the Diskuv OCaml distribution. Windows is ready today; macOS will be available soon.
+The DkML Installer for OCaml generates and distributes installers for
+the DkML distribution. Windows is ready today; macOS will be available soon.
 
-For news about Diskuv OCaml, 
+For news about DkML,
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/diskuv.svg?style=social&label=Follow%20%40diskuv)](https://twitter.com/diskuv) on Twitter.
 
 ## Installing
@@ -42,7 +42,7 @@ Briefly review the following:
 > First time installations may get a notification printed in red. If you see it, reboot your
 > computer and then restart your installation so that Visual Studio Installer
 > can complete. The notification looks like:
-> 
+>
 > ```diff
 > - FATAL [118acf2a]. The machine needs rebooting.
 > - ...
@@ -59,7 +59,7 @@ Briefly review the following:
 > that was issued by
 > `Certum Code Signing CA SHA2`.
 
-Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.2.0/setup-diskuv-ocaml-windows_x86_64-1.2.0.exe).
+Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v1.2.1-1/setup-diskuv-ocaml-windows_x86_64-1.2.1-1.exe).
 
 Now that your install is completed, you can read the
 [Install is done! What next?](https://diskuv-ocaml.gitlab.io/distributions/dkml/#install-is-done-what-next)
@@ -77,7 +77,7 @@ The full documentation is at https://diskuv-ocaml.gitlab.io/distributions/dkml/#
 <img align="left" alt="OCSF logo" src="https://ocaml-sf.org/assets/ocsf_logo.svg"/>
 </a>
 Thanks to the <a href="https://ocaml-sf.org">OCaml Software Foundation</a>
-for economic support to the development of Diskuv OCaml.
+for economic support to the development of DkML.
 <p/>
 
 ## How the installer is built
@@ -121,5 +121,5 @@ In addition, there are
 
 | What                     | Branch/Tag | Status                                                                                                                                                                                          |
 | ------------------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Installer build and test |            | [![Build with DKML compiler](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml) |
+| Installer build and test |            | [![Build with DkML compiler](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml) |
 | Installer syntax check   |            | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)           |
