@@ -9,7 +9,7 @@
  (libraries dkml-install-runner.user private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml))
@@ -20,7 +20,7 @@
  (libraries dkml-install-runner.admin private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml))
@@ -30,7 +30,7 @@
  (libraries dkml-package-console.create cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -41,7 +41,7 @@
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -53,7 +53,7 @@
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -66,7 +66,7 @@
  (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -78,7 +78,7 @@
  (libraries dkml-package-console.uninstaller cmdliner private_common
   dkml-component-network-ocamlcompiler dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-compile dkml-component-staging-desktop-full
+  dkml-component-staging-desktop-full
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
