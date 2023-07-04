@@ -429,6 +429,8 @@ jobs:
           if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocaml-lsp-server merlin failed") }
           opam install ocamlformat --yes
           if ($lastexitcode -ne 0) { throw ("FATAL: opam install ocamlformat failed") }
+          #opam install yaml --yes # test ctypes (but yaml.3.1.0 fails with same error as supposedly fixed https://github.com/avsm/ocaml-yaml/pull/53)
+          if ($lastexitcode -ne 0) { throw ("FATAL: opam install yaml failed") }
           Set-Location ..
 
           # -------- TEST PACMAN ---------
