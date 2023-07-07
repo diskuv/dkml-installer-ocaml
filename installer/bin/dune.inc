@@ -7,36 +7,36 @@
  (package dkml-installer-network-ocaml) (name runner_user)
  (modules runner_user) (ocamlopt_flags (:include ./user-link-flags.sexp))
  (libraries dkml-install-runner.user private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml))
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml))
 
 (executable (public_name dkml-installer-network-ocaml-admin-runner)
  (package dkml-installer-network-ocaml) (name runner_admin)
  (modules runner_admin) (ocamlopt_flags (:include ./admin-link-flags.sexp))
  (libraries dkml-install-runner.admin private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml))
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml))
 
 (executable (public_name dkml-installer-network-ocaml-create-installers)
  (package dkml-installer-network-ocaml) (name create_installers)
  (libraries dkml-package-console.create cmdliner private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml)
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml)
  (modules create_installers))
 
 (executable (public_name dkml-installer-network-ocaml-package-install)
  (package dkml-installer-network-ocaml) (name entry_install)
  (libraries dkml-package-console.entry cmdliner private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml)
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml)
  (modules entry_install)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
 (executable (public_name dkml-installer-network-ocaml-package-uninstall)
  (package dkml-installer-network-ocaml) (name entry_uninstall)
  (libraries dkml-package-console.entry cmdliner private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml)
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml)
  (modules entry_uninstall)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
@@ -44,16 +44,16 @@
  (package dkml-installer-network-ocaml) (name package_setup)
  (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml)
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml)
  (modules package_setup))
 
 (executable (public_name dkml-installer-network-ocaml-package-uninstaller)
  (package dkml-installer-network-ocaml) (name package_uninstaller)
  (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-withdkml)
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-withdkml)
  (modules package_uninstaller))
 
 (install (section bin) (package dkml-installer-network-ocaml)
