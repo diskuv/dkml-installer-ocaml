@@ -13,9 +13,9 @@
 
 (package
  (name dkml-installer-network-ocaml)
- (synopsis "DKML installer generator for OCaml")
+ (synopsis "DkML network installer generator for OCaml")
  (description
-  "The DKML Installer for OCaml generates installers for OCaml")
+  "Generates a network installer for OCaml, including Visual Studio and Git on Windows, and including a OCaml compiler built during installation time")
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
   (ocaml                                  (>= 4.12.1~))
@@ -25,6 +25,20 @@
   (dkml-install-installer                 (>= 0.3.0))
   (dkml-package-console                   (>= 0.3.0))
   (dkml-workflows                         (and (>= 1.1.0) :build))
-  ; crunch 3.2.0 has problems with reading CRLF on Windows
-  (crunch                                 (>= 3.3.1))
+  (alcotest                               (and (>= 1.4.0) :with-test))))
+
+(package
+ (name dkml-installer-offline-ocaml)
+ (synopsis "DkML offline installer generator for OCaml")
+ (description
+  "Generates an offline installer for OCaml. The offline installer only supports bytecode unless the end-user machine has a C + ASM compilers (ex. Visual Studio on Windows) at the same location as the build machine")
+ (depends
+  (odoc                                   (and (>= 1.5.3) :with-doc))
+  (ocaml                                  (>= 4.12.1~))
+  (dkml-component-offline-ocamlcompiler   (and (>= 4.14.0~) (< 4.14.1~)))
+  (dkml-component-offline-desktop-full    (>= 0.1.0))
+  (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
+  (dkml-install-installer                 (>= 0.3.0))
+  (dkml-package-console                   (>= 0.3.0))
+  (dkml-workflows                         (and (>= 1.1.0) :build))
   (alcotest                               (and (>= 1.4.0) :with-test))))
