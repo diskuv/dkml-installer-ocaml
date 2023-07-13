@@ -11,7 +11,7 @@ Publisher: Diskuv, Inc.
 PublisherUrl: https://www.diskuv.com/
 PrivacyUrl: https://diskuv.com/legal#privacy_policy
 PackageName: Diskuv OCaml
-PackageUrl: https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction
+PackageUrl: https://diskuv.com/dkmlbook/
 License: Apache License, Version 2.0
 LicenseUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 Copyright: Copyright 2023 Diskuv, Inc. # AUTO-BUMP

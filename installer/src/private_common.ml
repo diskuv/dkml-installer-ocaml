@@ -36,8 +36,8 @@ let program_info =
     Author_types.url_info_about_opt =
       Some "https://github.com/diskuv/dkml-installer-ocaml#readme";
     url_update_info_opt =
-      Some "https://gitlab.com/diskuv/diskuv-ocaml/-/blob/main/CHANGES.md";
-    help_link_opt = Some "https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction";
+      Some "https://gitlab.com/diskuv-ocaml/distributions/dkml/-/blob/main/CHANGES.md";
+    help_link_opt = Some "https://diskuv.com/dkmlbook/";
     (*
         2116259083L bytes (2.1 GB) in DKML 1.2.0
       - "{0} B" -f (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
