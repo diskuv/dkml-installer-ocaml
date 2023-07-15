@@ -19,7 +19,7 @@
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
   (ocaml                                  (>= 4.12.1~))
-  (dkml-component-network-ocamlcompiler   (and (>= 4.14.0~) (< 4.14.1~)))
+  (dkml-component-ocamlcompiler-network   (and (>= 4.14.0~) (< 4.14.1~)))
   (dkml-component-offline-desktop-full    (>= 0.1.0))
   (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
   (dkml-install-installer                 (>= 0.3.0))
@@ -35,7 +35,7 @@
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
   (ocaml                                  (>= 4.12.1~))
-  (dkml-component-offline-ocamlcompiler   (and (>= 4.14.0~) (< 4.14.1~)))
+  (dkml-component-ocamlcompiler-offline   (and (>= 4.14.0~) (< 4.14.1~)))
   (dkml-component-offline-desktop-full    (>= 0.1.0))
   (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
   (dkml-install-installer                 (>= 0.3.0))

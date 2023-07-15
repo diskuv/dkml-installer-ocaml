@@ -13,7 +13,7 @@ depends: [
   "dune" {>= "2.9"}
   "odoc" {>= "1.5.3" & with-doc}
   "ocaml" {>= "4.12.1~"}
-  "dkml-component-network-ocamlcompiler" {>= "4.14.0~" & < "4.14.1~"}
+  "dkml-component-ocamlcompiler-network" {>= "4.14.0~" & < "4.14.1~"}
   "dkml-component-offline-desktop-full" {>= "0.1.0"}
   "dkml-component-offline-opamshim" {>= "2.2.0~alpha0~20221104"}
   "dkml-install-installer" {>= "0.3.0"}
@@ -54,7 +54,7 @@ install: [
     "--program-version"
     "1.2.1-12"
     "--component"
-    "network-ocamlcompiler"
+    "ocamlcompiler-network"
     "--component"
     "offline-desktop-full"
 
