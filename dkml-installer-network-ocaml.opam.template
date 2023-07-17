@@ -12,7 +12,7 @@ install: [
     #   Debug logs
     "-vv"
     "--program-version"
-    "1.2.1-12"
+    "2.0.0"
     "--component"
     "ocamlcompiler-network"
     "--component"
