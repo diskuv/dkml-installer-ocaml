@@ -38,7 +38,6 @@ build: [
   ["dune" "install" "-p" name "--create-install-files" name]
 ]
 dev-repo: "git+https://github.com/diskuv/dkml-installer-ocaml.git"
-name: "dkml-installer-offline-ocaml"
 install: [
   # Create the installer executable after `dune install` (which is after
   # `build:[]` section) so Dune can do plugin rewriting since Dune edits (yes!)
