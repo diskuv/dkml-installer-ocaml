@@ -1,9 +1,8 @@
 # Suggested filename: .github/workflows/build-with-dkml.yml
 
-name: Build with DKML compiler
+name: Build installer with DkML compiler
 
 env:
-  OPAM_PACKAGE: dkml-installer-ocaml-network
   PROGRAM_NAME_KEBAB: diskuv-ocaml
   DKML_COMPILER: "" # You can override the dkml-compiler package version. Example: 4.12.1-v1.0.2, 4.14.0-v1.1.0-prerel1
 
@@ -38,9 +37,19 @@ jobs:
           - gh_os: windows-2019
             abi_pattern: win32-windows_x86
             dkml_host_abi: windows_x86
+            OPAM_PACKAGE: dkml-installer-ocaml-network
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86
+            dkml_host_abi: windows_x86
+            OPAM_PACKAGE: dkml-installer-ocaml-offline
           - gh_os: windows-2019
             abi_pattern: win32-windows_x86_64
             dkml_host_abi: windows_x86_64
+            OPAM_PACKAGE: dkml-installer-ocaml-network
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86_64
+            dkml_host_abi: windows_x86_64
+            OPAM_PACKAGE: dkml-installer-ocaml-offline
           # - gh_os: ubuntu-latest
           #   abi_pattern: manylinux2014-linux_x86
           #   dkml_host_abi: linux_x86

@@ -1,0 +1,6 @@
+package_setup.bc Used DLLs:
+	dllcamlstr
+	dllunix
+package_uninstaller.bc Used DLLs:
+	dllcamlstr
+	dllunix

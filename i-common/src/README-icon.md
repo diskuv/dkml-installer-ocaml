@@ -11,9 +11,9 @@ The `android-chrome-circle.png` is a high-res Diskuv logo with a white circle.
 ## Conversion
 
 > Even though the DKML Install API says 32x32, Windows supports 256x256. Confer:
-> https://learn.microsoft.com/en-us/windows/win32/uxguide/vis-icons#size-requirements
+> <https://learn.microsoft.com/en-us/windows/win32/uxguide/vis-icons#size-requirements>
 > and
-> https://en.wikipedia.org/wiki/ICO_(file_format)
+> <https://en.wikipedia.org/wiki/ICO_(file_format)>
 
 We'll use the Slack icon sizes (in the registry at `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\slack`
 as the `DisplayIcon` value):
