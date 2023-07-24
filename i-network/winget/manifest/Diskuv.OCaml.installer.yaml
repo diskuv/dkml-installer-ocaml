@@ -5,7 +5,7 @@
 #   https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0#best-practices
 # Reference: https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.2.0/installer.md
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: "2.0.1" # AUTO-BUMP
+PackageVersion: "2.0.2" # AUTO-BUMP
 # Scope: user
 UpgradeBehavior: uninstallPrevious
 Commands:
@@ -45,7 +45,7 @@ InstallerSwitches:
   SilentWithProgress: --ci
   Interactive: --color=always
   InstallLocation: --prefix "<INSTALLPATH>"
-ReleaseDate: 2023-07-23 # AUTO-BUMP
+ReleaseDate: 2023-07-24 # AUTO-BUMP
 # Dependencies:
   # ExternalDependencies:
   #   - Microsoft.VisualStudio.2019.BuildTools
@@ -69,7 +69,7 @@ ReleaseDate: 2023-07-23 # AUTO-BUMP
 Installers:
   - Architecture: x64
 
-    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v2.0.1/setup-diskuv-ocaml-windows_x86_64-2.0.1.exe # AUTO-BUMP
+    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v2.0.2/setup-diskuv-ocaml-windows_x86_64-2.0.2.exe # AUTO-BUMP
     InstallerType: exe
     InstallerSha256: df5bf69fb2d7ddb9bd64a03448b3d26befcf0823ab4662d4c5605b9a6fde9e92 # MANUAL-BUMP
 

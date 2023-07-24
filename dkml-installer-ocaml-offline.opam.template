@@ -11,7 +11,7 @@ install: [
     #   Debug logs
     "-vv"
     "--program-version"
-    "2.0.1"
+    "2.0.2"
     "--component"
     "ocamlcompiler-offline"
     "--component"
