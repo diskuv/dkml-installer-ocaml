@@ -1,8 +1,12 @@
-# DkML Installer
+# DkML Installer - Native Code Edition
 
-The DkML distribution is an open-source set of software
-that supports software development in pure OCaml. The distribution's
-strengths are its:
+> There is a less-powerful but faster-to-install version of the installer available as the [DkML Installer - Bytecode Edition] that requires no Administrator permissions. That edition is preferable for education.
+
+[DkML Installer - Bytecode Edition]: https://github.com/diskuv/dkml-installer-ocaml-byte
+
+DkML Native Code Edition is an open-source set of software
+that supports software development with mixed OCaml/C development. The
+Edition's strengths are its:
 
 * full compatibility with OCaml standards like Opam, Dune and ocamlfind
 * laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
@@ -17,9 +21,7 @@ These alternatives may be better depending on your use case:
 * Developing operating system kernels? Have a look at [Mirage OS](https://mirage.io/)
 * Developing Linux server software like web servers? Plain old [OCaml on Debian, etc.](https://ocaml.org/docs/up-and-running) works well
 * Writing compilers or proofs? Plain old OCaml works really well
-* Wanting quick installations? *Use anything but DkML!* DkML will conduct
-  from-source builds unless it can guarantee (and code sign) the binaries are
-  reproducible. Today that means a lot of compiling.
+* Wanting quick installations? *Try [DkML Installer - Bytecode Edition]!* For the Native Code Edition, DkML will conduct from-source builds unless it can guarantee (and code sign) the binaries are reproducible. Today that means a lot of compiling.
 
 The DkML Installer for OCaml generates and distributes installers for
 the DkML distribution. Windows is ready today; macOS will be available soon.
@@ -59,15 +61,15 @@ Briefly review the following:
 > that was issued by
 > `Certum Code Signing CA SHA2`.
 
-Then run the [latest Windows 64-bit installer](https://github.com/diskuv/dkml-installer-ocaml/releases/download/v2.0.2/setup-diskuv-ocaml-windows_x86_64-2.0.2.exe).
+Then run the [latest Windows 64-bit Native Code Edition installer](https://gitlab.com/diskuv-ocaml/distributions/dkml/-/releases/2.0.2/downloads/setup64nu.exe).
 
-Now that your install is completed, you can read the
+After your install is completed, you can read the
 [Install is done! What next?](https://diskuv-ocaml.gitlab.io/distributions/dkml/#install-is-done-what-next)
 documentation.
 
 ---
 
-The full set of releases is at <https://github.com/diskuv/dkml-installer-ocaml/releases>
+The full set of releases is at <https://gitlab.com/diskuv-ocaml/distributions/dkml/-/releases>
 
 The full documentation is at <https://diskuv-ocaml.gitlab.io/distributions/dkml/#introduction>
 

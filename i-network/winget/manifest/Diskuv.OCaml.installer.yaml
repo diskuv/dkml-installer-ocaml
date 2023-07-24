@@ -69,7 +69,7 @@ ReleaseDate: 2023-07-24 # AUTO-BUMP
 Installers:
   - Architecture: x64
 
-    InstallerUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/download/v2.0.2/setup-diskuv-ocaml-windows_x86_64-2.0.2.exe # AUTO-BUMP
+    InstallerUrl: https://gitlab.com/diskuv-ocaml/distributions/dkml/-/releases/2.0.2/downloads/setup64nu.exe # AUTO-BUMP
     InstallerType: exe
     InstallerSha256: df5bf69fb2d7ddb9bd64a03448b3d26befcf0823ab4662d4c5605b9a6fde9e92 # MANUAL-BUMP
 

@@ -10,17 +10,18 @@ PackageLocale: en-US
 Publisher: Diskuv, Inc.
 PublisherUrl: https://www.diskuv.com/
 PrivacyUrl: https://diskuv.com/legal#privacy_policy
-PackageName: Diskuv OCaml
+PackageName: DkML Native
 PackageUrl: https://diskuv.com/dkmlbook/
 License: Apache License, Version 2.0
 LicenseUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 Copyright: Copyright 2023 Diskuv, Inc. # AUTO-BUMP
 CopyrightUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 PublisherSupportUrl: https://github.com/diskuv/dkml-installer-ocaml/issues
-ShortDescription: The Windows-friendly distribution of OCaml.
+ShortDescription: DkML Native Code Edition, a Windows-friendly distribution of OCaml.
 Description: |-
-  The Diskuv OCaml distribution is an open-source set of software that supports
-  software development in pure OCaml. The distribution's strengths are its:
+  The DkML distribution is an open-source set of software that supports
+  software development in pure OCaml. The Native Code Edition's strengths are
+  its:
 
   ✓ full compatibility with OCaml standards like Opam, Dune and ocamlfind
   ✓ laser focus on "native" development (desktop software, mobile apps and
@@ -32,7 +33,7 @@ Description: |-
 
   The installation will take approximately 1.5 HOURS on a modern Windows PC.
 
-  This version does not currently work if you have a space in your username
+  The Native Code Edition does not work if you have a space in your username
   (ex. C:\Users\Jane Smith).
 
   Installing this package will automatically install the required prerequisites
@@ -48,15 +49,16 @@ Description: |-
   * Developing Linux server software like web servers? Plain old OCaml on
     Debian, etc. works well
   * Writing compilers or proofs? Plain old OCaml works really well
-  * Wanting quick installations? Use anything but Diskuv OCaml! Diskuv OCaml
-    will conduct from-source builds unless it can guarantee (and code sign) the
-    binaries are reproducible. Today that means a lot of compiling.
+  * Wanting quick installations? *Try "DkML Installer - Bytecode Edition"
+    at https://github.com/diskuv/dkml-installer-ocaml-byte. For the Native Code
+    Edition, DkML will conduct from-source builds unless it can guarantee (and
+    code sign) the binaries are reproducible. Today that means a lot of
+    compiling.
 
-  Commercial tools and support are available from Diskuv for mixed OCaml/C
-  development; however, this pure OCaml winget package only has limited support
-  for mixed OCaml/C. For example, the "ctypes" opam package has been patched
-  to work with Visual Studio but is out-dated. Contact
-  support AT diskuv.com if you need OCaml/C development.
+  Commercial tools and support are available from Diskuv for mixed
+  OCaml/C/C++/Java/Swift development; however, this pure OCaml winget package
+  has limited support for mixed OCaml/C development only. Contact
+  support AT diskuv.com if you need OCaml/C/C++/Java/Swift development.
 Moniker: dkml
 Tags:
 - foss
@@ -64,6 +66,6 @@ Tags:
 - ocaml
 - open-source
 - programming
-ReleaseNotesUrl: https://github.com/diskuv/dkml-installer-ocaml/releases/tag/v1.0.1
+ReleaseNotesUrl: https://gitlab.com/diskuv-ocaml/distributions/dkml/-/releases/2.0.2 # AUTO-BUMP
 ManifestType: defaultLocale
 ManifestVersion: 1.1.0

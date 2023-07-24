@@ -8,7 +8,6 @@ include(${DKML_BUMP_VERSION_PARTICIPANT_MODULE})
 
 DkMLBumpVersionParticipant_PlainReplace(README.md)
 DkMLBumpVersionParticipant_PlainReplace(dkml-installer-ocaml-network.opam.template)
-DkMLBumpVersionParticipant_PlainReplace(dkml-installer-ocaml-offline.opam.template)
 
 DkMLBumpVersionParticipant_PlainReplace(i-common/src/version.ml)
 
@@ -17,12 +16,6 @@ DkMLBumpVersionParticipant_PlainReplace(i-network/winget/manifest/Diskuv.OCaml.l
 DkMLBumpVersionParticipant_PlainReplace(i-network/winget/manifest/Diskuv.OCaml.yaml)
 DkMLBumpVersionParticipant_ReleaseDateReplace(i-network/winget/manifest/Diskuv.OCaml.installer.yaml)
 DkMLBumpVersionParticipant_CopyrightReplace(i-network/winget/manifest/Diskuv.OCaml.locale.en-US.yaml)
-
-DkMLBumpVersionParticipant_PlainReplace(i-offline/winget/manifest/Diskuv.OCaml.installer.yaml)
-DkMLBumpVersionParticipant_PlainReplace(i-offline/winget/manifest/Diskuv.OCaml.locale.en-US.yaml)
-DkMLBumpVersionParticipant_PlainReplace(i-offline/winget/manifest/Diskuv.OCaml.yaml)
-DkMLBumpVersionParticipant_ReleaseDateReplace(i-offline/winget/manifest/Diskuv.OCaml.installer.yaml)
-DkMLBumpVersionParticipant_CopyrightReplace(i-offline/winget/manifest/Diskuv.OCaml.locale.en-US.yaml)
 
 DkMLBumpVersionParticipant_DuneProjectReplace(dune-project)
 DkMLBumpVersionParticipant_GitAddAndCommit()

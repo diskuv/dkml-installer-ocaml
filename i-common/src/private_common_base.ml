@@ -8,15 +8,6 @@ let organization =
     common_name_kebab_lower_case = "diskuv";
   }
 
-let program_name =
-  {
-    Author_types.name_full = "Diskuv OCaml";
-    name_camel_case_nospaces = "DiskuvOCaml";
-    name_kebab_lower_case = "diskuv-ocaml";
-    installation_prefix_camel_case_nospaces_opt = None;
-    installation_prefix_kebab_lower_case_opt = None;
-  }
-
 let program_version = Version.program_version
 
 (* From ocaml-crunch defined in ./dune.

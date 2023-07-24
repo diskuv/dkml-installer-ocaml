@@ -1,6 +1,0 @@
-(library
- ; This is public because multiple libraries can't have
- ; the same [private_common] name in a single dune project.
- (public_name dkml-installer-ocaml-offline.private)
- (name private_common)
- (libraries private_common_base dkml-package-console.common))

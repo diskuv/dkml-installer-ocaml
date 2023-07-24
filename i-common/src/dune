@@ -5,5 +5,6 @@
   (run ocaml-crunch -m plain -o %{target} assets/)))
 
 (library
+ (public_name dkml-installer-ocaml-common)
  (name private_common_base)
  (libraries dkml-package-console.common))

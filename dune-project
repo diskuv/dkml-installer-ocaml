@@ -1,6 +1,6 @@
 (lang dune 2.9)
 
-(name dkml-installer-ocaml-network)
+(name dkml-installer-ocaml-common)
 (version 2.0.2)
 
 (generate_opam_files true)
@@ -12,6 +12,14 @@
 (maintainers "opensource+diskuv-ocaml@support.diskuv.com")
 
 (package
+ (name dkml-installer-ocaml-common)
+ (synopsis "Common code for the network and offline DkML installers for OCaml")
+ (depends
+  (odoc                                   (and (>= 1.5.3) :with-doc))
+  (dkml-package-console                   (>= 0.3.0))
+  (dkml-workflows                         (and (>= 1.1.0) :build))))
+
+(package
  (name dkml-installer-ocaml-network)
  (synopsis "DkML network installer generator for OCaml")
  (description
@@ -19,26 +27,8 @@
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
   (ocaml                                  (>= 4.12.1~))
+  (dkml-installer-ocaml-common            (= :version))
   (dkml-component-ocamlcompiler-network   (and (>= 4.14.0~) (< 4.14.1~)))
   (dkml-component-offline-desktop-full    (>= 0.1.0))
   (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
-  (dkml-install-installer                 (>= 0.3.0))
-  (dkml-package-console                   (>= 0.3.0))
-  (dkml-workflows                         (and (>= 1.1.0) :build))
-  (alcotest                               (and (>= 1.4.0) :with-test))))
-
-(package
- (name dkml-installer-ocaml-offline)
- (synopsis "DkML offline installer generator for OCaml")
- (description
-  "Generates an offline installer for OCaml. The offline installer only supports bytecode unless the end-user machine has a C + ASM compilers (ex. Visual Studio on Windows) at the same location as the build machine")
- (depends
-  (odoc                                   (and (>= 1.5.3) :with-doc))
-  (ocaml                                  (>= 4.12.1~))
-  (dkml-component-ocamlcompiler-offline   (and (>= 4.14.0~) (< 4.14.1~)))
-  (dkml-component-offline-desktop-full    (>= 0.1.0))
-  (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
-  (dkml-install-installer                 (>= 0.3.0))
-  (dkml-package-console                   (>= 0.3.0))
-  (dkml-workflows                         (and (>= 1.1.0) :build))
-  (alcotest                               (and (>= 1.4.0) :with-test))))
+  (dkml-install-installer                 (>= 0.3.0))))
