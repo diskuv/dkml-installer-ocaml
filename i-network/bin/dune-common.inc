@@ -2,7 +2,7 @@
 ; Do not edit unless need to regenerate!
 ; When regenerating, erase **all** content from this file, save the file, and then run:
 ;   dune clean
-;   dune build '@installer/bin//gen-dkml' --auto-promote
+;   dune build '@i-network/bin//gen-dkml' --auto-promote
 (executable (name discover) (libraries dune.configurator bos fpath)
  (modules discover))
 
