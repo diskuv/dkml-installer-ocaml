@@ -7,7 +7,7 @@ endif()
 include(${DKML_BUMP_VERSION_PARTICIPANT_MODULE})
 
 DkMLBumpVersionParticipant_PlainReplace(README.md)
-DkMLBumpVersionParticipant_PlainReplace(dkml-installer-network-ocaml.opam.template)
+DkMLBumpVersionParticipant_PlainReplace(dkml-installer-ocaml-network.opam.template)
 DkMLBumpVersionParticipant_PlainReplace(installer/src/version.ml)
 DkMLBumpVersionParticipant_PlainReplace(installer/winget/manifest/Diskuv.OCaml.installer.yaml)
 DkMLBumpVersionParticipant_PlainReplace(installer/winget/manifest/Diskuv.OCaml.locale.en-US.yaml)

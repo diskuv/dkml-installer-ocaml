@@ -2,7 +2,7 @@ open Dkml_package_console_common
 
 let build_info =
   {
-    Author_types.package_name = "dkml-installer-network-ocaml"
+    Author_types.package_name = "dkml-installer-ocaml-network"
   }
 
 let organization =

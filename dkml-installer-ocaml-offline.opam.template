@@ -7,7 +7,7 @@ install: [
   # small.
   [ "install" "-d" "%{_:share}%/w" "%{_:share}%/t" ]
   [
-    "_build/install/default/bin/dkml-installer-offline-ocaml-create-installers%{exe}%"
+    "_build/install/default/bin/dkml-installer-ocaml-offline-create-installers%{exe}%"
     #   Debug logs
     "-vv"
     "--program-version"
@@ -32,17 +32,17 @@ install: [
     "%{_:share}%/t"
 
     "--runner-admin-exe"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-admin-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-admin-runner%{exe}%"
     "--runner-user-exe"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-user-runner%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-user-runner%{exe}%"
 
     "--packager-install-exe"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-package-install%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-package-install%{exe}%"
     "--packager-uninstall-exe"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-package-uninstall%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-package-uninstall%{exe}%"
     "--packager-setup-bytecode"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-package-setup.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-package-setup.bc%{exe}%"
     "--packager-uninstaller-bytecode"
-    "_build/install/$(dune-context)/bin/dkml-installer-offline-ocaml-package-uninstaller.bc%{exe}%"
+    "_build/install/$(dune-context)/bin/dkml-installer-ocaml-offline-package-uninstaller.bc%{exe}%"
   ]
 ]

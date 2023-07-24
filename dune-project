@@ -1,6 +1,6 @@
 (lang dune 2.9)
 
-(name dkml-installer-network-ocaml)
+(name dkml-installer-ocaml-network)
 (version 2.0.1)
 
 (generate_opam_files true)
@@ -12,7 +12,7 @@
 (maintainers "opensource+diskuv-ocaml@support.diskuv.com")
 
 (package
- (name dkml-installer-network-ocaml)
+ (name dkml-installer-ocaml-network)
  (synopsis "DkML network installer generator for OCaml")
  (description
   "Generates a network installer for OCaml, including Visual Studio and Git on Windows, and including a OCaml compiler built during installation time")
@@ -28,7 +28,7 @@
   (alcotest                               (and (>= 1.4.0) :with-test))))
 
 (package
- (name dkml-installer-offline-ocaml)
+ (name dkml-installer-ocaml-offline)
  (synopsis "DkML offline installer generator for OCaml")
  (description
   "Generates an offline installer for OCaml. The offline installer only supports bytecode unless the end-user machine has a C + ASM compilers (ex. Visual Studio on Windows) at the same location as the build machine")

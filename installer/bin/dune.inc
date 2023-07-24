@@ -3,8 +3,8 @@
 ; When regenerating, erase **all** content from this file, save the file, and then run:
 ;   dune clean
 ;   dune build '@installer/bin//gen-dkml' --auto-promote
-(executable (public_name dkml-installer-network-ocaml-user-runner)
- (package dkml-installer-network-ocaml) (name runner_user)
+(executable (public_name dkml-installer-ocaml-network-user-runner)
+ (package dkml-installer-ocaml-network) (name runner_user)
  (modules runner_user) (ocamlopt_flags (:include ./user-link-flags.sexp))
  (libraries dkml-install-runner.user private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
@@ -14,8 +14,8 @@
   dkml-component-staging-opam64 dkml-component-staging-unixutils
   dkml-component-staging-withdkml))
 
-(executable (public_name dkml-installer-network-ocaml-admin-runner)
- (package dkml-installer-network-ocaml) (name runner_admin)
+(executable (public_name dkml-installer-ocaml-network-admin-runner)
+ (package dkml-installer-ocaml-network) (name runner_admin)
  (modules runner_admin) (ocamlopt_flags (:include ./admin-link-flags.sexp))
  (libraries dkml-install-runner.admin private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
@@ -25,8 +25,8 @@
   dkml-component-staging-opam64 dkml-component-staging-unixutils
   dkml-component-staging-withdkml))
 
-(executable (public_name dkml-installer-network-ocaml-create-installers)
- (package dkml-installer-network-ocaml) (name create_installers)
+(executable (public_name dkml-installer-ocaml-network-create-installers)
+ (package dkml-installer-ocaml-network) (name create_installers)
  (libraries dkml-package-console.create cmdliner private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
@@ -36,8 +36,8 @@
   dkml-component-staging-withdkml)
  (modules create_installers))
 
-(executable (public_name dkml-installer-network-ocaml-package-install)
- (package dkml-installer-network-ocaml) (name entry_install)
+(executable (public_name dkml-installer-ocaml-network-package-install)
+ (package dkml-installer-ocaml-network) (name entry_install)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
@@ -48,8 +48,8 @@
  (modules entry_install)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
-(executable (public_name dkml-installer-network-ocaml-package-uninstall)
- (package dkml-installer-network-ocaml) (name entry_uninstall)
+(executable (public_name dkml-installer-ocaml-network-package-uninstall)
+ (package dkml-installer-ocaml-network) (name entry_uninstall)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
@@ -60,8 +60,8 @@
  (modules entry_uninstall)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
-(executable (public_name dkml-installer-network-ocaml-package-setup)
- (package dkml-installer-network-ocaml) (name package_setup)
+(executable (public_name dkml-installer-ocaml-network-package-setup)
+ (package dkml-installer-ocaml-network) (name package_setup)
  (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
@@ -72,8 +72,8 @@
   dkml-component-staging-withdkml)
  (modules package_setup))
 
-(executable (public_name dkml-installer-network-ocaml-package-uninstaller)
- (package dkml-installer-network-ocaml) (name package_uninstaller)
+(executable (public_name dkml-installer-ocaml-network-package-uninstaller)
+ (package dkml-installer-ocaml-network) (name package_uninstaller)
  (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
   dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
@@ -84,10 +84,10 @@
   dkml-component-staging-withdkml)
  (modules package_uninstaller))
 
-(install (section bin) (package dkml-installer-network-ocaml)
- (files (package_setup.bc as dkml-installer-network-ocaml-package-setup.bc)
+(install (section bin) (package dkml-installer-ocaml-network)
+ (files (package_setup.bc as dkml-installer-ocaml-network-package-setup.bc)
   (package_uninstaller.bc as
-   dkml-installer-network-ocaml-package-uninstaller.bc)))
+   dkml-installer-ocaml-network-package-uninstaller.bc)))
 
 (rule (alias runtest)
  (deps (:ps package_setup.bc) (:pu package_uninstaller.bc))

@@ -54,7 +54,7 @@
    (run
     package-dune-of-installer-generator
     --package-name
-    dkml-installer-network-ocaml
+    dkml-installer-ocaml-network
     --project-root
     %{project_root}
     %{target}))))

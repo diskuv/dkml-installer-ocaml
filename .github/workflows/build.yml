@@ -3,7 +3,7 @@
 name: Build with DKML compiler
 
 env:
-  OPAM_PACKAGE: dkml-installer-network-ocaml
+  OPAM_PACKAGE: dkml-installer-ocaml-network
   PROGRAM_NAME_KEBAB: diskuv-ocaml
   DKML_COMPILER: "" # You can override the dkml-compiler package version. Example: 4.12.1-v1.0.2, 4.14.0-v1.1.0-prerel1
 
