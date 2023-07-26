@@ -10,10 +10,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml))
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml))
 
 (executable (public_name dkml-installer-ocaml-network-admin-runner)
  (package dkml-installer-ocaml-network) (name runner_admin)
@@ -22,10 +22,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml))
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml))
 
 (executable (public_name dkml-installer-ocaml-network-create-installers)
  (package dkml-installer-ocaml-network) (name create_installers)
@@ -33,10 +33,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml)
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml)
  (modules create_installers))
 
 (executable (public_name dkml-installer-ocaml-network-package-install)
@@ -45,10 +45,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml)
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml)
  (modules entry_install)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
@@ -58,10 +58,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml)
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml)
  (modules entry_uninstall)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
@@ -72,10 +72,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml)
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml)
  (modules package_setup))
 
 (executable (public_name dkml-installer-ocaml-network-package-uninstaller)
@@ -85,10 +85,10 @@
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
   dkml-component-ocamlcompiler-offline dkml-component-offline-desktop-full
   dkml-component-offline-opamshim dkml-component-offline-unixutils
-  dkml-component-staging-desktop-full dkml-component-staging-dkmlconfdir
-  dkml-component-staging-ocamlrun dkml-component-staging-opam32
-  dkml-component-staging-opam64 dkml-component-staging-unixutils
-  dkml-component-staging-withdkml)
+  dkml-component-staging-desktop-ci dkml-component-staging-desktop-full
+  dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
+  dkml-component-staging-opam32 dkml-component-staging-opam64
+  dkml-component-staging-unixutils dkml-component-staging-withdkml)
  (modules package_uninstaller))
 
 (install (section bin) (package dkml-installer-ocaml-network)
