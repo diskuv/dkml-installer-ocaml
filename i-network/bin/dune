@@ -9,7 +9,7 @@
   runner_user.ml)
  (action
   (progn
-   (run package-ml-of-installer-generator))))
+   (run package-ml-of-installer-generator %{read-strings:depends.txt}))))
 
 (rule
  (targets
@@ -57,7 +57,8 @@
     dkml-installer-ocaml-network
     --project-root
     %{project_root}
-    %{target}))))
+    %{target}
+    %{read-strings:depends.txt}))))
 
 (rule
   (alias gen-dkml)

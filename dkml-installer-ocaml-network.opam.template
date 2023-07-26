@@ -12,6 +12,7 @@ install: [
     "-vv"
     "--program-version"
     "2.0.2"
+    #   These components must be the same in i-network/bin/depends.txt
     "--component"
     "ocamlcompiler-network"
     "--component"
