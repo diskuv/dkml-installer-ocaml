@@ -18,7 +18,8 @@ let program_name =
 
 let program_info =
   {
-    Author_types.url_info_about_opt =
+    Author_types.components = [ "ocamlcompiler-network"; "offline-desktop-full" ];
+    url_info_about_opt =
       Some "https://github.com/diskuv/dkml-installer-ocaml#readme";
     url_update_info_opt =
       Some "https://gitlab.com/diskuv-ocaml/distributions/dkml/-/blob/main/CHANGES.md";
