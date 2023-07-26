@@ -17,7 +17,7 @@ depends: [
   "dkml-component-ocamlcompiler-network" {>= "4.14.0~" & < "4.14.1~"}
   "dkml-component-offline-desktop-full" {>= "0.1.0"}
   "dkml-component-offline-opamshim" {>= "2.2.0~alpha0~20221104"}
-  "dkml-install-installer" {>= "0.3.0"}
+  "dkml-install-installer" {>= "0.5.0"}
 ]
 build: [
   ["dune" "subst"] {dev}
