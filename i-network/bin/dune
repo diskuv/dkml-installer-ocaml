@@ -1,6 +1,7 @@
 (rule
  (targets
   discover.ml
+  componentlist.ml
   entry_assembly_manifest.ml
   entry-application.manifest)
  (action
@@ -40,7 +41,7 @@
   runner_user.ml)
  (action
   (progn
-   (run package-ml-of-installer-generator %{read-strings:depends.txt}))))
+   (run package-ml-of-installer-generator %{read-strings:components.strings}))))
 
 (rule
  (alias gen-dkml)
@@ -65,7 +66,7 @@
     --project-root
     %{project_root}
     %{target}
-    %{read-strings:depends.txt}))))
+    %{read-strings:components.strings}))))
 
 (rule
   (alias gen-dkml)

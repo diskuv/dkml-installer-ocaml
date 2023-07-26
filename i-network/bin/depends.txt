@@ -1,2 +1,0 @@
-ocamlcompiler-network
-offline-desktop-full
