@@ -1,18 +1,5 @@
 (rule
  (targets
-  create_installers.ml
-  entry_install.ml
-  entry_uninstall.ml
-  package_setup.ml
-  package_uninstaller.ml
-  runner_admin.ml
-  runner_user.ml)
- (action
-  (progn
-   (run package-ml-of-installer-generator %{read-strings:depends.txt}))))
-
-(rule
- (targets
   discover.ml
   entry_assembly_manifest.ml
   entry-application.manifest)
@@ -34,6 +21,26 @@
     --project-root
     %{project_root}
     %{target}))))
+
+(rule
+  (alias gen-dkml)
+  (action
+    (diff dune-common.inc dune-common.gen.inc)))
+
+(include dune-common.inc)
+
+(rule
+ (targets
+  create_installers.ml
+  entry_install.ml
+  entry_uninstall.ml
+  package_setup.ml
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
+ (action
+  (progn
+   (run package-ml-of-installer-generator %{read-strings:depends.txt}))))
 
 (rule
  (alias gen-dkml)
@@ -63,12 +70,6 @@
 (rule
   (alias gen-dkml)
   (action
-    (diff dune-common.inc dune-common.gen.inc)))
-
-(rule
-  (alias gen-dkml)
-  (action
     (diff dune.inc dune.gen.inc)))
 
-(include dune-common.inc)
 (include dune.inc)
