@@ -12,12 +12,6 @@
   entry.assembly.manifest)
  (action (run %{discover})))
 
-(executable (name componentlist) (libraries private_common)
- (modules componentlist))
-
-(rule (target components.strings)
- (action (with-stdout-to %{target} (run %{exe:componentlist.exe}))))
-
 (executable (name entry_assembly_manifest)
  (libraries dkml-package-console.common private_common fmt)
  (modules entry_assembly_manifest))
