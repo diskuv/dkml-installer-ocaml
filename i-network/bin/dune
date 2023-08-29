@@ -1,7 +1,6 @@
 (rule
  (targets
   discover.ml
-  componentlist.ml
   entry_assembly_manifest.ml
   entry-application.manifest)
  (action

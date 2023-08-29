@@ -1,0 +1,6 @@
+--install=ocamlcompiler-network
+--install=offline-desktop-full
+--install=offline-opamshim
+--uninstall=ocamlcompiler-network
+--uninstall=offline-desktop-full
+--uninstall=offline-opamshim
