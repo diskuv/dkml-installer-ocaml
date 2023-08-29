@@ -17,6 +17,7 @@ include(${DKML_BUMP_PACKAGES_PARTICIPANT_MODULE})
 DkMLBumpPackagesParticipant_DuneIncUpgrade(
     REL_FILENAMES i-network/bin/dune-common.inc i-network/bin/dune.inc
     DUNE_TARGET @i-network/bin/gen-dkml
+    EMPTY_DUNE_INC i-network/bin/dune.inc [[(rule (target components.strings) (action (write-file %{target} "")))]]
 )
 DkMLReleaseParticipant_DuneBuildOpamFiles() # Must come after dune.inc has been rebuilt and made valid
 DkMLBumpPackagesParticipant_GitAddAndCommit()
