@@ -11,7 +11,7 @@ install: [
     #   Debug logs
     "-vv"
     "--program-version"
-    "2.0.2"
+    "2.0.3"
 
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
     # corresponds to the build environments of GitHub workflow setup-dkml.yml.

@@ -61,7 +61,7 @@ Briefly review the following:
 > that was issued by
 > `Certum Code Signing CA SHA2`.
 
-Then run the [latest Windows 64-bit Native Code Edition installer](https://gitlab.com/dkml/distributions/dkml/-/releases/2.0.2/downloads/setup64nu.exe).
+Then run the [latest Windows 64-bit Native Code Edition installer](https://gitlab.com/dkml/distributions/dkml/-/releases/2.0.3/downloads/setup64nu.exe).
 
 After your install is completed, you can read the
 [Install is done! What next?](https://diskuv.com/dkmlbook/#install-is-done-what-next)
