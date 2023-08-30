@@ -66,6 +66,6 @@ Tags:
 - ocaml
 - open-source
 - programming
-ReleaseNotesUrl: https://gitlab.com/diskuv-ocaml/distributions/dkml/-/releases/2.0.3 # AUTO-BUMP
+ReleaseNotesUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.0.3 # AUTO-BUMP
 ManifestType: defaultLocale
 ManifestVersion: 1.1.0

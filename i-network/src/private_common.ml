@@ -18,7 +18,7 @@ let program_info =
       Some "https://github.com/diskuv/dkml-installer-ocaml#readme";
     url_update_info_opt =
       Some
-        "https://gitlab.com/diskuv-ocaml/distributions/dkml/-/blob/main/CHANGES.md";
+        "https://gitlab.com/dkml/distributions/dkml/-/blob/main/CHANGES.md";
     help_link_opt = Some "https://diskuv.com/dkmlbook/";
     (*
         2116259083L bytes (2.1 GB) in DKML 1.2.0

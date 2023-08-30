@@ -141,7 +141,7 @@ jobs:
           printf 'Major.Minor.Patch[-Prerelease] = \e[1;34m%s\e[0m\n' "$MAJMINPATPRE"
       - name: Checkout diskuv-ocaml at semver tags
         run: |
-          git clone https://gitlab.com/diskuv-ocaml/distributions/dkml.git
+          git clone https://gitlab.com/dkml/distributions/dkml.git
           if ! git -C dkml -c advice.detachedHead=false checkout "${MAJMINPATPRE}"; then
             # If there is no prerelease tag, perhaps there is a maj/min/patch tag?
             if ! git -C dkml -c advice.detachedHead=false checkout "${MAJMINPAT}"; then

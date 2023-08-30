@@ -90,7 +90,7 @@ to generate installers from the following Opam packages:
 * [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlcompiler)
 * [dkml-component-ocamlcompiler](http://github.com/diskuv/dkml-component-ocamlcompiler)
 * [dkml-component-opam](http://github.com/diskuv/dkml-component-opam)
-* [dkml-component-desktop](https://gitlab.com/diskuv-ocaml/components/dkml-component-desktop)
+* [dkml-component-desktop](https://gitlab.com/dkml/components/dkml-component-desktop)
 * [dkml-component-unixutils](http://github.com/diskuv/dkml-component-unixutils)
 
 ## Building from Source
