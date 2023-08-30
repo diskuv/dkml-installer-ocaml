@@ -1,11 +1,7 @@
 open Dkml_package_console_common
-
 include Private_common_base
 
-let build_info =
-  {
-    Author_types.package_name = "dkml-installer-ocaml-network"
-  }
+let build_info = { Author_types.package_name = "dkml-installer-ocaml-network" }
 
 let program_name =
   {
@@ -18,11 +14,11 @@ let program_name =
 
 let program_info =
   {
-    Author_types.components = [ "ocamlcompiler-network"; "offline-desktop-full" ];
-    url_info_about_opt =
+    Author_types.url_info_about_opt =
       Some "https://github.com/diskuv/dkml-installer-ocaml#readme";
     url_update_info_opt =
-      Some "https://gitlab.com/diskuv-ocaml/distributions/dkml/-/blob/main/CHANGES.md";
+      Some
+        "https://gitlab.com/diskuv-ocaml/distributions/dkml/-/blob/main/CHANGES.md";
     help_link_opt = Some "https://diskuv.com/dkmlbook/";
     (*
         2116259083L bytes (2.1 GB) in DKML 1.2.0
