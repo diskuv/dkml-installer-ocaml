@@ -13,6 +13,10 @@ install: [
     "--program-version"
     "2.0.3"
 
+    "--component=ocamlcompiler-network"
+    "--component=offline-desktop-full"
+    "--component=offline-opamshim"
+
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
     # corresponds to the build environments of GitHub workflow setup-dkml.yml.
     # Later can add Dune cross-compiler to get Darwin ARM64.
