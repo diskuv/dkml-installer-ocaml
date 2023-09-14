@@ -51,8 +51,9 @@
 (executable (public_name dkml-installer-ocaml-network-package-uninstall)
  (package dkml-installer-ocaml-network) (name entry_uninstall)
  (libraries dkml-package-console.entry cmdliner private_common
-  dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
-  dkml-component-offline-opamshim dkml-component-staging-ocamlrun)
+  dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
+  dkml-component-offline-desktop-full dkml-component-offline-opamshim
+  dkml-component-staging-ocamlrun)
  (modules entry_uninstall)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
@@ -72,8 +73,9 @@
  (package dkml-installer-ocaml-network) (name package_uninstaller)
  (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
-  dkml-component-ocamlcompiler-network dkml-component-offline-desktop-full
-  dkml-component-offline-opamshim dkml-component-staging-ocamlrun)
+  dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
+  dkml-component-offline-desktop-full dkml-component-offline-opamshim
+  dkml-component-staging-ocamlrun)
  (modules package_uninstaller))
 
 (install (section bin) (package dkml-installer-ocaml-network)
