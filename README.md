@@ -26,7 +26,7 @@ These alternatives may be better depending on your use case:
 The DkML Installer for OCaml generates and distributes installers for
 the DkML distribution. Windows is ready today; macOS will be available soon.
 
-For news about DkML,
+For news about DkML, <!-- markdown-link-check-disable-next-line -->
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/diskuv.svg?style=social&label=Follow%20%40diskuv)](https://twitter.com/diskuv) on Twitter.
 
 ## Installing
