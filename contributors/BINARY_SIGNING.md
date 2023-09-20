@@ -1,12 +1,14 @@
 # Binary Signing
 
 On Windows, unsigned .exe files are subject to:
+
 1. Heavy warnings from the browser that the file is unsafe
 2. Heavy warnings from Windows that the file is untrusted
 3. Quarantine or some other forms of blocking by anti-virus software
 
 So we choose to "code sign" the software. There are two types of code
 signing certificates:
+
 * OV (organization validation)
 * EV (extended validation)
 
@@ -120,6 +122,7 @@ An optional company name []:
 SECOND,
 
 Keep the `server-key.pem` secured for several years:
+
 * Store `server-key.pem` on USB flash drives under a physical
   lock and key. Other storage devices are acceptable, but make sure the
   storage devices are disconnected from the Internet.
@@ -141,6 +144,7 @@ Keep the `server-key.pem` secured for several years:
   Diskuv, Inc. Code Signing Certificate
   134bbcb9c230235cfbf99a36258ed0338a5cc81ff8a85216fac1bb76ce3a11c9
   ```
+
 * You will **never** give `server-key.pem` to a third-party.
 
 THIRD,
@@ -156,19 +160,22 @@ Certigo Standard Validation certificates that are authorized by Microsoft.
 > The Comodo SSL store will give you many warnings about only using Internet
 > Explorer 8 on Windows. This document is following a different procedure that
 > does not need Internet Explorer or any special web browser.
-
-> Comodo lets you [re-issue the certificates](https://help.comodosslstore.com/support/solutions/articles/22000219198-reissuing-your-code-signing-certificate)
-> if you made a mistake.
+>
+> Comodo lets you re-issue the certificates if you made a mistake.
 
 After your certificate has been generated and downloaded:
+
 * convert the downloaded certificate (ex. `user.crt`) into the "PEM" format with:
+
   ```bash
   openssl x509 -inform der -in user.crt -out cert.pem
   ```
-* download the latest Code Signing CA certificate from https://help.comodosslstore.com/support/solutions/articles/22000218266-comodo-intermediate-certificates-and-ca-bundle-
+
+* download the latest Code Signing CA certificate from <https://help.comodosslstore.com/support/solutions/articles/22000218266-comodo-intermediate-certificates-and-ca-bundle->
   (ex. Standard Sectigo Public Code Signing CA R36) and save it
   (ex. `SectigoPublicCodeSigningCAR36.crt`)
 * create a certificate chain in a X509 and "PKCS#7" file with:
+
   ```bash
   
   openssl x509 -in SectigoPublicCodeSigningCAR36.crt -out SectigoPublicCodeSigningCAR36.pem
@@ -176,6 +183,7 @@ After your certificate has been generated and downloaded:
 
   openssl crl2pkcs7 -nocrl --certfile cert.pem -certfile SectigoPublicCodeSigningCAR36.crt -out full-chain.p7.pem
   ```
+
 * you can delete the `server-key.csr` file
 
 FOURTH, we'll be saving the private key and certificate in the security device.
@@ -194,9 +202,9 @@ instructions.
 
 **FIXME**
 
-signtool sign /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /f ../cert.pem /v setup-diskuv-ocaml-windows_x86_64-0.4.0.exe
+signtool sign /tr <http://timestamp.sectigo.com> /td sha256 /fd sha256 /f ../cert.pem /v setup-diskuv-ocaml-windows_x86_64-0.4.0.exe
 
-signtool sign /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /f ../key-and-cert.p12 /v setup-diskuv-ocaml-windows_x86_64-0.4.0.exe
+signtool sign /tr <http://timestamp.sectigo.com> /td sha256 /fd sha256 /f ../key-and-cert.p12 /v setup-diskuv-ocaml-windows_x86_64-0.4.0.exe
 
 ### Distributing your Code Signing Certificate
 
@@ -214,10 +222,12 @@ With the PIN code someone, if they have the PIV device, can sign your documents
 and files.
 
 So to sign a binary you need both:
+
 1. either the PUK or PIN code *and*
 2. the PIV device
 
 Let's say you forget the PUK or PIN code:
+
 * What you already did: You distributed the PIV device to at least
   one other person, and through a separate channel you distributed the PIN (there
   is no reason to send them the PUK code).
@@ -226,6 +236,7 @@ Let's say you forget the PUK or PIN code:
 Let's say your PUK or PIN code is compromised (leaked, etc.), or your PIV
 device was lost or stolen, or your software was compromised (perhaps a virus
 was inserted into your code):
+
 * What you already did: You signed each of your binaries with a
   [timestamp service](https://sectigo.com/resource-library/time-stamping-server)
   by using an extra command line option in the SignTool.exe command.
@@ -253,8 +264,9 @@ was inserted into your code):
 
 ### SOP: Unblock PIN
 
-1. Download and install "OpenSC-0.22.0_win64.msi" from https://github.com/OpenSC/OpenSC/releases/tag/0.22.0
+1. Download and install "OpenSC-0.22.0_win64.msi" from <https://github.com/OpenSC/OpenSC/releases/tag/0.22.0>
 2. In PowerShell run the following:
+
    ```powershell
    & "$env:ProgramFiles\OpenSC Project\OpenSC\tools\pkcs15-tool" --unblock-pin
    ```
@@ -279,5 +291,4 @@ make
 ### References
 
 * [Best Practices for Code Signing Certificates](https://www.entrust.com/knowledgebase/ssl/best-practices-for-code-signing-certificates)
-* [How to Generate a Code Signing CSR](https://help.comodosslstore.com/support/solutions/articles/22000270319-how-to-generate-a-code-signing-csr)
 * [Time Stamp Server & Stamping Protocols for Digital Signatures/Code Signing](https://sectigo.com/resource-library/time-stamping-server)
