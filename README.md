@@ -117,7 +117,7 @@ See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkm
 In addition, there are
 
 * [code signing documents](contributors/BINARY_SIGNING.md)
-* [winget package submission documents](installer/winget/README.md)
+* [winget package submission documents](i-network/winget/README.md)
 
 ## Status
 
