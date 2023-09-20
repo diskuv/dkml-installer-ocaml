@@ -92,8 +92,8 @@ opamrun update
 
 # Build the installer
 case "$dkml_host_abi" in
-  linux_*) opamrun install "./${OPAM_PACKAGE}.opam" --with-test --yes --no-depexts ;;
-  *) opamrun install "./${OPAM_PACKAGE}.opam" --with-test --yes ;;
+  linux_*) opamrun install ./dkml-installer-ocaml-common.opam "./${OPAM_PACKAGE}.opam" --with-test --yes --no-depexts ;;
+  *) opamrun install ./dkml-installer-ocaml-common.opam "./${OPAM_PACKAGE}.opam" --with-test --yes ;;
 esac
 
 # Generate and print a .locked file
