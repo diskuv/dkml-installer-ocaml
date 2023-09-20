@@ -10,7 +10,7 @@ bug-reports: "https://github.com/diskuv/dkml-installer-ocaml/issues"
 depends: [
   "dune" {>= "2.9"}
   "odoc" {>= "1.5.3" & with-doc}
-  "dkml-package-console" {>= "0.5.0"}
+  "dkml-package-console" {>= "0.5.2"}
   "dkml-workflows" {>= "1.1.0" & build}
 ]
 build: [

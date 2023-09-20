@@ -16,7 +16,7 @@
  (synopsis "Common code for the network and offline DkML installers for OCaml")
  (depends
   (odoc                                   (and (>= 1.5.3) :with-doc))
-  (dkml-package-console                   (>= 0.5.0))
+  (dkml-package-console                   (>= 0.5.2))
   (dkml-workflows                         (and (>= 1.1.0) :build))))
 
 (package
@@ -31,4 +31,4 @@
   (dkml-component-ocamlcompiler-network   (and (>= 4.14.0~) (< 4.14.1~)))
   (dkml-component-offline-desktop-full    (>= 0.1.0))
   (dkml-component-offline-opamshim        (>= 2.2.0~alpha0~20221104))
-  (dkml-install-installer                 (>= 0.5.0))))
+  (dkml-install-installer                 (>= 0.5.2))))
