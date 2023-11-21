@@ -1,3 +1,6 @@
+build-env: [
+  OCAMLRUNPARAM = "b"
+]
 install: [
   # Create the installer executable after `dune install` (which is after
   # `build:[]` section) so Dune can do plugin rewriting since Dune edits (yes!)
