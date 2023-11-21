@@ -30,6 +30,7 @@
 (include dune-common.inc)
 
 (rule
+ (deps (universe)) ; package-ml-of-installer-generator queries `findlib` in the installed universe
  (targets
   create_installers.ml
   entry_install.ml
@@ -46,6 +47,7 @@
  (alias gen-dkml)
  (target dune.gen.inc)
  (deps
+  (universe) ; package-dune-of-installer-generator queries `findlib` in the installed universe
   create_installers.ml
   discover.ml
   entry_assembly_manifest.ml
