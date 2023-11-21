@@ -36,6 +36,7 @@ install: [
     "--runner-user-exe"
     "_build/install/$(dune-context)/bin/dkml-installer-ocaml-network-user-runner%{exe}%"
 
+    # $(dune-context) is a macro for the correct Dune context directory based on the target ABI
     "--packager-install-exe"
     "_build/install/$(dune-context)/bin/dkml-installer-ocaml-network-package-install%{exe}%"
     "--packager-uninstall-exe"
