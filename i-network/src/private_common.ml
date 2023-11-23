@@ -6,8 +6,11 @@ let build_info = { Author_types.package_name = "dkml-installer-ocaml-network" }
 let program_name =
   {
     Author_types.name_full = "DkML Native";
+
+    (* Must be in sync with dkml-runtime-apps/src/runtimelib/dkml_context.ml for [dkml init --system], etc. *)
     name_camel_case_nospaces = "DkMLNative";
     name_kebab_lower_case = "dkml-native";
+
     installation_prefix_camel_case_nospaces_opt = None;
     installation_prefix_kebab_lower_case_opt = None;
   }
