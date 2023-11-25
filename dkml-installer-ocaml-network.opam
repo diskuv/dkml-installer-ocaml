@@ -63,9 +63,10 @@ install: [
     # Later can add Dune cross-compiler to get Darwin ARM64.
     "--abi=windows_x86"
     "--abi=windows_x86_64"
-    # "--abi=linux_x86"
-    # "--abi=linux_x86_64"
-    # "--abi=darwin_x86_64"
+    "--abi=linux_x86"
+    "--abi=linux_x86_64"
+    "--abi=darwin_x86_64"
+    "--abi=darwin_arm64"
 
     "--work-dir"
     "%{_:share}%/w"
