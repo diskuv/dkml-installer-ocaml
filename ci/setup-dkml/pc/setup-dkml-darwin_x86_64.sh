@@ -45,7 +45,6 @@ export PIN_DKML_APPS='2.1.0'
 export PIN_DKML_BASE_COMPILER='4.14.0~v2.1.0'
 export PIN_DKML_BUILD_DESKTOP='2.1.0'
 export PIN_DKML_C_PROBE='3.0.0'
-export PIN_DKML_COMPILER_ENV='2.1.0'
 export PIN_DKML_COMPILER_SRC='2.1.0'
 export PIN_DKML_COMPONENT_XX_CONSOLE='0.1.1'
 export PIN_DKML_EXE_LIB='2.1.0'
@@ -53,7 +52,7 @@ export PIN_DKML_EXE='2.1.0'
 export PIN_DKML_INSTALL_INSTALLER='0.5.2'
 export PIN_DKML_INSTALL_RUNNER='0.5.2'
 export PIN_DKML_INSTALL='0.5.2'
-export PIN_DKML_INSTALLER_OCAML_COMMON='2.0.3'
+export PIN_DKML_INSTALLER_OCAML_COMMON='2.1.0'
 export PIN_DKML_PACKAGE_CONSOLE='0.5.2'
 export PIN_DKML_RUNTIME_COMMON_NATIVE='2.1.0'
 export PIN_DKML_RUNTIME_COMMON='2.1.0'
@@ -166,21 +165,24 @@ export PIN_UUSEG='15.0.0'
 export PIN_UUTF='1.0.3'
 export PIN_WITH_DKML='2.1.0'
 export PIN_XDG='3.9.0'
-export PIN_YOJSON='2.1.1'
+export PIN_YOJSON='2.1.2'
 export PIN_ZED='3.2.2'
 
 # Set matrix variables
-# autogen from pc_vars. only darwin_x86_64
+#   nit: We use darwin_arm64 settings from gh/ and gl/, and then override to darwin_x86_64 since gh + gl only have darwin_arm64 settings.
+# autogen from pc_vars. only darwin_arm64
 export dkml_host_os="darwin"
 export opam_root_cacheable="${PC_PROJECT_DIR}/.ci/o"
-export abi_pattern="macos-darwin_all"
+export abi_pattern="macos-darwin_all-silicon"
+export no_gh="true"
 export bootstrap_opam_version="2.2.0-alpha-20221228"
-export dkml_host_abi="darwin_x86_64"
+export dkml_host_abi="darwin_arm64"
 export opam_root="${PC_PROJECT_DIR}/.ci/o"
 
+export dkml_host_abi="darwin_x86_64"
 
 usage() {
-  echo 'Setup Diskuv OCaml (DKML) compiler on a desktop PC.' >&2
+  echo 'Setup DkML compiler on a desktop PC.' >&2
   echo 'usage: setup-dkml-darwin_x86_64.sh [options]' >&2
   echo 'Options:' >&2
 
@@ -227,7 +229,6 @@ usage() {
   echo "  --PIN_DKML_BASE_COMPILER=<value>. Defaults to: ${PIN_DKML_BASE_COMPILER}" >&2
   echo "  --PIN_DKML_BUILD_DESKTOP=<value>. Defaults to: ${PIN_DKML_BUILD_DESKTOP}" >&2
   echo "  --PIN_DKML_C_PROBE=<value>. Defaults to: ${PIN_DKML_C_PROBE}" >&2
-  echo "  --PIN_DKML_COMPILER_ENV=<value>. Defaults to: ${PIN_DKML_COMPILER_ENV}" >&2
   echo "  --PIN_DKML_COMPILER_SRC=<value>. Defaults to: ${PIN_DKML_COMPILER_SRC}" >&2
   echo "  --PIN_DKML_COMPONENT_XX_CONSOLE=<value>. Defaults to: ${PIN_DKML_COMPONENT_XX_CONSOLE}" >&2
   echo "  --PIN_DKML_EXE_LIB=<value>. Defaults to: ${PIN_DKML_EXE_LIB}" >&2
@@ -440,8 +441,6 @@ while getopts :h-: option; do
     PIN_DKML_BUILD_DESKTOP=*) PIN_DKML_BUILD_DESKTOP=${OPTARG#*=} ;;
     PIN_DKML_C_PROBE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_C_PROBE=*) PIN_DKML_C_PROBE=${OPTARG#*=} ;;
-    PIN_DKML_COMPILER_ENV) fail "Option \"$OPTARG\" missing argument" ;;
-    PIN_DKML_COMPILER_ENV=*) PIN_DKML_COMPILER_ENV=${OPTARG#*=} ;;
     PIN_DKML_COMPILER_SRC) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_COMPILER_SRC=*) PIN_DKML_COMPILER_SRC=${OPTARG#*=} ;;
     PIN_DKML_COMPONENT_XX_CONSOLE) fail "Option \"$OPTARG\" missing argument" ;;
@@ -840,7 +839,7 @@ cat > .ci/sd4/run-checkout-code.sh <<'end_of_script'
 # dockcross (used by Linux) since a Docker-in-Docker container can have
 # difficulties doing a git checkout (the Git credentials for any private
 # repositories are likely not present). We don't care about any private
-# repositories for DKML but any code that extends this (ex. DKSDK) may
+# repositories for DkML but any code that extends this (ex. DKSDK) may
 # need to use private repositories.
 
 set -euf
@@ -993,6 +992,33 @@ fi
 
 # -------------------------------------------------------------------
 
+docker_fqin_preusername= # fully qualified image name (hostname[:port]/username/reponame[:tag]), the parts before the username (hostname[:port]/)
+if [ -n "${docker_registry:-}" ]; then
+    docker_fqin_preusername="$docker_registry/"
+fi
+
+# Extend dockcross. https://github.com/dockcross/dockcross#how-to-extend-dockcross-images
+dockcross_image_id=
+dockcross_cli_image_args=
+if [ "${in_docker:-}" = "true" ] && [ -n "${dockcross_image:-}" ]; then
+    echo "Doing docker build"
+    section_begin docker-build "Summary: docker build -t ${docker_fqin_preusername}dkml-workflows/dockcross"
+
+    install -d .ci/sd4/docker-image
+    printf "FROM %s\nENV DEFAULT_DOCKCROSS_IMAGE %sdkml-workflows/dockcross:latest\nRUN if command -v apt-get; then apt-get install -y rsync %s && rm -rf /var/lib/apt/lists/*; fi\nRUN if command -v yum; then yum install -y rsync %s && yum clean all && rm -rf /var/cache/yum; fi" \
+        "${dockcross_image:-}" "${docker_fqin_preusername}" "${dockcross_packages_apt:-}" "${dockcross_packages_yum:-}" >.ci/sd4/docker-image/Dockerfile
+    docker build -t "${docker_fqin_preusername}dkml-workflows/dockcross:latest" .ci/sd4/docker-image
+
+    # Save image id to re-use for all remaining dockcross invocations
+    docker images --format "{{.ID}} {{.CreatedAt}}" | sort -rk 2 | awk 'NR==1{print $1}' | tee .ci/sd4/docker-image-id
+    dockcross_image_id=$(cat .ci/sd4/docker-image-id)
+    dockcross_cli_image_args="--image $dockcross_image_id"
+
+    section_end docker-build
+fi
+
+# -------------------------------------------------------------------
+
 section_begin setup-info "Summary: setup-dkml"
 
 SKIP_OPAM_MODIFICATIONS=${SKIP_OPAM_MODIFICATIONS:-false} # default is false
@@ -1043,8 +1069,8 @@ original_opam_root=${original_opam_root}
 original_opam_root_cacheable=${original_opam_root_cacheable}
 unix_opam_root=${unix_opam_root}
 unix_opam_root_cacheable=${unix_opam_root_cacheable}
+docker_registry=${docker_registry:-}
 dockcross_image=${dockcross_image:-}
-dockcross_image_custom_prefix=${dockcross_image_custom_prefix:-}
 dockcross_run_extra_args=${dockcross_run_extra_args:-}
 docker_runner=${docker_runner:-}
 in_docker=${in_docker:-}
@@ -1204,12 +1230,12 @@ install -d .ci/sd4/dist
 tar cf .ci/sd4/dist/run-with-env.tar -T /dev/null
 
 do_get_dockcross() {
-    if [ -n "${dockcross_image:-}" ]; then
+    if [ "${in_docker:-}" = "true" ] && [ -n "${dockcross_image:-}" ]; then
         # The dockcross script is super-slow
         section_begin get-dockcross 'Get dockcross binary (ManyLinux)'
         install -d .ci/sd4
         #   shellcheck disable=SC2086
-        docker run ${dockcross_run_extra_args:-} --rm "${dockcross_image_custom_prefix:-}${dockcross_image:-}" >.ci/sd4/dockcross.gen
+        docker run ${dockcross_run_extra_args:-} --rm "${dockcross_image_id}" >.ci/sd4/dockcross.gen
 
         # PROBLEM 1
         # ---------
@@ -1307,10 +1333,11 @@ if [ "\$BUILDER_UID" = 0 ] && [ "\$BUILDER_GID" = 0 ]; then
         --rm \
         \${ARGS:-} \
          -v "\$HOST_PWD":/work \
-        ${dockcross_image_custom_prefix:-}${dockcross_image:-} ${dockcross_entrypoint} "\$@"
+        "${dockcross_image_id}" ${dockcross_entrypoint} "\$@"
 else
     HERE=\$(dirname "\$0")
     HERE=\$(cd "\$HERE" && pwd)
+    export OCI_EXE=docker # default to podman if available, which breaks complaining about HTTPS vs HTTP on GitHub Actions communicating to http (docker) local registry.
     exec "\$HERE/dockcross-real" "\$@"
 fi
 EOF
@@ -1323,46 +1350,6 @@ EOF
     fi
 }
 do_get_dockcross
-
-if [ -n "${dockcross_image:-}" ]; then
-    # rsync needs to be available, even after Docker container disappears
-    if [ ! -e .ci/sd4/bs/bin/rsync ]; then
-        section_begin get-opam-prereqs-in-dockcross 'Get Opam prerequisites (ManyLinux)'
-        install -d .ci/sd4/bs/bin
-        # Install rsync with 'yum' (ManyLinux) or 'apt' (dockcross/linux-x64, etc.)
-        # if not present.
-        #   shellcheck disable=SC2016
-        .ci/sd4/dockcross --args "${dockcross_run_extra_args:-}" sh -c 'if ! command -v rsync; then if command -v yum; then sudo yum install -y rsync; else sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y rsync; fi; fi && install $(command -v rsync) .ci/sd4/bs/bin'
-        section_end get-opam-prereqs-in-dockcross
-    fi
-fi
-
-# Opam prerequisites for using opam (not for installing opam)
-
-{
-    if [ -n "${docker_runner:-}" ]; then
-        # rsync needs to be available, even after Docker container disappears
-        if [ ! -e .ci/sd4/bs/bin/rsync.deps ]; then
-            section_begin get-opam-prereqs-in-docker 'Get Opam prerequisites (Linux Docker)'
-            install -d .ci/sd4/bs/bin
-            ${docker_runner} sh -c '
-            apt-get update -qq -o=Dpkg::Use-Pty=0 &&
-            apt-get install -qq -o=Dpkg::Use-Pty=0 -y rsync &&
-            ldd /usr/bin/rsync &&
-            ls -l /lib/i386-linux-gnu/libpopt.so.0 /lib/i386-linux-gnu/libacl.so.1 /lib/i386-linux-gnu/libattr.so.1 &&
-            tar cCfhz / /work/.ci/sd4/bs/bin/deps.tar.gz /usr/bin/rsync /lib/i386-linux-gnu/libpopt.so.0
-        '
-            touch .ci/sd4/bs/bin/rsync.deps
-            section_end get-opam-prereqs-in-docker
-        fi
-    fi
-
-    # Bundle Opam prerequisites (ManyLinux or Linux Docker)
-    if [ -n "${docker_runner:-}" ] || [ -n "${dockcross_image:-}" ]; then
-        # Bundle for consumers of setup-dkml.yml
-        do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/bs/bin/rsync
-    fi
-}
 
 # Get Opam Cache
 do_get_opam_cache() {
@@ -1538,7 +1525,7 @@ if [ "\$#" -ge 1 ] && [ "\$1" = "-it" ]; then
     termargs=-it
 fi
 
-exec bash "\${PROJECT_DIR}"/.ci/sd4/dockcross --args "\${termargs} -v \${PROJECT_DIR}/.ci/sd4/edr:/home/root ${dockcross_run_extra_args:-}" /work/.ci/sd4/run-in-docker "\$@"
+exec bash "\${PROJECT_DIR}"/.ci/sd4/dockcross ${dockcross_cli_image_args} --args "\${termargs} -v \${PROJECT_DIR}/.ci/sd4/edr:/home/root ${dockcross_run_extra_args:-}" /work/.ci/sd4/run-in-docker "\$@"
 EOF
         chmod +x .ci/sd4/run-with-env
 
@@ -1550,7 +1537,7 @@ EOF
         echo '___________________' >&2
         do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/run-with-env .ci/sd4/run-in-docker .ci/sd4/edr
 
-    elif [ -n "${docker_runner:-}" ]; then
+    elif [ "${in_docker:-}" = "true" ] && [ -n "${docker_runner:-}" ]; then
 
         cat >.ci/sd4/run-with-env <<EOF
 #!/bin/sh
@@ -1873,7 +1860,6 @@ do_pins() {
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-base-compiler "${PIN_DKML_BASE_COMPILER}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-build-desktop "${PIN_DKML_BUILD_DESKTOP}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-c-probe "${PIN_DKML_C_PROBE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-compiler-env "${PIN_DKML_COMPILER_ENV}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-compiler-src "${PIN_DKML_COMPILER_SRC}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-component-xx-console "${PIN_DKML_COMPONENT_XX_CONSOLE}"
     opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe "${PIN_DKML_EXE}"
@@ -2121,8 +2107,8 @@ if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
     fi
 fi
 
-# Because dune.X.Y.Z+shim (and any user DKML packages) requires DKML installed (after all, it is just
-# a with-dkml.exe shim), we need either dkmlvars-v2.sexp or DKML environment
+# Because dune.X.Y.Z+shim (and any user DkML packages) requires DkML installed (after all, it is just
+# a with-dkml.exe shim), we need either dkmlvars-v2.sexp or DkML environment
 # variables. Confer: Dkml_runtimelib.Dkml_context.get_dkmlversion
 #
 # grep matches either:
@@ -2190,15 +2176,6 @@ do_install_compiler() {
     opamrun upgrade --switch "$do_install_compiler_NAME" --yes dkml-base-compiler conf-dkml-cross-toolchain ${ocaml_options:-}
     section_end "install-compiler-$do_install_compiler_NAME"
 }
-if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
-    if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
-        do_install_compiler dkml
-    fi
-    if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
-        do_install_compiler two
-    fi
-fi
-
 do_summary() {
     do_summary_NAME=$1
     shift
@@ -2208,7 +2185,15 @@ do_summary() {
     section_end "summary-$do_summary_NAME"
 }
 if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
-    do_summary dkml
+    if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
+        do_install_compiler dkml
+    fi
+    if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
+        do_install_compiler two
+    fi
+    if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
+        do_summary dkml
+    fi
     if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
         do_summary two
     fi

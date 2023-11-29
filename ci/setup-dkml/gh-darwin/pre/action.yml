@@ -59,20 +59,19 @@ runs:
       id: full_matrix_vars
       run: |
         # Select correct Darwin matrix variables
-        case "${{ matrix.dkml_host_abi }}" in
         
-        darwin_x86_64)
-          dkml_host_os='darwin';
-          opam_root_cacheable='/Users/runner/.opam';
-          abi_pattern='macos-darwin_all';
-          gh_os='macos-latest';
-          gh_unix_shell='sh';
-          bootstrap_opam_version='2.2.0-alpha-20221228';
-          dkml_host_abi='darwin_x86_64';
-          opam_root='/Users/runner/.opam' ;;
-          
-        *)  echo "FATAL: Unsupported dkml_host_abi=$dkml_host_abi in Darwin action.yml"; exit 107 ;;
-        esac
+        dkml_host_os='darwin'
+        opam_root_cacheable='/Users/runner/.opam'
+        abi_pattern='macos-darwin_all-intel'
+        no_gl='true'
+        gh_os='macos-latest'
+        gh_unix_shell='sh'
+        bootstrap_opam_version='2.2.0-alpha-20221228'
+        dkml_host_abi='darwin_x86_64'
+        opam_root='/Users/runner/.opam'
+        #
+        #   note: All Darwin machines can cross-compile so they are equal except [dkml_host_abi].
+        dkml_host_abi='${{ matrix.dkml_host_abi }}'
 
         add() {
           echo "$1=$2" | tee -a $GITHUB_OUTPUT | tee -a $GITHUB_ENV
@@ -229,7 +228,7 @@ runs:
         # dockcross (used by Linux) since a Docker-in-Docker container can have
         # difficulties doing a git checkout (the Git credentials for any private
         # repositories are likely not present). We don't care about any private
-        # repositories for DKML but any code that extends this (ex. DKSDK) may
+        # repositories for DkML but any code that extends this (ex. DKSDK) may
         # need to use private repositories.
 
         set -euf
@@ -382,6 +381,33 @@ runs:
 
         # -------------------------------------------------------------------
 
+        docker_fqin_preusername= # fully qualified image name (hostname[:port]/username/reponame[:tag]), the parts before the username (hostname[:port]/)
+        if [ -n "${docker_registry:-}" ]; then
+            docker_fqin_preusername="$docker_registry/"
+        fi
+
+        # Extend dockcross. https://github.com/dockcross/dockcross#how-to-extend-dockcross-images
+        dockcross_image_id=
+        dockcross_cli_image_args=
+        if [ "${in_docker:-}" = "true" ] && [ -n "${dockcross_image:-}" ]; then
+            echo "Doing docker build"
+            section_begin docker-build "Summary: docker build -t ${docker_fqin_preusername}dkml-workflows/dockcross"
+
+            install -d .ci/sd4/docker-image
+            printf "FROM %s\nENV DEFAULT_DOCKCROSS_IMAGE %sdkml-workflows/dockcross:latest\nRUN if command -v apt-get; then apt-get install -y rsync %s && rm -rf /var/lib/apt/lists/*; fi\nRUN if command -v yum; then yum install -y rsync %s && yum clean all && rm -rf /var/cache/yum; fi" \
+                "${dockcross_image:-}" "${docker_fqin_preusername}" "${dockcross_packages_apt:-}" "${dockcross_packages_yum:-}" >.ci/sd4/docker-image/Dockerfile
+            docker build -t "${docker_fqin_preusername}dkml-workflows/dockcross:latest" .ci/sd4/docker-image
+
+            # Save image id to re-use for all remaining dockcross invocations
+            docker images --format "{{.ID}} {{.CreatedAt}}" | sort -rk 2 | awk 'NR==1{print $1}' | tee .ci/sd4/docker-image-id
+            dockcross_image_id=$(cat .ci/sd4/docker-image-id)
+            dockcross_cli_image_args="--image $dockcross_image_id"
+
+            section_end docker-build
+        fi
+
+        # -------------------------------------------------------------------
+
         section_begin setup-info "Summary: setup-dkml"
 
         SKIP_OPAM_MODIFICATIONS=${SKIP_OPAM_MODIFICATIONS:-false} # default is false
@@ -432,8 +458,8 @@ runs:
         original_opam_root_cacheable=${original_opam_root_cacheable}
         unix_opam_root=${unix_opam_root}
         unix_opam_root_cacheable=${unix_opam_root_cacheable}
+        docker_registry=${docker_registry:-}
         dockcross_image=${dockcross_image:-}
-        dockcross_image_custom_prefix=${dockcross_image_custom_prefix:-}
         dockcross_run_extra_args=${dockcross_run_extra_args:-}
         docker_runner=${docker_runner:-}
         in_docker=${in_docker:-}
@@ -593,12 +619,12 @@ runs:
         tar cf .ci/sd4/dist/run-with-env.tar -T /dev/null
 
         do_get_dockcross() {
-            if [ -n "${dockcross_image:-}" ]; then
+            if [ "${in_docker:-}" = "true" ] && [ -n "${dockcross_image:-}" ]; then
                 # The dockcross script is super-slow
                 section_begin get-dockcross 'Get dockcross binary (ManyLinux)'
                 install -d .ci/sd4
                 #   shellcheck disable=SC2086
-                docker run ${dockcross_run_extra_args:-} --rm "${dockcross_image_custom_prefix:-}${dockcross_image:-}" >.ci/sd4/dockcross.gen
+                docker run ${dockcross_run_extra_args:-} --rm "${dockcross_image_id}" >.ci/sd4/dockcross.gen
 
                 # PROBLEM 1
                 # ---------
@@ -696,10 +722,11 @@ runs:
                 --rm \
                 \${ARGS:-} \
                  -v "\$HOST_PWD":/work \
-                ${dockcross_image_custom_prefix:-}${dockcross_image:-} ${dockcross_entrypoint} "\$@"
+                "${dockcross_image_id}" ${dockcross_entrypoint} "\$@"
         else
             HERE=\$(dirname "\$0")
             HERE=\$(cd "\$HERE" && pwd)
+            export OCI_EXE=docker # default to podman if available, which breaks complaining about HTTPS vs HTTP on GitHub Actions communicating to http (docker) local registry.
             exec "\$HERE/dockcross-real" "\$@"
         fi
         EOF
@@ -712,46 +739,6 @@ runs:
             fi
         }
         do_get_dockcross
-
-        if [ -n "${dockcross_image:-}" ]; then
-            # rsync needs to be available, even after Docker container disappears
-            if [ ! -e .ci/sd4/bs/bin/rsync ]; then
-                section_begin get-opam-prereqs-in-dockcross 'Get Opam prerequisites (ManyLinux)'
-                install -d .ci/sd4/bs/bin
-                # Install rsync with 'yum' (ManyLinux) or 'apt' (dockcross/linux-x64, etc.)
-                # if not present.
-                #   shellcheck disable=SC2016
-                .ci/sd4/dockcross --args "${dockcross_run_extra_args:-}" sh -c 'if ! command -v rsync; then if command -v yum; then sudo yum install -y rsync; else sudo apt-get install -qq -o=Dpkg::Use-Pty=0 -y rsync; fi; fi && install $(command -v rsync) .ci/sd4/bs/bin'
-                section_end get-opam-prereqs-in-dockcross
-            fi
-        fi
-
-        # Opam prerequisites for using opam (not for installing opam)
-
-        {
-            if [ -n "${docker_runner:-}" ]; then
-                # rsync needs to be available, even after Docker container disappears
-                if [ ! -e .ci/sd4/bs/bin/rsync.deps ]; then
-                    section_begin get-opam-prereqs-in-docker 'Get Opam prerequisites (Linux Docker)'
-                    install -d .ci/sd4/bs/bin
-                    ${docker_runner} sh -c '
-                    apt-get update -qq -o=Dpkg::Use-Pty=0 &&
-                    apt-get install -qq -o=Dpkg::Use-Pty=0 -y rsync &&
-                    ldd /usr/bin/rsync &&
-                    ls -l /lib/i386-linux-gnu/libpopt.so.0 /lib/i386-linux-gnu/libacl.so.1 /lib/i386-linux-gnu/libattr.so.1 &&
-                    tar cCfhz / /work/.ci/sd4/bs/bin/deps.tar.gz /usr/bin/rsync /lib/i386-linux-gnu/libpopt.so.0
-                '
-                    touch .ci/sd4/bs/bin/rsync.deps
-                    section_end get-opam-prereqs-in-docker
-                fi
-            fi
-
-            # Bundle Opam prerequisites (ManyLinux or Linux Docker)
-            if [ -n "${docker_runner:-}" ] || [ -n "${dockcross_image:-}" ]; then
-                # Bundle for consumers of setup-dkml.yml
-                do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/bs/bin/rsync
-            fi
-        }
 
         # Get Opam Cache
         do_get_opam_cache() {
@@ -927,7 +914,7 @@ runs:
             termargs=-it
         fi
 
-        exec bash "\${PROJECT_DIR}"/.ci/sd4/dockcross --args "\${termargs} -v \${PROJECT_DIR}/.ci/sd4/edr:/home/root ${dockcross_run_extra_args:-}" /work/.ci/sd4/run-in-docker "\$@"
+        exec bash "\${PROJECT_DIR}"/.ci/sd4/dockcross ${dockcross_cli_image_args} --args "\${termargs} -v \${PROJECT_DIR}/.ci/sd4/edr:/home/root ${dockcross_run_extra_args:-}" /work/.ci/sd4/run-in-docker "\$@"
         EOF
                 chmod +x .ci/sd4/run-with-env
 
@@ -939,7 +926,7 @@ runs:
                 echo '___________________' >&2
                 do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/run-with-env .ci/sd4/run-in-docker .ci/sd4/edr
 
-            elif [ -n "${docker_runner:-}" ]; then
+            elif [ "${in_docker:-}" = "true" ] && [ -n "${docker_runner:-}" ]; then
 
                 cat >.ci/sd4/run-with-env <<EOF
         #!/bin/sh
@@ -1262,7 +1249,6 @@ runs:
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-base-compiler "${PIN_DKML_BASE_COMPILER}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-build-desktop "${PIN_DKML_BUILD_DESKTOP}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-c-probe "${PIN_DKML_C_PROBE}"
-            opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-compiler-env "${PIN_DKML_COMPILER_ENV}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-compiler-src "${PIN_DKML_COMPILER_SRC}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-component-xx-console "${PIN_DKML_COMPONENT_XX_CONSOLE}"
             opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe "${PIN_DKML_EXE}"
@@ -1510,8 +1496,8 @@ runs:
             fi
         fi
 
-        # Because dune.X.Y.Z+shim (and any user DKML packages) requires DKML installed (after all, it is just
-        # a with-dkml.exe shim), we need either dkmlvars-v2.sexp or DKML environment
+        # Because dune.X.Y.Z+shim (and any user DkML packages) requires DkML installed (after all, it is just
+        # a with-dkml.exe shim), we need either dkmlvars-v2.sexp or DkML environment
         # variables. Confer: Dkml_runtimelib.Dkml_context.get_dkmlversion
         #
         # grep matches either:
@@ -1579,15 +1565,6 @@ runs:
             opamrun upgrade --switch "$do_install_compiler_NAME" --yes dkml-base-compiler conf-dkml-cross-toolchain ${ocaml_options:-}
             section_end "install-compiler-$do_install_compiler_NAME"
         }
-        if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
-            if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
-                do_install_compiler dkml
-            fi
-            if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
-                do_install_compiler two
-            fi
-        fi
-
         do_summary() {
             do_summary_NAME=$1
             shift
@@ -1597,7 +1574,15 @@ runs:
             section_end "summary-$do_summary_NAME"
         }
         if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
-            do_summary dkml
+            if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
+                do_install_compiler dkml
+            fi
+            if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
+                do_install_compiler two
+            fi
+            if ! [ "${PRIMARY_SWITCH_SKIP_INSTALL:-}" = "true" ]; then
+                do_summary dkml
+            fi
             if [ "${SECONDARY_SWITCH:-}" = "true" ]; then
                 do_summary two
             fi
@@ -1746,7 +1731,7 @@ runs:
       shell: bash
       run: |
         set -x
-        echo '8b4097-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
+        echo 'b539a8-${{ inputs.FDOPEN_OPAMEXE_BOOTSTRAP }}-${{ steps.full_matrix_vars.outputs.dkml_host_abi }}-${{ steps.full_matrix_vars.outputs.opam_abi }}-${{ steps.full_matrix_vars.outputs.bootstrap_opam_version }}' > .ci/sd4/cachekey.opam.binaries
         echo '${{ steps.full_matrix_vars.outputs.abi_pattern }}-${{ steps.full_matrix_vars.outputs.vsstudio_arch }}-${{ steps.full_matrix_vars.outputs.vsstudio_hostarch }}-${{ steps.full_matrix_vars.outputs.vsstudio_dir }}-${{ steps.full_matrix_vars.outputs.vsstudio_vcvarsver }}-${{ steps.full_matrix_vars.outputs.vsstudio_winsdkver }}-${{ steps.full_matrix_vars.outputs.vsstudio_msvspreference }}-${{ steps.full_matrix_vars.outputs.vsstudio_cmakegenerator }}' > .ci/sd4/cachekey.vsstudio
         echo '${{ inputs.OCAML_COMPILER }}-${{ inputs.DISKUV_OPAM_REPOSITORY }}-${{ inputs.DKML_COMPILER }}-${{ inputs.CONF_DKML_CROSS_TOOLCHAIN }}' > .ci/sd4/cachekey.ci.inputs
 
@@ -1789,7 +1774,7 @@ runs:
 
     # Checkout code
 
-    - name: Checkout DKML code
+    - name: Checkout DkML code
       shell: bash
       env:
         # Push down inputs variables for GitHub/GitLab portable scripts
@@ -1838,7 +1823,6 @@ runs:
         PIN_DKML_BASE_COMPILER: '4.14.0~v2.1.0'
         PIN_DKML_BUILD_DESKTOP: '2.1.0'
         PIN_DKML_C_PROBE: '3.0.0'
-        PIN_DKML_COMPILER_ENV: '2.1.0'
         PIN_DKML_COMPILER_SRC: '2.1.0'
         PIN_DKML_COMPONENT_XX_CONSOLE: '0.1.1'
         PIN_DKML_EXE_LIB: '2.1.0'
@@ -1846,7 +1830,7 @@ runs:
         PIN_DKML_INSTALL_INSTALLER: '0.5.2'
         PIN_DKML_INSTALL_RUNNER: '0.5.2'
         PIN_DKML_INSTALL: '0.5.2'
-        PIN_DKML_INSTALLER_OCAML_COMMON: '2.0.3'
+        PIN_DKML_INSTALLER_OCAML_COMMON: '2.1.0'
         PIN_DKML_PACKAGE_CONSOLE: '0.5.2'
         PIN_DKML_RUNTIME_COMMON_NATIVE: '2.1.0'
         PIN_DKML_RUNTIME_COMMON: '2.1.0'
@@ -1959,7 +1943,7 @@ runs:
         PIN_UUTF: '1.0.3'
         PIN_WITH_DKML: '2.1.0'
         PIN_XDG: '3.9.0'
-        PIN_YOJSON: '2.1.1'
+        PIN_YOJSON: '2.1.2'
         PIN_ZED: '3.2.2'
       run: |
         sh .ci/sd4/run-setup-dkml.sh GITHUB_WORKSPACE "$GITHUB_WORKSPACE"
