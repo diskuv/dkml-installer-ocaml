@@ -1,12 +1,7 @@
 # DkML Installer - Native Code Edition
 
-> There is a less-powerful but faster-to-install version of the installer available as the [DkML Installer - Bytecode Edition] that requires no Administrator permissions. That edition is preferable for education.
-
-[DkML Installer - Bytecode Edition]: https://github.com/diskuv/dkml-installer-ocaml-byte
-
-DkML Native Code Edition is an open-source set of software
-that supports software development with mixed OCaml/C development. The
-Edition's strengths are its:
+DkML is an open-source set of software
+that supports software development with mixed OCaml/C development. DkML's strengths are its:
 
 * full compatibility with OCaml standards like Opam, Dune and ocamlfind
 * laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
@@ -21,10 +16,9 @@ These alternatives may be better depending on your use case:
 * Developing operating system kernels? Have a look at [Mirage OS](https://mirage.io/)
 * Developing Linux server software like web servers? Plain old [OCaml on Debian, etc.](https://ocaml.org/docs/up-and-running) works well
 * Writing compilers or proofs? Plain old OCaml works really well
-* Wanting quick installations? *Try [DkML Installer - Bytecode Edition]!* For the Native Code Edition, DkML will conduct from-source builds unless it can guarantee (and code sign) the binaries are reproducible. Today that means a lot of compiling.
 
 The DkML Installer for OCaml generates and distributes installers for
-the DkML distribution. Windows is ready today; macOS will be available soon.
+the DkML distribution. Windows, Debian/x86_64 and macOS/Silicon are ready today.
 
 For news about DkML, <!-- markdown-link-check-disable-next-line -->
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/diskuv.svg?style=social&label=Follow%20%40diskuv)](https://twitter.com/diskuv) on Twitter.

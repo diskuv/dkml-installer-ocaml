@@ -17,11 +17,10 @@ LicenseUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 Copyright: Copyright 2023 Diskuv, Inc. # AUTO-BUMP
 CopyrightUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
 PublisherSupportUrl: https://github.com/diskuv/dkml-installer-ocaml/issues
-ShortDescription: DkML Native Code Edition, a Windows-friendly distribution of OCaml.
+ShortDescription: DkML, a Windows-friendly distribution of OCaml.
 Description: |-
   The DkML distribution is an open-source set of software that supports
-  software development in pure OCaml. The Native Code Edition's strengths are
-  its:
+  software development in pure OCaml. DkML's strengths are its:
 
   ✓ full compatibility with OCaml standards like Opam, Dune and ocamlfind
   ✓ laser focus on "native" development (desktop software, mobile apps and
@@ -31,16 +30,27 @@ Description: |-
     high school students should be able to use it
   ✓ security through reproducibility, versioning and from-source builds
 
-  The installation will take approximately 1.5 HOURS on a modern Windows PC.
+  There are two categories of programs installed by this DkML package:
 
-  The Native Code Edition does not work if you have a space in your username
+  1. "Immediate" programs that manipulate OCaml bytecode or source code:
+     * `utop`, `ocamlc`, `ocaml`, `ocamlrun`, `ocamlformat`, `ocamllsp`, `ocamllex`,
+       `dkml` and `with-dkml`
+  2. "Shim" programs that manipulate OCaml native code:
+     * `opam`
+
+  The shim programs have prerequisites. You should install them before you run
+  the shim programs, although if you forget the programs will tell you what you
+  need to install. The prerequisites are:
+
+  * Git. If you don't have this, install Git for Windows with:
+      winget install Git.Git
+  * Visual Studio Enterprise/Professional/Community/Build Tools 2019 in a directory
+    without spaces or parentheses. For example, "C:\Program Files (x86)\VisualStudio" won't
+    work. If you don't have Visual Studio, install it with:
+      winget install Microsoft.VisualStudio.2019.BuildTools --override "--wait --passive --installPath C:\VS --addProductLang En-us --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+
+  The DkML package will experience problems if you have a space in your username
   (ex. C:\Users\Jane Smith).
-
-  Installing this package will automatically install the required prerequisites
-  for Windows development:
-  * Visual Studio Build Tools 2019 (it will not touch any existing Visual Studio
-    installation)
-  * Git for Windows (if and only if your machine does not have it installed)
 
   These alternatives may be better depending on your use case:
 
@@ -49,15 +59,10 @@ Description: |-
   * Developing Linux server software like web servers? Plain old OCaml on
     Debian, etc. works well
   * Writing compilers or proofs? Plain old OCaml works really well
-  * Wanting quick installations? *Try "DkML Installer - Bytecode Edition"
-    at https://github.com/diskuv/dkml-installer-ocaml-byte. For the Native Code
-    Edition, DkML will conduct from-source builds unless it can guarantee (and
-    code sign) the binaries are reproducible. Today that means a lot of
-    compiling.
 
   Commercial tools and support are available from Diskuv for mixed
-  OCaml/C/C++/Java/Swift development; however, this pure OCaml winget package
-  has limited support for mixed OCaml/C development only. Contact
+  OCaml/C/C++/Java/Swift development; this pure OCaml winget package
+  only has support for mixed OCaml/C development. Contact
   support AT diskuv.com if you need OCaml/C/C++/Java/Swift development.
 Moniker: dkml
 Tags:

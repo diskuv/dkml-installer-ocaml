@@ -27,13 +27,13 @@ to avoid the errors:
 Validate any changes with:
 
 ```powershell
-winget validate --manifest installer/winget/manifest
+winget validate --manifest i-network/winget/manifest
 ```
 
 Test a change with:
 
 ```powershell
-winget install --manifest installer/winget/manifest
+winget install --manifest i-network/winget/manifest
 ```
 
 ### Troubleshooting with Windows Sandbox
@@ -59,9 +59,13 @@ git clone https://github.com/microsoft/winget-pkgs.git
 SECOND, run the manifest in the sandbox:
 
 ```powershell
-if (Test-Path ..\di-ocaml) {$DIOCAML="..\di-ocaml"} else {$DIOCAML="..\dkml-installer-ocaml"}
-.\Tools\SandboxTest.ps1 "$DIOCAML\installer\winget\manifest"
+if (Test-Path ..\dkml\build\_deps\dkml-installer-ocaml-src) {$DIOCAML="..\dkml\build\_deps\dkml-installer-ocaml-src"} else {$DIOCAML="..\dkml-installer-ocaml"}
+.\Tools\SandboxTest.ps1 "$DIOCAML\i-network\winget\manifest"
 ```
+
+That will auto-install WinGet and the DkML package in a PowerShell window. You can re-use that PowerShell window
+after a successful installation by typing `Update-EnvironmentVariables`, or open a new PowerShell window. Either
+way, you can start using the commands like `utop` and `opam`.
 
 If the installer fails with:
 

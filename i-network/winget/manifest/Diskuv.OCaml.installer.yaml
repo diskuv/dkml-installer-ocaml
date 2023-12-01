@@ -22,14 +22,14 @@ Commands:
   - dkml
   - ocaml
   - ocamlc
-  - ocamlc.opt
   - ocamldebug
   # BUT 3 ... ocamldoc is essentially deprecated by odoc
   # - ocamldoc
-  - ocamlopt
-  - ocamlopt.opt
+  # BUT 4 ... native code tools are created at shim stage by [dkml init] or the shims [dune] or [opam]
+  # - ocamlopt
+  # - ocamlopt.opt
   - ocamlrun
-  # BUT 4 ... with-dkml is deprecated and will be rolled into dkml
+  # BUT 5 ... with-dkml is deprecated and will be rolled into dkml
   # - with-dkml
 Platform:
   - "Windows.Desktop"
@@ -71,7 +71,7 @@ Installers:
 
     InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.0/downloads/setup64nu.exe # AUTO-BUMP
     InstallerType: exe
-    InstallerSha256: df5bf69fb2d7ddb9bd64a03448b3d26befcf0823ab4662d4c5605b9a6fde9e92 # MANUAL-BUMP
+    InstallerSha256: f6479fc74631dae0882b3143451b08eed69e6127f113bf54997c37ff05950201 # MANUAL-BUMP
 
 ManifestType: "installer"
 ManifestVersion: "1.1.0"
