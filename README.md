@@ -1,7 +1,6 @@
-# DkML Installer - Native Code Edition
+# DkML Installer
 
-DkML is an open-source set of software
-that supports software development with mixed OCaml/C development. DkML's strengths are its:
+DkML is an open-source set of software that supports software development with mixed OCaml/C development. DkML's strengths are its:
 
 * full compatibility with OCaml standards like Opam, Dune and ocamlfind
 * laser focus on "native" development (desktop software, mobile apps and embedded software) through support for the standard native compilers like Visual Studio
@@ -25,47 +24,9 @@ For news about DkML, <!-- markdown-link-check-disable-next-line -->
 
 ## Installing
 
-**Windows user?**
+Please visit https://gitlab.com/dkml/distributions/dkml#installing.
 
-Briefly review the following:
-
-> You need to **stay at your computer for 15 minutes** and press "Yes" if either
-> `Visual Studio Installer` or `Git for Windows` or both programs ask you to
-> allow installation.
-> After 15 minutes, you can go have lunch or do other work for the
-> **remaining hour**.
->
-> First time installations may get a notification printed in red. If you see it, reboot your
-> computer and then restart your installation so that Visual Studio Installer
-> can complete. The notification looks like:
->
-> ```diff
-> - FATAL [118acf2a]. The machine needs rebooting.
-> - ...
-> - >>> The machine needs rebooting. <<<
-> -         ...
-> -         FATAL [5f927a8b].
-> -         A transient failure occurred.
-> -         ...
-> -         >>> A transient failure occurred. <<<
-> ```
->
-> You may be asked to accept a certificate from
-> `Open Source Developer, Gerardo Grignoli` for the `gsudo` executable
-> that was issued by
-> `Certum Code Signing CA SHA2`.
-
-Then run the [latest Windows 64-bit Native Code Edition installer](https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.0/downloads/setup64nu.exe).
-
-After your install is completed, you can read the
-[Install is done! What next?](https://diskuv.com/dkmlbook/#install-is-done-what-next)
-documentation.
-
----
-
-The full set of releases is at <https://gitlab.com/dkml/distributions/dkml/-/releases>
-
-The full documentation is at <https://diskuv.com/dkmlbook>
+Do not use the GitHub releases because they are very old.
 
 ## Sponsor
 
