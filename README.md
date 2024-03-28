@@ -37,46 +37,6 @@ Thanks to the [OCaml Software Foundation](https://ocaml-sf.org)
 for economic support to the development of DkML.
 <p/>
 
-## How the installer is built
-
-We use the [dkml-install-api](https://diskuv.github.io/dkml-install-api/index.html)
-to generate installers from the following Opam packages:
-
-* [dkml-component-ocamlrun](http://github.com/diskuv/dkml-component-ocamlcompiler)
-* [dkml-component-ocamlcompiler](http://github.com/diskuv/dkml-component-ocamlcompiler)
-* [dkml-component-opam](http://github.com/diskuv/dkml-component-opam)
-* [dkml-component-desktop](https://gitlab.com/dkml/components/dkml-component-desktop)
-* [dkml-component-unixutils](http://github.com/diskuv/dkml-component-unixutils)
-
-## Building from Source
-
-On Windows, if you have already installed OCaml:
-
-```powershell
-with-dkml opam install . --with-test --with-doc --deps-only
-with-dkml dune build
-```
-
-On Unix:
-
-```bash
-opam install .--with-test --with-doc --deps-only
-dune build
-```
-
 ## Contributing
 
-The installer makes heavy use of the dkml-install-api.
-See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkml-install-api/blob/main/contributors/README.md).
-
-In addition, there are
-
-* [code signing documents](contributors/BINARY_SIGNING.md)
-* [winget package submission documents](i-network/winget/README.md)
-
-## Status
-
-| What                     | Branch/Tag | Status                                                                                                                                                                                          |
-| ------------------------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Installer build and test |            | [![Build with DkML compiler](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/build.yml) |
-| Installer syntax check   |            | [![Syntax check](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-installer-ocaml/actions/workflows/syntax.yml)           |
+Please visit https://gitlab.com/dkml/distributions/dkml.
