@@ -1,17 +1,19 @@
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: "2.1.1" # AUTO-BUMP
+PackageVersion: 2.1.1
 PackageLocale: en-US
 Publisher: Diskuv, Inc.
 PublisherUrl: https://www.diskuv.com/
+PublisherSupportUrl: https://gitlab.com/dkml/distributions/dkml/-/issues
 PrivacyUrl: https://diskuv.com/legal#privacy_policy
 PackageName: DkML Native
 PackageUrl: https://diskuv.com/dkmlbook/
 License: Apache License, Version 2.0
-LicenseUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
-Copyright: Copyright 2024 Diskuv, Inc. # AUTO-BUMP
-CopyrightUrl: https://github.com/diskuv/dkml-installer-ocaml/blob/main/LICENSE
-PublisherSupportUrl: https://github.com/diskuv/dkml-installer-ocaml/issues
+LicenseUrl: https://gitlab.com/dkml/distributions/dkml/-/blob/main/LICENSE.txt
+Copyright: Copyright 2024 Diskuv, Inc.
+CopyrightUrl: https://gitlab.com/dkml/distributions/dkml/-/blob/main/LICENSE.txt
 ShortDescription: DkML, a Windows-friendly distribution of OCaml.
 Description: |-
   The DkML distribution is an open-source set of software that supports
@@ -68,4 +70,4 @@ Tags:
 - programming
 ReleaseNotesUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.1 # AUTO-BUMP
 ManifestType: defaultLocale
-ManifestVersion: 1.1.0
+ManifestVersion: 1.6.0

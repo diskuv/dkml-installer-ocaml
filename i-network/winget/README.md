@@ -1,8 +1,88 @@
 # winget
 
 The files in the `manifest/` directory are published to Microsoft. See
-[Authoring Manifest](https://github.com/microsoft/winget-pkgs/blob/master/AUTHORING_MANIFESTS.md)
+[Authoring a Manifest](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#authoring-a-manifest)
 for more details.
+
+## Upgrading
+
+Follow the [Testing](#testing) section first.
+
+Then search for `# BUMP` in the `.yaml` files and edit each line.
+
+## Submitting
+
+FIRST, in PowerShell upgrade and update the files in [manifest](manifest/) using the `wingetcreate` tool:
+
+```powershell
+winget install wingetcreate
+
+# (version 2.2.0~beta2~20240409) in dune-project converts to:
+#   2.2.0-beta2-20240409
+#   2.2.0-beta2
+$SemVer = $(Select-String -Path dune-project -Pattern "(version " -SimpleMatch | Select-Object -First 1).Line -replace "\(","" -replace "\)","" -replace "~","-" -split " " | Select-Object -Index 1
+$ARPVer = $SemVer -split "-" | Select-Object -First 2 | Join-String -Separator "-"
+
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out installer/winget Diskuv.OCaml
+
+foreach ($yamlfile in "Diskuv.OCaml.yaml","Diskuv.OCaml.locale.en-US.yaml","Diskuv.OCaml.installer.yaml")
+{
+  Copy-Item "installer\winget\manifests\d\Diskuv\ocaml\$ARPVer\$yamlfile" "installer\winget\manifest\$yamlfile"
+}
+
+Remove-Item -Force -Recurse installer\winget\manifests
+```
+
+SECOND, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
+
+THIRD, do the submission:
+
+```powershell
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit Diskuv.OCaml
+```
+
+## Alternate - Manual Submission
+
+FIRST, go to <https://github.com/microsoft/winget-pkgs> and press the Fork
+button. You will create a fork in your personal GitHub account.
+
+SECOND, in the `dkml-installer-ocaml` directory use PowerShell to run:
+
+```powershell
+# Set this to your personal GitHub account name because we'll need to do a
+# GitHub PR. Example: jonahbeckford
+$PERSONAL="todo-what-is-your-personal-github-account-name"
+
+if (Test-Path ..\winget-pkgs) {
+    git -C ..\winget-pkgs fetch
+    git -C ..\winget-pkgs switch master --discard-changes
+    git -C ..\winget-pkgs branch --set-upstream-to=origin/master
+    git -C ..\winget-pkgs reset --hard origin/master
+} else {
+    git -C .. clone https://github.com/microsoft/winget-pkgs
+}
+if (-not (Test-Path ..\winget-pkgs\.git\refs\remotes\personal\HEAD)) {
+    git -C ..\winget-pkgs remote add personal "https://github.com/$PERSONAL/winget-pkgs.git"
+}
+$PKGSEARCH = Get-Content .\installer\winget\manifest\Diskuv.OCaml.yaml | Select-String -Pattern "^PackageVersion: *([0-9a-z.-]+)" -CaseSensitive
+$PKGVER = $PKGSEARCH.Matches.Groups[1].Value
+if (Test-Path "..\winget-pkgs\.git\refs\heads\ocaml-$PKGVER" ) {
+    git -C ..\winget-pkgs switch "ocaml-$PKGVER"
+} else {
+    git -C ..\winget-pkgs switch -c "ocaml-$PKGVER"
+}
+$MANIFESTDIR = "..\winget-pkgs\manifests\d\Diskuv\ocaml\$PKGVER"
+if (-not (Test-Path $MANIFESTDIR)) { New-Item -Type Directory $MANIFESTDIR }
+Copy-Item -Path ".\installer\winget\manifest\*.yaml" -Destination $MANIFESTDIR
+git -C ..\winget-pkgs add "manifests\d\Diskuv\ocaml\$PKGVER"
+
+git -C ..\winget-pkgs commit "manifests\d\Diskuv\ocaml\$PKGVER" -m "ocaml $PKGVER"
+
+# Add the -f option to force push onto an existing PR
+git -C ..\winget-pkgs push --set-upstream personal "ocaml-$PKGVER"
+```
+
+After that you can go to your personal GitHub project and do a PR.
 
 ## Testing
 
@@ -64,8 +144,8 @@ if (Test-Path ..\dkml\build\_deps\dkml-installer-ocaml-src) {$DIOCAML="..\dkml\b
 ```
 
 That will auto-install WinGet and the DkML package in a PowerShell window. You can re-use that PowerShell window
-after a successful installation by typing `Update-EnvironmentVariables`, or open a new PowerShell window. Either
-way, you can start using the commands like `utop` and `opam`.
+after a successful installation by typing `Update-EnvironmentVariables`, or open a new PowerShell window.
+Either way, you can start using the commands like `utop` and `opam`.
 
 If the installer fails with:
 
