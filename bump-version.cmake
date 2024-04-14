@@ -6,7 +6,6 @@ if(NOT DKML_BUMP_VERSION_PARTICIPANT_MODULE)
 endif()
 include(${DKML_BUMP_VERSION_PARTICIPANT_MODULE})
 
-DkMLBumpVersionParticipant_PlainReplace(README.md)
 DkMLBumpVersionParticipant_PlainReplace(dkml-installer-ocaml-network.opam.template)
 
 DkMLBumpVersionParticipant_PlainReplace(i-common/src/version.ml)
