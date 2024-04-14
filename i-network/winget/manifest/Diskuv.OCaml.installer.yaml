@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.2.0.schema.json
 PackageIdentifier: Diskuv.OCaml
-PackageVersion: "2.1.0" # AUTO-BUMP
+PackageVersion: "2.1.1" # AUTO-BUMP
 # Scope: user
 UpgradeBehavior: uninstallPrevious
 Commands:
@@ -21,11 +21,11 @@ InstallerSwitches:
   SilentWithProgress: --ci
   Interactive: --color=always
   InstallLocation: --prefix "<INSTALLPATH>"
-ReleaseDate: 2023-12-02 # AUTO-BUMP
+ReleaseDate: 2024-04-14 # AUTO-BUMP
 Installers:
   - Architecture: x64
 
-    InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.0/downloads/setup64nu.exe # AUTO-BUMP
+    InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.1/downloads/setup64nu.exe # AUTO-BUMP
     InstallerType: exe
     InstallerSha256: ed2ba64bd13d60843f5f9d23f181c9a225d5be956c8d312499a1d73500827368 # MANUAL-BUMP
 
