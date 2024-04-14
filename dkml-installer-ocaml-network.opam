@@ -4,8 +4,8 @@ version: "2.1.1"
 synopsis: "DkML network installer generator for OCaml"
 description:
   "Generates a network installer for OCaml, including Visual Studio and Git on Windows, and including a OCaml compiler built during installation time"
-maintainer: ["opensource+diskuv-ocaml@support.diskuv.com"]
-authors: ["Diskuv, Inc. <opensource+diskuv-ocaml@support.diskuv.com>"]
+maintainer: ["opensource+dkml@support.diskuv.com"]
+authors: ["Diskuv, Inc. <opensource+dkml@support.diskuv.com>"]
 license: "Apache-2.0"
 homepage: "https://github.com/diskuv/dkml-installer-ocaml"
 bug-reports: "https://github.com/diskuv/dkml-installer-ocaml/issues"
@@ -14,7 +14,7 @@ depends: [
   "odoc" {>= "1.5.3" & with-doc}
   "ocaml" {>= "4.12.1~"}
   "dkml-installer-ocaml-common" {= version}
-  "dkml-component-ocamlcompiler-network" {>= "4.14.0~" & < "4.14.1~"}
+  "dkml-component-ocamlcompiler-network" {>= "4.14.2~" & < "4.14.3~"}
   "dkml-component-offline-desktop-full" {>= "0.1.0"}
   "dkml-component-offline-opamshim" {>= "2.2.0~alpha0~20221104"}
   "dkml-install-installer" {>= "0.5.2"}
