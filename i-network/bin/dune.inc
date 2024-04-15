@@ -8,8 +8,7 @@
  (modules runner_user) (ocamlopt_flags (:include ./user-link-flags.sexp))
  (libraries dkml-install-runner.user private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-offline-unixutils dkml-component-staging-desktop-full
+  dkml-component-offline-opamshim dkml-component-offline-unixutils
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml))
@@ -19,8 +18,7 @@
  (modules runner_admin) (ocamlopt_flags (:include ./admin-link-flags.sexp))
  (libraries dkml-install-runner.admin private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-offline-unixutils dkml-component-staging-desktop-full
+  dkml-component-offline-opamshim dkml-component-offline-unixutils
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml))
@@ -29,8 +27,7 @@
  (package dkml-installer-ocaml-network) (name create_installers)
  (libraries dkml-package-console.create cmdliner private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-offline-unixutils dkml-component-staging-desktop-full
+  dkml-component-offline-opamshim dkml-component-offline-unixutils
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -40,8 +37,7 @@
  (package dkml-installer-ocaml-network) (name entry_install)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-offline-unixutils dkml-component-staging-desktop-full
+  dkml-component-offline-opamshim dkml-component-offline-unixutils
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -52,8 +48,7 @@
  (package dkml-installer-ocaml-network) (name entry_uninstall)
  (libraries dkml-package-console.entry cmdliner private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-staging-ocamlrun)
+  dkml-component-offline-opamshim dkml-component-staging-ocamlrun)
  (modules entry_uninstall)
  (ocamlopt_flags (:include ./console-link-flags.sexp)))
 
@@ -62,8 +57,7 @@
  (modes (byte exe))
  (libraries dkml-package-console.setup cmdliner private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-offline-unixutils dkml-component-staging-desktop-full
+  dkml-component-offline-opamshim dkml-component-offline-unixutils
   dkml-component-staging-dkmlconfdir dkml-component-staging-ocamlrun
   dkml-component-staging-opam32 dkml-component-staging-opam64
   dkml-component-staging-unixutils dkml-component-staging-withdkml)
@@ -74,8 +68,7 @@
  (modes (byte exe))
  (libraries dkml-package-console.uninstaller cmdliner private_common
   dkml-component-ocamlcompiler-common dkml-component-ocamlcompiler-network
-  dkml-component-offline-desktop-full dkml-component-offline-opamshim
-  dkml-component-staging-ocamlrun)
+  dkml-component-offline-opamshim dkml-component-staging-ocamlrun)
  (modules package_uninstaller))
 
 (install (section bin) (package dkml-installer-ocaml-network)
