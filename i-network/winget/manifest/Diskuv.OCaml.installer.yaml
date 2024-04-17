@@ -21,7 +21,7 @@ InstallerSwitches:
   SilentWithProgress: --ci
   Interactive: --color=always
   InstallLocation: --prefix "<INSTALLPATH>"
-ReleaseDate: 2024-04-16 # AUTO-BUMP
+ReleaseDate: 2024-04-17 # AUTO-BUMP
 Installers:
   - Architecture: x64
 
