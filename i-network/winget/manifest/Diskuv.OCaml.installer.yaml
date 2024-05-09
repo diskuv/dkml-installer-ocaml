@@ -27,7 +27,7 @@ Installers:
 
     InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.1/downloads/setup64nu.exe # AUTO-BUMP
     InstallerType: exe
-    InstallerSha256: ed2ba64bd13d60843f5f9d23f181c9a225d5be956c8d312499a1d73500827368 # MANUAL-BUMP
+    InstallerSha256: 9ad5e3a4f358bd1e8bc68eb08e9f27fc894a50028dec1df9cae18bba77007158 # MANUAL-BUMP
 
 ManifestType: "installer"
 ManifestVersion: "1.1.0"
