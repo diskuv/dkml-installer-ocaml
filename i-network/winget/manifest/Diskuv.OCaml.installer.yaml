@@ -22,7 +22,7 @@ Commands:
   - ocamlc
   - ocamldebug
   - ocamlrun
-ReleaseDate: 2024-08-15 # AUTO-BUMP
+ReleaseDate: 2024-08-16 # AUTO-BUMP
 Installers:
 - Architecture: x64
   InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2/downloads/setup64nu.exe # AUTO-BUMP
