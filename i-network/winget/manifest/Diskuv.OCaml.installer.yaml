@@ -17,6 +17,7 @@ InstallerSwitches:
   InstallLocation: --prefix "<INSTALLPATH>"
 UpgradeBehavior: uninstallPrevious
 Commands:
+  - dk
   - dkml
   - ocaml
   - ocamlc
