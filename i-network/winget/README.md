@@ -23,7 +23,7 @@ winget install wingetcreate
 $SemVer = $(Select-String -Path dune-project -Pattern "(version " -SimpleMatch | Select-Object -First 1).Line -replace "\(","" -replace "\)","" -replace "~","-" -split " " | Select-Object -Index 1
 $ARPVer = $SemVer -split "-" | Select-Object -First 2 | Join-String -Separator "-"
 
-wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out i-network/winget Diskuv.OCaml
+wingetcreate.exe update --urls "https://gitlab.com/dkml/distributions/dkml/-/releases/$SemVer/downloads/setup64nu.exe|x64|user" --version "$ARPVer" --out i-network/winget Diskuv.OCaml
 
 foreach ($yamlfile in "Diskuv.OCaml.yaml","Diskuv.OCaml.locale.en-US.yaml","Diskuv.OCaml.installer.yaml")
 {
@@ -38,7 +38,7 @@ SECOND, review the changes with `git diff`. *If you need modifications, you'll h
 THIRD, do the submission:
 
 ```powershell
-wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit Diskuv.OCaml
+wingetcreate.exe update --urls "https://gitlab.com/dkml/distributions/dkml/-/releases/$SemVer/downloads/setup64nu.exe|x64|user" --version "$ARPVer" --submit Diskuv.OCaml
 ```
 
 ## Alternate - Manual Submission
