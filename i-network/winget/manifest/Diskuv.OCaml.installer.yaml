@@ -1,4 +1,4 @@
-# Created using wingetcreate 1.6.1.0
+# Created using wingetcreate 1.6.4.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 
 PackageIdentifier: Diskuv.OCaml
@@ -17,19 +17,18 @@ InstallerSwitches:
   InstallLocation: --prefix "<INSTALLPATH>"
 UpgradeBehavior: uninstallPrevious
 Commands:
-  - dk
-  - dkml
-  - ocaml
-  - ocamlc
-  - ocamldebug
-  - ocamlrun
-ReleaseDate: 2024-08-20 # AUTO-BUMP
+- dk
+- dkml
+- ocaml
+- ocamlc
+- ocamldebug
+- ocamlrun
+Dependencies:
+  PackageDependencies:
+  - PackageIdentifier: Microsoft.VCRedist.2015+.x64
 Installers:
 - Architecture: x64
-  InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2/downloads/setup64nu.exe # AUTO-BUMP
-  InstallerSha256: 9ad5e3a4f358bd1e8bc68eb08e9f27fc894a50028dec1df9cae18bba77007158 # MANUAL-BUMP
-  Dependencies:
-    PackageDependencies:
-      - PackageIdentifier: Microsoft.VCRedist.2015+.x64
+  InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2/downloads/setup64nu.exe
+  InstallerSha256: D9BE0EDC3D2A04172F610AF4EA0476998BDB0D09BEC325A08E107E9181E6419C
 ManifestType: installer
 ManifestVersion: 1.6.0

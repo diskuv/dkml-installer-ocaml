@@ -1,4 +1,4 @@
-# Created using wingetcreate 1.6.1.0
+# Created using wingetcreate 1.6.4.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
 
 PackageIdentifier: Diskuv.OCaml
@@ -41,10 +41,10 @@ Description: |-
 
   * Git. If you don't have this, install Git for Windows with:
       winget install Git.Git
-  * Visual Studio Enterprise/Professional/Community/Build Tools 2019 in a directory
+  * Visual Studio Enterprise/Professional/Community/Build Tools 2019 or 2022 in a directory
     without spaces or parentheses. For example, "C:\Program Files (x86)\VisualStudio" won't
     work. If you don't have Visual Studio, install it with:
-      winget install Microsoft.VisualStudio.2019.BuildTools --override "--wait --passive --installPath C:\VS --addProductLang En-us --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+      winget install Microsoft.VisualStudio.2022.BuildTools --override "--wait --passive --installPath C:\VS17 --addProductLang En-us --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.14.38.17.8.x86.x64 --includeRecommended"
 
   The DkML package will experience problems if you have a space in your username
   (ex. C:\Users\Jane Smith).
@@ -68,6 +68,6 @@ Tags:
 - ocaml
 - open-source
 - programming
-ReleaseNotesUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2 # AUTO-BUMP
+ReleaseNotesUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2
 ManifestType: defaultLocale
 ManifestVersion: 1.6.0
