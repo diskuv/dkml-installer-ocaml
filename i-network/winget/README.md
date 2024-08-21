@@ -23,14 +23,14 @@ winget install wingetcreate
 $SemVer = $(Select-String -Path dune-project -Pattern "(version " -SimpleMatch | Select-Object -First 1).Line -replace "\(","" -replace "\)","" -replace "~","-" -split " " | Select-Object -Index 1
 $ARPVer = $SemVer -split "-" | Select-Object -First 2 | Join-String -Separator "-"
 
-wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out installer/winget Diskuv.OCaml
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-ocaml/releases/download/$SemVer/unsigned-ocaml-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out i-network/winget Diskuv.OCaml
 
 foreach ($yamlfile in "Diskuv.OCaml.yaml","Diskuv.OCaml.locale.en-US.yaml","Diskuv.OCaml.installer.yaml")
 {
-  Copy-Item "installer\winget\manifests\d\Diskuv\ocaml\$ARPVer\$yamlfile" "installer\winget\manifest\$yamlfile"
+  Copy-Item "i-network\winget\manifests\d\Diskuv\OCaml\$ARPVer\$yamlfile" "i-network\winget\manifest\$yamlfile"
 }
 
-Remove-Item -Force -Recurse installer\winget\manifests
+Remove-Item -Force -Recurse i-network\winget\manifests
 ```
 
 SECOND, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
@@ -64,19 +64,19 @@ if (Test-Path ..\winget-pkgs) {
 if (-not (Test-Path ..\winget-pkgs\.git\refs\remotes\personal\HEAD)) {
     git -C ..\winget-pkgs remote add personal "https://github.com/$PERSONAL/winget-pkgs.git"
 }
-$PKGSEARCH = Get-Content .\installer\winget\manifest\Diskuv.OCaml.yaml | Select-String -Pattern "^PackageVersion: *([0-9a-z.-]+)" -CaseSensitive
+$PKGSEARCH = Get-Content .\i-network\winget\manifest\Diskuv.OCaml.yaml | Select-String -Pattern "^PackageVersion: *([0-9a-z.-]+)" -CaseSensitive
 $PKGVER = $PKGSEARCH.Matches.Groups[1].Value
 if (Test-Path "..\winget-pkgs\.git\refs\heads\ocaml-$PKGVER" ) {
     git -C ..\winget-pkgs switch "ocaml-$PKGVER"
 } else {
     git -C ..\winget-pkgs switch -c "ocaml-$PKGVER"
 }
-$MANIFESTDIR = "..\winget-pkgs\manifests\d\Diskuv\ocaml\$PKGVER"
+$MANIFESTDIR = "..\winget-pkgs\manifests\d\Diskuv\OCaml\$PKGVER"
 if (-not (Test-Path $MANIFESTDIR)) { New-Item -Type Directory $MANIFESTDIR }
-Copy-Item -Path ".\installer\winget\manifest\*.yaml" -Destination $MANIFESTDIR
-git -C ..\winget-pkgs add "manifests\d\Diskuv\ocaml\$PKGVER"
+Copy-Item -Path ".\i-network\winget\manifest\*.yaml" -Destination $MANIFESTDIR
+git -C ..\winget-pkgs add "manifests\d\Diskuv\OCaml\$PKGVER"
 
-git -C ..\winget-pkgs commit "manifests\d\Diskuv\ocaml\$PKGVER" -m "ocaml $PKGVER"
+git -C ..\winget-pkgs commit "manifests\d\Diskuv\OCaml\$PKGVER" -m "ocaml $PKGVER"
 
 # Add the -f option to force push onto an existing PR
 git -C ..\winget-pkgs push --set-upstream personal "ocaml-$PKGVER"
