@@ -29,6 +29,6 @@ Dependencies:
 Installers:
 - Architecture: x64
   InstallerUrl: https://gitlab.com/dkml/distributions/dkml/-/releases/2.1.2/downloads/setup64nu.exe
-  InstallerSha256: D9BE0EDC3D2A04172F610AF4EA0476998BDB0D09BEC325A08E107E9181E6419C
+  InstallerSha256: 2EE857C5815FDCBE428B206DCD5834869EE02BF6DA68E2B27698B036B9097832
 ManifestType: installer
 ManifestVersion: 1.6.0
