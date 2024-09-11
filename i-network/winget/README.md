@@ -15,7 +15,8 @@ Then search for `# BUMP` in the `.yaml` files and edit each line.
 FIRST, in PowerShell upgrade and update the files in [manifest](manifest/) using the `wingetcreate` tool:
 
 ```powershell
-winget install wingetcreate
+winget install Microsoft.WingetCreate
+winget upgrade Microsoft.WingetCreate
 
 # (version 2.2.0~beta2~20240409) in dune-project converts to:
 #   2.2.0-beta2-20240409
