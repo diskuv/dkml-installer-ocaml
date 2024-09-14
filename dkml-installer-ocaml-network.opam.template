@@ -14,7 +14,7 @@ install: [
     #   Debug logs
     "-vv"
     "--program-version"
-    "2.1.3"
+    "2.1.4"
 
     "--component=ocamlcompiler-network"
     "--component=offline-desktop-full"
