@@ -12,7 +12,7 @@ PackageName: DkML Native
 PackageUrl: https://diskuv.com/dkmlbook/
 License: Apache License, Version 2.0
 LicenseUrl: https://gitlab.com/dkml/distributions/dkml/-/blob/main/LICENSE.txt
-Copyright: Copyright 2024 Diskuv, Inc.
+Copyright: Copyright 2025 Diskuv, Inc.
 CopyrightUrl: https://gitlab.com/dkml/distributions/dkml/-/blob/main/LICENSE.txt
 ShortDescription: DkML, a Windows-friendly distribution of OCaml.
 Description: |-
