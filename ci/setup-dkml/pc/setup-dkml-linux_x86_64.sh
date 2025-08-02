@@ -14,6 +14,8 @@ unset OCAML_TOPLEVEL_PATH
 export MSYS2_ARG_CONV_EXCL='*'
 
 export PC_PROJECT_DIR="$PWD"
+export GIT_LOCATION=
+export DKML_RUNTIME_DISTRIBUTION=
 export FDOPEN_OPAMEXE_BOOTSTRAP=false
 export CACHE_PREFIX=v1
 export OCAML_COMPILER=
@@ -22,59 +24,80 @@ export SKIP_OPAM_MODIFICATIONS=false
 export PRIMARY_SWITCH_SKIP_INSTALL=false
 export SECONDARY_SWITCH=false
 export CONF_DKML_CROSS_TOOLCHAIN=@repository@
+export OCAML_OPAM_REPOSITORY=
 export DISKUV_OPAM_REPOSITORY=
 export DKML_HOME=
 # autogen from global_env_vars.
-export DKML_VERSION='2.1.0'
-export DEFAULT_DISKUV_OPAM_REPOSITORY_TAG='2.1.0'
-export DEFAULT_DKML_COMPILER='2.1.0'
+export DKML_VERSION='2.1.4'
+export DEFAULT_DISKUV_OPAM_REPOSITORY_TAG='2.1.4'
+export DEFAULT_OCAML_OPAM_REPOSITORY_TAG='98ac0a55cd7b45747207396a0b8fe1cc619b4a14'
+export DEFAULT_DKML_COMPILER='2.1.4'
+export BOOTSTRAP_OPAM_VERSION='2.2.1'
+export PIN_MLFRONT_UNPACK='2.1.4'
+export PIN_ANGSTROM_LWT_UNIX='0.16.1'
+export PIN_ANGSTROM='0.16.0'
 export PIN_ASTRING='0.8.5'
 export PIN_BASE='v0.16.1'
+export PIN_BASE64='3.5.1'
 export PIN_BIGARRAY_COMPAT='1.1.0'
+export PIN_BIGSTRINGAF='0.10.0'
 export PIN_BOS='0.2.1'
 export PIN_CAMLP_STREAMS='5.0.1'
-export PIN_CHROME_TRACE='3.11.1'
-export PIN_CMDLINER='1.2.0'
+export PIN_CHROME_TRACE='3.15.0'
+export PIN_CMDLINER='1.3.0'
+export PIN_CONF_BASH='1'
 export PIN_CONF_DKML_SYS_OPAM='1'
-export PIN_CONF_PKG_CONFIG='2+cpkgs'
+export PIN_CONF_DKSDK='1'
+export PIN_CONF_PKG_CONFIG='3+cpkgs'
+export PIN_CONF_SDL2='1'
 export PIN_CONF_SQLITE3='3.1+cpkgs'
 export PIN_CPPO='1.6.9'
 export PIN_CRUNCH='3.3.1'
 export PIN_CSEXP='1.5.2'
-export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r7'
-export PIN_CTYPES='0.19.2-windowssupport-r7'
+export PIN_CSTRUCT='6.2.0'
+export PIN_CTYPES_FOREIGN='0.19.2-windowssupport-r8'
+export PIN_CTYPES='0.19.2-windowssupport-r8'
 export PIN_CUDF='0.10'
+export PIN_DAP='1.0.6'
+export PIN_DIGESTIF='1.2.0'
 export PIN_DISKUVBOX='0.2.0'
-export PIN_DKML_APPS='2.1.0'
-export PIN_DKML_BASE_COMPILER='4.14.0~v2.1.0'
-export PIN_DKML_BUILD_DESKTOP='2.1.0'
+export PIN_DKML_APPS='2.1.4'
+export PIN_DKML_BASE_COMPILER='4.14.2~v2.1.4'
+export PIN_DKML_BUILD_DESKTOP='2.1.4'
 export PIN_DKML_C_PROBE='3.0.0'
-export PIN_DKML_COMPILER_SRC='2.1.0'
+export PIN_DKML_COMPILER_SRC='2.1.4'
 export PIN_DKML_COMPONENT_XX_CONSOLE='0.1.1'
-export PIN_DKML_EXE_LIB='2.1.0'
-export PIN_DKML_EXE='2.1.0'
-export PIN_DKML_INSTALL_INSTALLER='0.5.2'
-export PIN_DKML_INSTALL_RUNNER='0.5.2'
-export PIN_DKML_INSTALL='0.5.2'
-export PIN_DKML_INSTALLER_OCAML_COMMON='2.1.0'
-export PIN_DKML_PACKAGE_CONSOLE='0.5.2'
-export PIN_DKML_RUNTIME_COMMON_NATIVE='2.1.0'
-export PIN_DKML_RUNTIME_COMMON='2.1.0'
-export PIN_DKML_RUNTIME_DISTRIBUTION='2.1.0'
-export PIN_DKML_RUNTIMELIB='2.1.0'
-export PIN_DKML_RUNTIMESCRIPTS='2.1.0'
-export PIN_DKML_WORKFLOWS='2.1.0'
-export PIN_DUNE_ACTION_PLUGIN='3.11.1'
-export PIN_DUNE_BUILD_INFO='3.8.3'
-export PIN_DUNE_CONFIGURATOR='3.8.3'
-export PIN_DUNE_GLOB='3.11.1'
-export PIN_DUNE_PRIVATE_LIBS='3.11.1'
-export PIN_DUNE_RPC_LWT='3.11.1'
-export PIN_DUNE_RPC='3.11.1'
-export PIN_DUNE_SITE='3.11.1'
-export PIN_DUNE='3.8.3'
-export PIN_DYN='3.11.1'
+export PIN_DKML_EXE_LIB='2.1.4'
+export PIN_DKML_EXE='2.1.4'
+export PIN_DKML_HOST_ABI_WINDOWS_X86_64='1'
+export PIN_DKML_HOST_ABI='1'
+export PIN_DKML_INSTALL_INSTALLER='0.5.3'
+export PIN_DKML_INSTALL_RUNNER='0.5.3'
+export PIN_DKML_INSTALL='0.5.3'
+export PIN_DKML_INSTALLER_OCAML_COMMON='2.1.3'
+export PIN_DKML_OPTION_BX32='1'
+export PIN_DKML_PACKAGE_CONSOLE='0.5.3'
+export PIN_DKML_RUNTIME_COMMON_NATIVE='2.1.1'
+export PIN_DKML_RUNTIME_COMMON='2.1.4'
+export PIN_DKML_RUNTIME_DISTRIBUTION='2.1.4'
+export PIN_DKML_RUNTIMELIB='2.1.4'
+export PIN_DKML_RUNTIMESCRIPTS='2.1.4'
+export PIN_DKML_TARGET_ABI_ANY='1'
+export PIN_DKML_TARGET_ABI_WINDOWS_X86_64='1'
+export PIN_DKML_WORKFLOWS='2.1.4'
+export PIN_DUNE_ACTION_PLUGIN='3.15.0'
+export PIN_DUNE_BUILD_INFO='3.15.0'
+export PIN_DUNE_CONFIGURATOR='3.15.0'
+export PIN_DUNE_GLOB='3.15.0'
+export PIN_DUNE_PRIVATE_LIBS='3.15.0'
+export PIN_DUNE_RPC_LWT='3.15.0'
+export PIN_DUNE_RPC='3.15.0'
+export PIN_DUNE_SITE='3.15.0'
+export PIN_DUNE='3.15.0'
+export PIN_DYN='3.15.0'
+export PIN_EARLYBIRD='1.3.2+dkml-4_14-backport-linearclosures'
 export PIN_EITHER='1.0.0'
+export PIN_EQAF='0.9'
 export PIN_EXTLIB='1.7.9'
 export PIN_FEATHER='0.3.0'
 export PIN_FIBER='3.7.0'
@@ -82,43 +105,55 @@ export PIN_FIX='20230505'
 export PIN_FMT='0.9.0'
 export PIN_FPATH='0.7.3'
 export PIN_GRAPHICS='5.1.2'
+export PIN_HMAP='0.8.1'
+export PIN_HOST_ARCH_X86_64='1'
 export PIN_INTEGERS='0.7.0'
+export PIN_IOSTREAM='0.2.2'
+export PIN_ITER='1.9'
 export PIN_JANE_STREET_HEADERS='v0.16.0'
 export PIN_JINGOO='1.5.0'
-export PIN_JSONRPC='1.16.2'
+export PIN_JSONRPC='1.17.0'
 export PIN_JST_CONFIG='v0.16.0'
-export PIN_LAMBDA_TERM='3.3.1'
+export PIN_LAMBDA_TERM='3.3.2'
 export PIN_LOGS='0.7.0'
-export PIN_LSP='1.16.2'
-export PIN_LWT='5.6.1'
+export PIN_LRU='0.3.1'
+export PIN_LSP='1.17.0'
+export PIN_LWT='5.7.0'
+export PIN_LWT_PPX='5.9.1'
 export PIN_LWT_REACT='1.2.0'
 export PIN_MCCS='1.1+13'
-export PIN_MDX='2.3.0'
-export PIN_MENHIR='20230608'
-export PIN_MENHIRLIB='20230608'
-export PIN_MENHIRSDK='20230608'
-export PIN_MERLIN_LIB='4.12-414'
+export PIN_MDX='2.4.1'
+export PIN_MENHIR='20231231'
+export PIN_MENHIRCST='20231231'
+export PIN_MENHIRLIB='20231231'
+export PIN_MENHIRSDK='20231231'
+export PIN_MERLIN_LIB='4.14-414'
 export PIN_METAPP='0.4.4+win'
 export PIN_METAQUOT='0.5.2'
 export PIN_MEW='0.1.0'
 export PIN_MEW_VI='0.5.0'
-export PIN_NUM='1.4'
+export PIN_MSYS2_CLANG64='1'
+export PIN_MSYS2='0.1.0+dkml'
+export PIN_NUM='1.5'
 export PIN_OCAML_COMPILER_LIBS='v0.12.4'
-export PIN_OCAML_LSP_SERVER='1.16.2'
-export PIN_OCAML_VERSION='3.6.2'
-export PIN_OCAML='4.14.0'
+export PIN_OCAML_LSP_SERVER='1.17.0'
+export PIN_OCAML_SYNTAX_SHIMS='1.0.0'
+export PIN_OCAML_VERSION='3.6.5'
+export PIN_OCAML='4.14.2'
 export PIN_OCAMLBUILD='0.14.2+win+unix'
-export PIN_OCAMLC_LOC='3.11.1'
+export PIN_OCAMLC_LOC='3.15.0'
 export PIN_OCAMLFIND='1.9.5'
-export PIN_OCAMLFORMAT_LIB='0.25.1'
-export PIN_OCAMLFORMAT_RPC_LIB='0.25.1'
-export PIN_OCAMLFORMAT='0.25.1'
+export PIN_OCAMLFORMAT_LIB='0.26.1'
+export PIN_OCAMLFORMAT_RPC_LIB='0.26.1'
+export PIN_OCAMLFORMAT='0.26.1'
 export PIN_OCP_INDENT='1.8.2-windowssupport'
 export PIN_OCPLIB_ENDIAN='1.2'
-export PIN_ODOC_PARSER='2.0.0'
-export PIN_ODOC='2.2.0'
-export PIN_ORDERING='3.11.1'
+export PIN_ODOC_PARSER='2.4.1'
+export PIN_ODOC='2.4.1'
+export PIN_ORDERING='3.15.0'
 export PIN_PARSEXP='v0.16.0'
+export PIN_PATH_GLOB='0.3'
+export PIN_POSIXAT='v0.16.0'
 export PIN_PP='1.2.0'
 export PIN_PPX_ASSERT='v0.16.0'
 export PIN_PPX_BASE='v0.16.0'
@@ -126,18 +161,20 @@ export PIN_PPX_COLD='v0.16.0'
 export PIN_PPX_COMPARE='v0.16.0'
 export PIN_PPX_DERIVERS='1.2.1'
 export PIN_PPX_DERIVING='5.2.1'
+export PIN_PPX_DERIVING_YOJSON='3.9.1'
 export PIN_PPX_ENUMERATE='v0.16.0'
 export PIN_PPX_EXPECT='v0.16.0'
 export PIN_PPX_GLOBALIZE='v0.16.0'
 export PIN_PPX_HASH='v0.16.0'
 export PIN_PPX_HERE='v0.16.0'
 export PIN_PPX_IGNORE_INSTRUMENTATION='v0.16.0'
-export PIN_PPX_INLINE_TEST='v0.16.0'
+export PIN_PPX_INLINE_TEST='v0.16.1'
 export PIN_PPX_OPTCOMP='v0.16.0'
 export PIN_PPX_PIPEBANG='v0.16.0'
 export PIN_PPX_SEXP_CONV='v0.16.0'
 export PIN_PPX_YOJSON_CONV_LIB='v0.16.0'
 export PIN_PPXLIB='0.30.0'
+export PIN_PSQ='0.2.1'
 export PIN_PTIME='1.1.0'
 export PIN_QRC='0.1.1~dune'
 export PIN_RE='1.11.0'
@@ -149,36 +186,40 @@ export PIN_SEQ='base'
 export PIN_SEXPLIB='v0.16.0'
 export PIN_SEXPLIB0='v0.16.0'
 export PIN_SHA='1.15.4'
+export PIN_SHEXP='v0.16.0'
 export PIN_SPAWN='v0.15.1'
-export PIN_SQLITE3='5.1.0+msvc'
+export PIN_SQLITE3='5.2.0'
 export PIN_STDCOMPAT='19+optautoconf'
 export PIN_STDIO='v0.16.0'
 export PIN_STDLIB_SHIMS='0.3.0'
-export PIN_STDUNE='3.11.1'
+export PIN_STDUNE='3.15.0'
+export PIN_STRINGEXT='1.6.0'
 export PIN_TIME_NOW='v0.16.0'
+export PIN_TINY_HTTPD='0.16'
 export PIN_TOPKG='1.0.7'
 export PIN_TRAVERSE='0.3.0'
 export PIN_TRIE='1.0.0'
 export PIN_TSORT='2.1.0'
 export PIN_TYXML='4.6.0'
 export PIN_UCHAR='0.0.2'
+export PIN_URI='4.4.0'
 export PIN_UTOP='2.13.1'
 export PIN_UUCP='15.0.0'
 export PIN_UUIDM='0.9.8'
 export PIN_UUSEG='15.0.0'
 export PIN_UUTF='1.0.3'
-export PIN_WITH_DKML='2.1.0'
-export PIN_XDG='3.9.0'
+export PIN_WITH_DKML='2.1.4'
+export PIN_XDG='3.15.0'
 export PIN_YOJSON='2.1.2'
-export PIN_ZED='3.2.2'
+export PIN_ZED='3.2.3'
 
 # Set matrix variables
 # autogen from pc_vars. only linux_x86_64
 export dkml_host_os="linux"
 export opam_root_cacheable=".ci/o"
 export abi_pattern="manylinux2014-linux_x86_64"
-export bootstrap_opam_version="2.2.0-alpha-20221228"
 export dkml_host_abi="linux_x86_64"
+export dkml_target_abi="linux_x86_64"
 export opam_root=".ci/o"
 export dockcross_image="dockcross/manylinux2014-x64"
 export dockcross_run_extra_args="--platform linux/amd64"
@@ -192,17 +233,20 @@ usage() {
 
   # Context variables
   echo "  --PC_PROJECT_DIR=<value>. Defaults to the current directory (${PC_PROJECT_DIR})" >&2
+  echo "  --GIT_LOCATION=<value>. Defaults to ${GIT_LOCATION}" >&2
+  echo "  --DKML_RUNTIME_DISTRIBUTION=<value>. Optional. May be file:// uri. Overrides PIN_DKML_RUNTIME_DISTRIBUTION and TAG_DKML_RUNTIME_DISTRIBUTION, if any." >&2
 
   # Input variables
   echo "  --FDOPEN_OPAMEXE_BOOTSTRAP=true|false. Defaults to: ${FDOPEN_OPAMEXE_BOOTSTRAP}" >&2
   echo "  --CACHE_PREFIX=<value>. Defaults to: ${CACHE_PREFIX}" >&2
   echo "  --OCAML_COMPILER=<value>. --DKML_COMPILER takes priority. If --DKML_COMPILER is not set and --OCAML_COMPILER is set, then the specified OCaml version tag of dkml-compiler (ex. 4.12.1) is used. Defaults to: ${OCAML_COMPILER}" >&2
-  echo "  --DKML_COMPILER=<value>. Unspecified or blank is the latest from the default branch (main) of dkml-compiler. Defaults to: ${DKML_COMPILER}" >&2
+  echo "  --DKML_COMPILER=<value>. Unspecified or blank is the latest from the default branch (main) of dkml-compiler. May be file:// uri. Defaults to: ${DKML_COMPILER}" >&2
   echo "  --SKIP_OPAM_MODIFICATIONS=true|false. If true then the opam root and switches will not be created or modified. Defaults to: ${SKIP_OPAM_MODIFICATIONS}" >&2
   echo "  --SECONDARY_SWITCH=true|false. If true then the secondary switch named 'two' is created. Defaults to: ${SECONDARY_SWITCH}" >&2
   echo "  --PRIMARY_SWITCH_SKIP_INSTALL=true|false. If true no dkml-base-compiler will be installed in the 'dkml' switch. Defaults to: ${PRIMARY_SWITCH_SKIP_INSTALL}" >&2
   echo "  --CONF_DKML_CROSS_TOOLCHAIN=<value>. Unspecified or blank is the latest from the default branch (main) of conf-dkml-cross-toolchain. @repository@ is the latest from Opam. Defaults to: ${CONF_DKML_CROSS_TOOLCHAIN}" >&2
-  echo "  --DISKUV_OPAM_REPOSITORY=<value>. Defaults to the value of --DEFAULT_DISKUV_OPAM_REPOSITORY_TAG (see below)" >&2
+  echo "  --OCAML_OPAM_REPOSITORY=<value>. Defaults to the value of --DEFAULT_OCAML_OPAM_REPOSITORY_TAG (see below)" >&2
+  echo "  --DISKUV_OPAM_REPOSITORY=<value>. Defaults to the value of --DEFAULT_DISKUV_OPAM_REPOSITORY_TAG (see below). May be file:// uri." >&2
   echo "  --DKML_HOME=<value>. then DiskuvOCamlHome, DiskuvOCamlBinaryPaths and DiskuvOCamlDeploymentId will be set, in addition to the always-present DiskuvOCamlVarsVersion and DiskuvOCamlVersion." >&2
   echo "  --in_docker=true|false. When true, opamrun and cmdrun will launch commands inside a Docker container. Defaults to '${in_docker:-}'" >&2
   echo "  --dockcross_image=<value>. When --in_docker=true, will be Docker container image. Defaults to '${dockcross_image:-}'" >&2
@@ -211,23 +255,36 @@ usage() {
   # autogen from global_env_vars.
   echo "  --DKML_VERSION=<value>. Defaults to: ${DKML_VERSION}" >&2
   echo "  --DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=<value>. Defaults to: ${DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" >&2
+  echo "  --DEFAULT_OCAML_OPAM_REPOSITORY_TAG=<value>. Defaults to: ${DEFAULT_OCAML_OPAM_REPOSITORY_TAG}" >&2
   echo "  --DEFAULT_DKML_COMPILER=<value>. Defaults to: ${DEFAULT_DKML_COMPILER}" >&2
+  echo "  --BOOTSTRAP_OPAM_VERSION=<value>. Defaults to: ${BOOTSTRAP_OPAM_VERSION}" >&2
+  echo "  --PIN_MLFRONT_UNPACK=<value>. Defaults to: ${PIN_MLFRONT_UNPACK}" >&2
+  echo "  --PIN_ANGSTROM_LWT_UNIX=<value>. Defaults to: ${PIN_ANGSTROM_LWT_UNIX}" >&2
+  echo "  --PIN_ANGSTROM=<value>. Defaults to: ${PIN_ANGSTROM}" >&2
   echo "  --PIN_ASTRING=<value>. Defaults to: ${PIN_ASTRING}" >&2
   echo "  --PIN_BASE=<value>. Defaults to: ${PIN_BASE}" >&2
+  echo "  --PIN_BASE64=<value>. Defaults to: ${PIN_BASE64}" >&2
   echo "  --PIN_BIGARRAY_COMPAT=<value>. Defaults to: ${PIN_BIGARRAY_COMPAT}" >&2
+  echo "  --PIN_BIGSTRINGAF=<value>. Defaults to: ${PIN_BIGSTRINGAF}" >&2
   echo "  --PIN_BOS=<value>. Defaults to: ${PIN_BOS}" >&2
   echo "  --PIN_CAMLP_STREAMS=<value>. Defaults to: ${PIN_CAMLP_STREAMS}" >&2
   echo "  --PIN_CHROME_TRACE=<value>. Defaults to: ${PIN_CHROME_TRACE}" >&2
   echo "  --PIN_CMDLINER=<value>. Defaults to: ${PIN_CMDLINER}" >&2
+  echo "  --PIN_CONF_BASH=<value>. Defaults to: ${PIN_CONF_BASH}" >&2
   echo "  --PIN_CONF_DKML_SYS_OPAM=<value>. Defaults to: ${PIN_CONF_DKML_SYS_OPAM}" >&2
+  echo "  --PIN_CONF_DKSDK=<value>. Defaults to: ${PIN_CONF_DKSDK}" >&2
   echo "  --PIN_CONF_PKG_CONFIG=<value>. Defaults to: ${PIN_CONF_PKG_CONFIG}" >&2
+  echo "  --PIN_CONF_SDL2=<value>. Defaults to: ${PIN_CONF_SDL2}" >&2
   echo "  --PIN_CONF_SQLITE3=<value>. Defaults to: ${PIN_CONF_SQLITE3}" >&2
   echo "  --PIN_CPPO=<value>. Defaults to: ${PIN_CPPO}" >&2
   echo "  --PIN_CRUNCH=<value>. Defaults to: ${PIN_CRUNCH}" >&2
   echo "  --PIN_CSEXP=<value>. Defaults to: ${PIN_CSEXP}" >&2
+  echo "  --PIN_CSTRUCT=<value>. Defaults to: ${PIN_CSTRUCT}" >&2
   echo "  --PIN_CTYPES_FOREIGN=<value>. Defaults to: ${PIN_CTYPES_FOREIGN}" >&2
   echo "  --PIN_CTYPES=<value>. Defaults to: ${PIN_CTYPES}" >&2
   echo "  --PIN_CUDF=<value>. Defaults to: ${PIN_CUDF}" >&2
+  echo "  --PIN_DAP=<value>. Defaults to: ${PIN_DAP}" >&2
+  echo "  --PIN_DIGESTIF=<value>. Defaults to: ${PIN_DIGESTIF}" >&2
   echo "  --PIN_DISKUVBOX=<value>. Defaults to: ${PIN_DISKUVBOX}" >&2
   echo "  --PIN_DKML_APPS=<value>. Defaults to: ${PIN_DKML_APPS}" >&2
   echo "  --PIN_DKML_BASE_COMPILER=<value>. Defaults to: ${PIN_DKML_BASE_COMPILER}" >&2
@@ -237,16 +294,21 @@ usage() {
   echo "  --PIN_DKML_COMPONENT_XX_CONSOLE=<value>. Defaults to: ${PIN_DKML_COMPONENT_XX_CONSOLE}" >&2
   echo "  --PIN_DKML_EXE_LIB=<value>. Defaults to: ${PIN_DKML_EXE_LIB}" >&2
   echo "  --PIN_DKML_EXE=<value>. Defaults to: ${PIN_DKML_EXE}" >&2
+  echo "  --PIN_DKML_HOST_ABI_WINDOWS_X86_64=<value>. Defaults to: ${PIN_DKML_HOST_ABI_WINDOWS_X86_64}" >&2
+  echo "  --PIN_DKML_HOST_ABI=<value>. Defaults to: ${PIN_DKML_HOST_ABI}" >&2
   echo "  --PIN_DKML_INSTALL_INSTALLER=<value>. Defaults to: ${PIN_DKML_INSTALL_INSTALLER}" >&2
   echo "  --PIN_DKML_INSTALL_RUNNER=<value>. Defaults to: ${PIN_DKML_INSTALL_RUNNER}" >&2
   echo "  --PIN_DKML_INSTALL=<value>. Defaults to: ${PIN_DKML_INSTALL}" >&2
   echo "  --PIN_DKML_INSTALLER_OCAML_COMMON=<value>. Defaults to: ${PIN_DKML_INSTALLER_OCAML_COMMON}" >&2
+  echo "  --PIN_DKML_OPTION_BX32=<value>. Defaults to: ${PIN_DKML_OPTION_BX32}" >&2
   echo "  --PIN_DKML_PACKAGE_CONSOLE=<value>. Defaults to: ${PIN_DKML_PACKAGE_CONSOLE}" >&2
   echo "  --PIN_DKML_RUNTIME_COMMON_NATIVE=<value>. Defaults to: ${PIN_DKML_RUNTIME_COMMON_NATIVE}" >&2
   echo "  --PIN_DKML_RUNTIME_COMMON=<value>. Defaults to: ${PIN_DKML_RUNTIME_COMMON}" >&2
   echo "  --PIN_DKML_RUNTIME_DISTRIBUTION=<value>. Defaults to: ${PIN_DKML_RUNTIME_DISTRIBUTION}" >&2
   echo "  --PIN_DKML_RUNTIMELIB=<value>. Defaults to: ${PIN_DKML_RUNTIMELIB}" >&2
   echo "  --PIN_DKML_RUNTIMESCRIPTS=<value>. Defaults to: ${PIN_DKML_RUNTIMESCRIPTS}" >&2
+  echo "  --PIN_DKML_TARGET_ABI_ANY=<value>. Defaults to: ${PIN_DKML_TARGET_ABI_ANY}" >&2
+  echo "  --PIN_DKML_TARGET_ABI_WINDOWS_X86_64=<value>. Defaults to: ${PIN_DKML_TARGET_ABI_WINDOWS_X86_64}" >&2
   echo "  --PIN_DKML_WORKFLOWS=<value>. Defaults to: ${PIN_DKML_WORKFLOWS}" >&2
   echo "  --PIN_DUNE_ACTION_PLUGIN=<value>. Defaults to: ${PIN_DUNE_ACTION_PLUGIN}" >&2
   echo "  --PIN_DUNE_BUILD_INFO=<value>. Defaults to: ${PIN_DUNE_BUILD_INFO}" >&2
@@ -258,7 +320,9 @@ usage() {
   echo "  --PIN_DUNE_SITE=<value>. Defaults to: ${PIN_DUNE_SITE}" >&2
   echo "  --PIN_DUNE=<value>. Defaults to: ${PIN_DUNE}" >&2
   echo "  --PIN_DYN=<value>. Defaults to: ${PIN_DYN}" >&2
+  echo "  --PIN_EARLYBIRD=<value>. Defaults to: ${PIN_EARLYBIRD}" >&2
   echo "  --PIN_EITHER=<value>. Defaults to: ${PIN_EITHER}" >&2
+  echo "  --PIN_EQAF=<value>. Defaults to: ${PIN_EQAF}" >&2
   echo "  --PIN_EXTLIB=<value>. Defaults to: ${PIN_EXTLIB}" >&2
   echo "  --PIN_FEATHER=<value>. Defaults to: ${PIN_FEATHER}" >&2
   echo "  --PIN_FIBER=<value>. Defaults to: ${PIN_FIBER}" >&2
@@ -266,19 +330,26 @@ usage() {
   echo "  --PIN_FMT=<value>. Defaults to: ${PIN_FMT}" >&2
   echo "  --PIN_FPATH=<value>. Defaults to: ${PIN_FPATH}" >&2
   echo "  --PIN_GRAPHICS=<value>. Defaults to: ${PIN_GRAPHICS}" >&2
+  echo "  --PIN_HMAP=<value>. Defaults to: ${PIN_HMAP}" >&2
+  echo "  --PIN_HOST_ARCH_X86_64=<value>. Defaults to: ${PIN_HOST_ARCH_X86_64}" >&2
   echo "  --PIN_INTEGERS=<value>. Defaults to: ${PIN_INTEGERS}" >&2
+  echo "  --PIN_IOSTREAM=<value>. Defaults to: ${PIN_IOSTREAM}" >&2
+  echo "  --PIN_ITER=<value>. Defaults to: ${PIN_ITER}" >&2
   echo "  --PIN_JANE_STREET_HEADERS=<value>. Defaults to: ${PIN_JANE_STREET_HEADERS}" >&2
   echo "  --PIN_JINGOO=<value>. Defaults to: ${PIN_JINGOO}" >&2
   echo "  --PIN_JSONRPC=<value>. Defaults to: ${PIN_JSONRPC}" >&2
   echo "  --PIN_JST_CONFIG=<value>. Defaults to: ${PIN_JST_CONFIG}" >&2
   echo "  --PIN_LAMBDA_TERM=<value>. Defaults to: ${PIN_LAMBDA_TERM}" >&2
   echo "  --PIN_LOGS=<value>. Defaults to: ${PIN_LOGS}" >&2
+  echo "  --PIN_LRU=<value>. Defaults to: ${PIN_LRU}" >&2
   echo "  --PIN_LSP=<value>. Defaults to: ${PIN_LSP}" >&2
   echo "  --PIN_LWT=<value>. Defaults to: ${PIN_LWT}" >&2
+  echo "  --PIN_LWT_PPX=<value>. Defaults to: ${PIN_LWT_PPX}" >&2
   echo "  --PIN_LWT_REACT=<value>. Defaults to: ${PIN_LWT_REACT}" >&2
   echo "  --PIN_MCCS=<value>. Defaults to: ${PIN_MCCS}" >&2
   echo "  --PIN_MDX=<value>. Defaults to: ${PIN_MDX}" >&2
   echo "  --PIN_MENHIR=<value>. Defaults to: ${PIN_MENHIR}" >&2
+  echo "  --PIN_MENHIRCST=<value>. Defaults to: ${PIN_MENHIRCST}" >&2
   echo "  --PIN_MENHIRLIB=<value>. Defaults to: ${PIN_MENHIRLIB}" >&2
   echo "  --PIN_MENHIRSDK=<value>. Defaults to: ${PIN_MENHIRSDK}" >&2
   echo "  --PIN_MERLIN_LIB=<value>. Defaults to: ${PIN_MERLIN_LIB}" >&2
@@ -286,9 +357,12 @@ usage() {
   echo "  --PIN_METAQUOT=<value>. Defaults to: ${PIN_METAQUOT}" >&2
   echo "  --PIN_MEW=<value>. Defaults to: ${PIN_MEW}" >&2
   echo "  --PIN_MEW_VI=<value>. Defaults to: ${PIN_MEW_VI}" >&2
+  echo "  --PIN_MSYS2_CLANG64=<value>. Defaults to: ${PIN_MSYS2_CLANG64}" >&2
+  echo "  --PIN_MSYS2=<value>. Defaults to: ${PIN_MSYS2}" >&2
   echo "  --PIN_NUM=<value>. Defaults to: ${PIN_NUM}" >&2
   echo "  --PIN_OCAML_COMPILER_LIBS=<value>. Defaults to: ${PIN_OCAML_COMPILER_LIBS}" >&2
   echo "  --PIN_OCAML_LSP_SERVER=<value>. Defaults to: ${PIN_OCAML_LSP_SERVER}" >&2
+  echo "  --PIN_OCAML_SYNTAX_SHIMS=<value>. Defaults to: ${PIN_OCAML_SYNTAX_SHIMS}" >&2
   echo "  --PIN_OCAML_VERSION=<value>. Defaults to: ${PIN_OCAML_VERSION}" >&2
   echo "  --PIN_OCAML=<value>. Defaults to: ${PIN_OCAML}" >&2
   echo "  --PIN_OCAMLBUILD=<value>. Defaults to: ${PIN_OCAMLBUILD}" >&2
@@ -303,6 +377,8 @@ usage() {
   echo "  --PIN_ODOC=<value>. Defaults to: ${PIN_ODOC}" >&2
   echo "  --PIN_ORDERING=<value>. Defaults to: ${PIN_ORDERING}" >&2
   echo "  --PIN_PARSEXP=<value>. Defaults to: ${PIN_PARSEXP}" >&2
+  echo "  --PIN_PATH_GLOB=<value>. Defaults to: ${PIN_PATH_GLOB}" >&2
+  echo "  --PIN_POSIXAT=<value>. Defaults to: ${PIN_POSIXAT}" >&2
   echo "  --PIN_PP=<value>. Defaults to: ${PIN_PP}" >&2
   echo "  --PIN_PPX_ASSERT=<value>. Defaults to: ${PIN_PPX_ASSERT}" >&2
   echo "  --PIN_PPX_BASE=<value>. Defaults to: ${PIN_PPX_BASE}" >&2
@@ -310,6 +386,7 @@ usage() {
   echo "  --PIN_PPX_COMPARE=<value>. Defaults to: ${PIN_PPX_COMPARE}" >&2
   echo "  --PIN_PPX_DERIVERS=<value>. Defaults to: ${PIN_PPX_DERIVERS}" >&2
   echo "  --PIN_PPX_DERIVING=<value>. Defaults to: ${PIN_PPX_DERIVING}" >&2
+  echo "  --PIN_PPX_DERIVING_YOJSON=<value>. Defaults to: ${PIN_PPX_DERIVING_YOJSON}" >&2
   echo "  --PIN_PPX_ENUMERATE=<value>. Defaults to: ${PIN_PPX_ENUMERATE}" >&2
   echo "  --PIN_PPX_EXPECT=<value>. Defaults to: ${PIN_PPX_EXPECT}" >&2
   echo "  --PIN_PPX_GLOBALIZE=<value>. Defaults to: ${PIN_PPX_GLOBALIZE}" >&2
@@ -322,6 +399,7 @@ usage() {
   echo "  --PIN_PPX_SEXP_CONV=<value>. Defaults to: ${PIN_PPX_SEXP_CONV}" >&2
   echo "  --PIN_PPX_YOJSON_CONV_LIB=<value>. Defaults to: ${PIN_PPX_YOJSON_CONV_LIB}" >&2
   echo "  --PIN_PPXLIB=<value>. Defaults to: ${PIN_PPXLIB}" >&2
+  echo "  --PIN_PSQ=<value>. Defaults to: ${PIN_PSQ}" >&2
   echo "  --PIN_PTIME=<value>. Defaults to: ${PIN_PTIME}" >&2
   echo "  --PIN_QRC=<value>. Defaults to: ${PIN_QRC}" >&2
   echo "  --PIN_RE=<value>. Defaults to: ${PIN_RE}" >&2
@@ -333,19 +411,23 @@ usage() {
   echo "  --PIN_SEXPLIB=<value>. Defaults to: ${PIN_SEXPLIB}" >&2
   echo "  --PIN_SEXPLIB0=<value>. Defaults to: ${PIN_SEXPLIB0}" >&2
   echo "  --PIN_SHA=<value>. Defaults to: ${PIN_SHA}" >&2
+  echo "  --PIN_SHEXP=<value>. Defaults to: ${PIN_SHEXP}" >&2
   echo "  --PIN_SPAWN=<value>. Defaults to: ${PIN_SPAWN}" >&2
   echo "  --PIN_SQLITE3=<value>. Defaults to: ${PIN_SQLITE3}" >&2
   echo "  --PIN_STDCOMPAT=<value>. Defaults to: ${PIN_STDCOMPAT}" >&2
   echo "  --PIN_STDIO=<value>. Defaults to: ${PIN_STDIO}" >&2
   echo "  --PIN_STDLIB_SHIMS=<value>. Defaults to: ${PIN_STDLIB_SHIMS}" >&2
   echo "  --PIN_STDUNE=<value>. Defaults to: ${PIN_STDUNE}" >&2
+  echo "  --PIN_STRINGEXT=<value>. Defaults to: ${PIN_STRINGEXT}" >&2
   echo "  --PIN_TIME_NOW=<value>. Defaults to: ${PIN_TIME_NOW}" >&2
+  echo "  --PIN_TINY_HTTPD=<value>. Defaults to: ${PIN_TINY_HTTPD}" >&2
   echo "  --PIN_TOPKG=<value>. Defaults to: ${PIN_TOPKG}" >&2
   echo "  --PIN_TRAVERSE=<value>. Defaults to: ${PIN_TRAVERSE}" >&2
   echo "  --PIN_TRIE=<value>. Defaults to: ${PIN_TRIE}" >&2
   echo "  --PIN_TSORT=<value>. Defaults to: ${PIN_TSORT}" >&2
   echo "  --PIN_TYXML=<value>. Defaults to: ${PIN_TYXML}" >&2
   echo "  --PIN_UCHAR=<value>. Defaults to: ${PIN_UCHAR}" >&2
+  echo "  --PIN_URI=<value>. Defaults to: ${PIN_URI}" >&2
   echo "  --PIN_UTOP=<value>. Defaults to: ${PIN_UTOP}" >&2
   echo "  --PIN_UUCP=<value>. Defaults to: ${PIN_UUCP}" >&2
   echo "  --PIN_UUIDM=<value>. Defaults to: ${PIN_UUIDM}" >&2
@@ -370,6 +452,10 @@ while getopts :h-: option; do
   -) case $OPTARG in
     PC_PROJECT_DIR) fail "Option \"$OPTARG\" missing argument" ;;
     PC_PROJECT_DIR=*) PC_PROJECT_DIR=${OPTARG#*=} ;;
+    GIT_LOCATION) fail "Option \"$OPTARG\" missing argument" ;;
+    GIT_LOCATION=*) GIT_LOCATION=${OPTARG#*=} ;;
+    DKML_RUNTIME_DISTRIBUTION) fail "Option \"$OPTARG\" missing argument" ;;
+    DKML_RUNTIME_DISTRIBUTION=*) DKML_RUNTIME_DISTRIBUTION=${OPTARG#*=} ;;
     CACHE_PREFIX) fail "Option \"$OPTARG\" missing argument" ;;
     CACHE_PREFIX=*) CACHE_PREFIX=${OPTARG#*=} ;;
     FDOPEN_OPAMEXE_BOOTSTRAP) fail "Option \"$OPTARG\" missing argument" ;;
@@ -386,6 +472,8 @@ while getopts :h-: option; do
     PRIMARY_SWITCH_SKIP_INSTALL=*) PRIMARY_SWITCH_SKIP_INSTALL=${OPTARG#*=} ;;
     CONF_DKML_CROSS_TOOLCHAIN) fail "Option \"$OPTARG\" missing argument" ;;
     CONF_DKML_CROSS_TOOLCHAIN=*) CONF_DKML_CROSS_TOOLCHAIN=${OPTARG#*=} ;;
+    OCAML_OPAM_REPOSITORY) fail "Option \"$OPTARG\" missing argument" ;;
+    OCAML_OPAM_REPOSITORY=*) OCAML_OPAM_REPOSITORY=${OPTARG#*=} ;;
     DISKUV_OPAM_REPOSITORY) fail "Option \"$OPTARG\" missing argument" ;;
     DISKUV_OPAM_REPOSITORY=*) DISKUV_OPAM_REPOSITORY=${OPTARG#*=} ;;
     DKML_HOME) fail "Option \"$OPTARG\" missing argument" ;;
@@ -401,14 +489,28 @@ while getopts :h-: option; do
     DKML_VERSION=*) DKML_VERSION=${OPTARG#*=} ;;
     DEFAULT_DISKUV_OPAM_REPOSITORY_TAG) fail "Option \"$OPTARG\" missing argument" ;;
     DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=*) DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=${OPTARG#*=} ;;
+    DEFAULT_OCAML_OPAM_REPOSITORY_TAG) fail "Option \"$OPTARG\" missing argument" ;;
+    DEFAULT_OCAML_OPAM_REPOSITORY_TAG=*) DEFAULT_OCAML_OPAM_REPOSITORY_TAG=${OPTARG#*=} ;;
     DEFAULT_DKML_COMPILER) fail "Option \"$OPTARG\" missing argument" ;;
     DEFAULT_DKML_COMPILER=*) DEFAULT_DKML_COMPILER=${OPTARG#*=} ;;
+    BOOTSTRAP_OPAM_VERSION) fail "Option \"$OPTARG\" missing argument" ;;
+    BOOTSTRAP_OPAM_VERSION=*) BOOTSTRAP_OPAM_VERSION=${OPTARG#*=} ;;
+    PIN_MLFRONT_UNPACK) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_MLFRONT_UNPACK=*) PIN_MLFRONT_UNPACK=${OPTARG#*=} ;;
+    PIN_ANGSTROM_LWT_UNIX) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ANGSTROM_LWT_UNIX=*) PIN_ANGSTROM_LWT_UNIX=${OPTARG#*=} ;;
+    PIN_ANGSTROM) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ANGSTROM=*) PIN_ANGSTROM=${OPTARG#*=} ;;
     PIN_ASTRING) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_ASTRING=*) PIN_ASTRING=${OPTARG#*=} ;;
     PIN_BASE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_BASE=*) PIN_BASE=${OPTARG#*=} ;;
+    PIN_BASE64) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_BASE64=*) PIN_BASE64=${OPTARG#*=} ;;
     PIN_BIGARRAY_COMPAT) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_BIGARRAY_COMPAT=*) PIN_BIGARRAY_COMPAT=${OPTARG#*=} ;;
+    PIN_BIGSTRINGAF) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_BIGSTRINGAF=*) PIN_BIGSTRINGAF=${OPTARG#*=} ;;
     PIN_BOS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_BOS=*) PIN_BOS=${OPTARG#*=} ;;
     PIN_CAMLP_STREAMS) fail "Option \"$OPTARG\" missing argument" ;;
@@ -417,10 +519,16 @@ while getopts :h-: option; do
     PIN_CHROME_TRACE=*) PIN_CHROME_TRACE=${OPTARG#*=} ;;
     PIN_CMDLINER) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CMDLINER=*) PIN_CMDLINER=${OPTARG#*=} ;;
+    PIN_CONF_BASH) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_CONF_BASH=*) PIN_CONF_BASH=${OPTARG#*=} ;;
     PIN_CONF_DKML_SYS_OPAM) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CONF_DKML_SYS_OPAM=*) PIN_CONF_DKML_SYS_OPAM=${OPTARG#*=} ;;
+    PIN_CONF_DKSDK) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_CONF_DKSDK=*) PIN_CONF_DKSDK=${OPTARG#*=} ;;
     PIN_CONF_PKG_CONFIG) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CONF_PKG_CONFIG=*) PIN_CONF_PKG_CONFIG=${OPTARG#*=} ;;
+    PIN_CONF_SDL2) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_CONF_SDL2=*) PIN_CONF_SDL2=${OPTARG#*=} ;;
     PIN_CONF_SQLITE3) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CONF_SQLITE3=*) PIN_CONF_SQLITE3=${OPTARG#*=} ;;
     PIN_CPPO) fail "Option \"$OPTARG\" missing argument" ;;
@@ -429,12 +537,18 @@ while getopts :h-: option; do
     PIN_CRUNCH=*) PIN_CRUNCH=${OPTARG#*=} ;;
     PIN_CSEXP) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CSEXP=*) PIN_CSEXP=${OPTARG#*=} ;;
+    PIN_CSTRUCT) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_CSTRUCT=*) PIN_CSTRUCT=${OPTARG#*=} ;;
     PIN_CTYPES_FOREIGN) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CTYPES_FOREIGN=*) PIN_CTYPES_FOREIGN=${OPTARG#*=} ;;
     PIN_CTYPES) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CTYPES=*) PIN_CTYPES=${OPTARG#*=} ;;
     PIN_CUDF) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_CUDF=*) PIN_CUDF=${OPTARG#*=} ;;
+    PIN_DAP) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DAP=*) PIN_DAP=${OPTARG#*=} ;;
+    PIN_DIGESTIF) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DIGESTIF=*) PIN_DIGESTIF=${OPTARG#*=} ;;
     PIN_DISKUVBOX) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DISKUVBOX=*) PIN_DISKUVBOX=${OPTARG#*=} ;;
     PIN_DKML_APPS) fail "Option \"$OPTARG\" missing argument" ;;
@@ -453,6 +567,10 @@ while getopts :h-: option; do
     PIN_DKML_EXE_LIB=*) PIN_DKML_EXE_LIB=${OPTARG#*=} ;;
     PIN_DKML_EXE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_EXE=*) PIN_DKML_EXE=${OPTARG#*=} ;;
+    PIN_DKML_HOST_ABI_WINDOWS_X86_64) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_HOST_ABI_WINDOWS_X86_64=*) PIN_DKML_HOST_ABI_WINDOWS_X86_64=${OPTARG#*=} ;;
+    PIN_DKML_HOST_ABI) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_HOST_ABI=*) PIN_DKML_HOST_ABI=${OPTARG#*=} ;;
     PIN_DKML_INSTALL_INSTALLER) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_INSTALL_INSTALLER=*) PIN_DKML_INSTALL_INSTALLER=${OPTARG#*=} ;;
     PIN_DKML_INSTALL_RUNNER) fail "Option \"$OPTARG\" missing argument" ;;
@@ -461,6 +579,8 @@ while getopts :h-: option; do
     PIN_DKML_INSTALL=*) PIN_DKML_INSTALL=${OPTARG#*=} ;;
     PIN_DKML_INSTALLER_OCAML_COMMON) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_INSTALLER_OCAML_COMMON=*) PIN_DKML_INSTALLER_OCAML_COMMON=${OPTARG#*=} ;;
+    PIN_DKML_OPTION_BX32) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_OPTION_BX32=*) PIN_DKML_OPTION_BX32=${OPTARG#*=} ;;
     PIN_DKML_PACKAGE_CONSOLE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_PACKAGE_CONSOLE=*) PIN_DKML_PACKAGE_CONSOLE=${OPTARG#*=} ;;
     PIN_DKML_RUNTIME_COMMON_NATIVE) fail "Option \"$OPTARG\" missing argument" ;;
@@ -473,6 +593,10 @@ while getopts :h-: option; do
     PIN_DKML_RUNTIMELIB=*) PIN_DKML_RUNTIMELIB=${OPTARG#*=} ;;
     PIN_DKML_RUNTIMESCRIPTS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_RUNTIMESCRIPTS=*) PIN_DKML_RUNTIMESCRIPTS=${OPTARG#*=} ;;
+    PIN_DKML_TARGET_ABI_ANY) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_TARGET_ABI_ANY=*) PIN_DKML_TARGET_ABI_ANY=${OPTARG#*=} ;;
+    PIN_DKML_TARGET_ABI_WINDOWS_X86_64) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_DKML_TARGET_ABI_WINDOWS_X86_64=*) PIN_DKML_TARGET_ABI_WINDOWS_X86_64=${OPTARG#*=} ;;
     PIN_DKML_WORKFLOWS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DKML_WORKFLOWS=*) PIN_DKML_WORKFLOWS=${OPTARG#*=} ;;
     PIN_DUNE_ACTION_PLUGIN) fail "Option \"$OPTARG\" missing argument" ;;
@@ -495,8 +619,12 @@ while getopts :h-: option; do
     PIN_DUNE=*) PIN_DUNE=${OPTARG#*=} ;;
     PIN_DYN) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_DYN=*) PIN_DYN=${OPTARG#*=} ;;
+    PIN_EARLYBIRD) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_EARLYBIRD=*) PIN_EARLYBIRD=${OPTARG#*=} ;;
     PIN_EITHER) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_EITHER=*) PIN_EITHER=${OPTARG#*=} ;;
+    PIN_EQAF) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_EQAF=*) PIN_EQAF=${OPTARG#*=} ;;
     PIN_EXTLIB) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_EXTLIB=*) PIN_EXTLIB=${OPTARG#*=} ;;
     PIN_FEATHER) fail "Option \"$OPTARG\" missing argument" ;;
@@ -511,8 +639,16 @@ while getopts :h-: option; do
     PIN_FPATH=*) PIN_FPATH=${OPTARG#*=} ;;
     PIN_GRAPHICS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_GRAPHICS=*) PIN_GRAPHICS=${OPTARG#*=} ;;
+    PIN_HMAP) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_HMAP=*) PIN_HMAP=${OPTARG#*=} ;;
+    PIN_HOST_ARCH_X86_64) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_HOST_ARCH_X86_64=*) PIN_HOST_ARCH_X86_64=${OPTARG#*=} ;;
     PIN_INTEGERS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_INTEGERS=*) PIN_INTEGERS=${OPTARG#*=} ;;
+    PIN_IOSTREAM) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_IOSTREAM=*) PIN_IOSTREAM=${OPTARG#*=} ;;
+    PIN_ITER) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_ITER=*) PIN_ITER=${OPTARG#*=} ;;
     PIN_JANE_STREET_HEADERS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_JANE_STREET_HEADERS=*) PIN_JANE_STREET_HEADERS=${OPTARG#*=} ;;
     PIN_JINGOO) fail "Option \"$OPTARG\" missing argument" ;;
@@ -525,10 +661,14 @@ while getopts :h-: option; do
     PIN_LAMBDA_TERM=*) PIN_LAMBDA_TERM=${OPTARG#*=} ;;
     PIN_LOGS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_LOGS=*) PIN_LOGS=${OPTARG#*=} ;;
+    PIN_LRU) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_LRU=*) PIN_LRU=${OPTARG#*=} ;;
     PIN_LSP) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_LSP=*) PIN_LSP=${OPTARG#*=} ;;
     PIN_LWT) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_LWT=*) PIN_LWT=${OPTARG#*=} ;;
+    PIN_LWT_PPX) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_LWT_PPX=*) PIN_LWT_PPX=${OPTARG#*=} ;;
     PIN_LWT_REACT) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_LWT_REACT=*) PIN_LWT_REACT=${OPTARG#*=} ;;
     PIN_MCCS) fail "Option \"$OPTARG\" missing argument" ;;
@@ -537,6 +677,8 @@ while getopts :h-: option; do
     PIN_MDX=*) PIN_MDX=${OPTARG#*=} ;;
     PIN_MENHIR) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_MENHIR=*) PIN_MENHIR=${OPTARG#*=} ;;
+    PIN_MENHIRCST) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_MENHIRCST=*) PIN_MENHIRCST=${OPTARG#*=} ;;
     PIN_MENHIRLIB) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_MENHIRLIB=*) PIN_MENHIRLIB=${OPTARG#*=} ;;
     PIN_MENHIRSDK) fail "Option \"$OPTARG\" missing argument" ;;
@@ -551,12 +693,18 @@ while getopts :h-: option; do
     PIN_MEW=*) PIN_MEW=${OPTARG#*=} ;;
     PIN_MEW_VI) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_MEW_VI=*) PIN_MEW_VI=${OPTARG#*=} ;;
+    PIN_MSYS2_CLANG64) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_MSYS2_CLANG64=*) PIN_MSYS2_CLANG64=${OPTARG#*=} ;;
+    PIN_MSYS2) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_MSYS2=*) PIN_MSYS2=${OPTARG#*=} ;;
     PIN_NUM) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_NUM=*) PIN_NUM=${OPTARG#*=} ;;
     PIN_OCAML_COMPILER_LIBS) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_OCAML_COMPILER_LIBS=*) PIN_OCAML_COMPILER_LIBS=${OPTARG#*=} ;;
     PIN_OCAML_LSP_SERVER) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_OCAML_LSP_SERVER=*) PIN_OCAML_LSP_SERVER=${OPTARG#*=} ;;
+    PIN_OCAML_SYNTAX_SHIMS) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_OCAML_SYNTAX_SHIMS=*) PIN_OCAML_SYNTAX_SHIMS=${OPTARG#*=} ;;
     PIN_OCAML_VERSION) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_OCAML_VERSION=*) PIN_OCAML_VERSION=${OPTARG#*=} ;;
     PIN_OCAML) fail "Option \"$OPTARG\" missing argument" ;;
@@ -585,6 +733,10 @@ while getopts :h-: option; do
     PIN_ORDERING=*) PIN_ORDERING=${OPTARG#*=} ;;
     PIN_PARSEXP) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PARSEXP=*) PIN_PARSEXP=${OPTARG#*=} ;;
+    PIN_PATH_GLOB) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_PATH_GLOB=*) PIN_PATH_GLOB=${OPTARG#*=} ;;
+    PIN_POSIXAT) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_POSIXAT=*) PIN_POSIXAT=${OPTARG#*=} ;;
     PIN_PP) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PP=*) PIN_PP=${OPTARG#*=} ;;
     PIN_PPX_ASSERT) fail "Option \"$OPTARG\" missing argument" ;;
@@ -599,6 +751,8 @@ while getopts :h-: option; do
     PIN_PPX_DERIVERS=*) PIN_PPX_DERIVERS=${OPTARG#*=} ;;
     PIN_PPX_DERIVING) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PPX_DERIVING=*) PIN_PPX_DERIVING=${OPTARG#*=} ;;
+    PIN_PPX_DERIVING_YOJSON) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_PPX_DERIVING_YOJSON=*) PIN_PPX_DERIVING_YOJSON=${OPTARG#*=} ;;
     PIN_PPX_ENUMERATE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PPX_ENUMERATE=*) PIN_PPX_ENUMERATE=${OPTARG#*=} ;;
     PIN_PPX_EXPECT) fail "Option \"$OPTARG\" missing argument" ;;
@@ -623,6 +777,8 @@ while getopts :h-: option; do
     PIN_PPX_YOJSON_CONV_LIB=*) PIN_PPX_YOJSON_CONV_LIB=${OPTARG#*=} ;;
     PIN_PPXLIB) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PPXLIB=*) PIN_PPXLIB=${OPTARG#*=} ;;
+    PIN_PSQ) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_PSQ=*) PIN_PSQ=${OPTARG#*=} ;;
     PIN_PTIME) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_PTIME=*) PIN_PTIME=${OPTARG#*=} ;;
     PIN_QRC) fail "Option \"$OPTARG\" missing argument" ;;
@@ -645,6 +801,8 @@ while getopts :h-: option; do
     PIN_SEXPLIB0=*) PIN_SEXPLIB0=${OPTARG#*=} ;;
     PIN_SHA) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_SHA=*) PIN_SHA=${OPTARG#*=} ;;
+    PIN_SHEXP) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_SHEXP=*) PIN_SHEXP=${OPTARG#*=} ;;
     PIN_SPAWN) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_SPAWN=*) PIN_SPAWN=${OPTARG#*=} ;;
     PIN_SQLITE3) fail "Option \"$OPTARG\" missing argument" ;;
@@ -657,8 +815,12 @@ while getopts :h-: option; do
     PIN_STDLIB_SHIMS=*) PIN_STDLIB_SHIMS=${OPTARG#*=} ;;
     PIN_STDUNE) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_STDUNE=*) PIN_STDUNE=${OPTARG#*=} ;;
+    PIN_STRINGEXT) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_STRINGEXT=*) PIN_STRINGEXT=${OPTARG#*=} ;;
     PIN_TIME_NOW) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_TIME_NOW=*) PIN_TIME_NOW=${OPTARG#*=} ;;
+    PIN_TINY_HTTPD) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_TINY_HTTPD=*) PIN_TINY_HTTPD=${OPTARG#*=} ;;
     PIN_TOPKG) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_TOPKG=*) PIN_TOPKG=${OPTARG#*=} ;;
     PIN_TRAVERSE) fail "Option \"$OPTARG\" missing argument" ;;
@@ -671,6 +833,8 @@ while getopts :h-: option; do
     PIN_TYXML=*) PIN_TYXML=${OPTARG#*=} ;;
     PIN_UCHAR) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_UCHAR=*) PIN_UCHAR=${OPTARG#*=} ;;
+    PIN_URI) fail "Option \"$OPTARG\" missing argument" ;;
+    PIN_URI=*) PIN_URI=${OPTARG#*=} ;;
     PIN_UTOP) fail "Option \"$OPTARG\" missing argument" ;;
     PIN_UTOP=*) PIN_UTOP=${OPTARG#*=} ;;
     PIN_UUCP) fail "Option \"$OPTARG\" missing argument" ;;
@@ -794,8 +958,8 @@ export_temp_for_windows() {
             TEMP=$(cygpath -am "$RUNNER_TEMP")
         else
             # GitLab CI/CD or desktop
-            install -d .ci/tmp
-            TEMP=$(cygpath -am ".ci/tmp")
+            install -d .ci/sd4/tmp
+            TEMP=$(cygpath -am ".ci/sd4/tmp")
         fi
         export TEMP
     fi
@@ -862,14 +1026,22 @@ fi
 # shellcheck source=./common-values.sh
 . .ci/sd4/common-values.sh
 
+do_git() {
+    if [ -z "${GIT_LOCATION:-}" ]; then
+        git "$@"
+    else
+        PATH="$GIT_LOCATION:$PATH" git "$@"
+    fi
+}
+
 # Disable automatic garbage collection
 git_disable_gc() {
     git_disable_gc_NAME=$1
     shift
-    git -C ".ci/sd4/g/$git_disable_gc_NAME" config --local gc.auto 0
+    do_git -C ".ci/sd4/g/$git_disable_gc_NAME" config --local gc.auto 0
 }
 
-# Mimic the behavior of GitHub's actions/checkout@v3
+# Mimic the behavior of GitHub's actions/checkout@v4
 # - the plus symbol in 'git fetch ... origin +REF:refs/tags/v0.0' overrides any existing REF
 git_checkout() {
     git_checkout_NAME=$1
@@ -879,24 +1051,35 @@ git_checkout() {
     git_checkout_REF=$1
     shift
 
-    if [ -e ".ci/sd4/g/$git_checkout_NAME" ]; then
-        git_disable_gc "$git_checkout_NAME"
-        git -C ".ci/sd4/g/$git_checkout_NAME" remote set-url origin "$git_checkout_URL"
-        git -C ".ci/sd4/g/$git_checkout_NAME" fetch --no-tags --progress --no-recurse-submodules --depth=1 origin "+${git_checkout_REF}:refs/tags/v0.0"
-    else
-        install -d ".ci/sd4/g/$git_checkout_NAME"
-        git -C ".ci/sd4/g/$git_checkout_NAME" -c init.defaultBranch=main init
-        git_disable_gc "$git_checkout_NAME"
-        git -C ".ci/sd4/g/$git_checkout_NAME" remote add origin "$git_checkout_URL"
-        git -C ".ci/sd4/g/$git_checkout_NAME" fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin "+${git_checkout_REF}:refs/tags/v0.0"
-    fi
-    git -C ".ci/sd4/g/$git_checkout_NAME" -c advice.detachedHead=false checkout --progress --force refs/tags/v0.0
-    git -C ".ci/sd4/g/$git_checkout_NAME" log -1 --format='%H'
+    case "$git_checkout_REF" in
+      file://*)
+        git_checkout_FILEURI=$(printf "%s" "$git_checkout_REF" | sed 's#^file://##')
+        rm -rf ".ci/sd4/g/$git_checkout_NAME"
+        cp -rp "$git_checkout_FILEURI" ".ci/sd4/g/$git_checkout_NAME" ;;
+      *)
+        if [ -e ".ci/sd4/g/$git_checkout_NAME" ]; then
+            git_disable_gc "$git_checkout_NAME"
+            do_git -C ".ci/sd4/g/$git_checkout_NAME" remote set-url origin "$git_checkout_URL"
+            do_git -C ".ci/sd4/g/$git_checkout_NAME" fetch --no-tags --progress --no-recurse-submodules --depth=1 origin "+${git_checkout_REF}:refs/tags/v0.0"
+        else
+            install -d ".ci/sd4/g/$git_checkout_NAME"
+            do_git -C ".ci/sd4/g/$git_checkout_NAME" -c init.defaultBranch=main init
+            git_disable_gc "$git_checkout_NAME"
+            do_git -C ".ci/sd4/g/$git_checkout_NAME" remote add origin "$git_checkout_URL"
+            do_git -C ".ci/sd4/g/$git_checkout_NAME" fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin "+${git_checkout_REF}:refs/tags/v0.0"
+        fi
+        do_git -C ".ci/sd4/g/$git_checkout_NAME" -c advice.detachedHead=false checkout --progress --force refs/tags/v0.0
+        do_git -C ".ci/sd4/g/$git_checkout_NAME" log -1 --format='%H' ;;
+    esac
 }
 
 # ---------------------------------------------------------------------
 
 section_begin checkout-info "Summary: code checkout"
+
+PIN_DKML_RUNTIME_DISTRIBUTION=${PIN_DKML_RUNTIME_DISTRIBUTION:-}
+TAG_DKML_RUNTIME_DISTRIBUTION=${TAG_DKML_RUNTIME_DISTRIBUTION:-$PIN_DKML_RUNTIME_DISTRIBUTION}
+DKML_RUNTIME_DISTRIBUTION=${DKML_RUNTIME_DISTRIBUTION:-$TAG_DKML_RUNTIME_DISTRIBUTION}
 
 # shellcheck disable=SC2154
 echo "
@@ -915,10 +1098,22 @@ Inputs
 ------
 VERBOSE=${VERBOSE:-}
 .
+-------
+Context
+-------
+GIT_LOCATION=${GIT_LOCATION:-}
+.
 ------
 Matrix
 ------
 dkml_host_abi=$dkml_host_abi
+.
+---------
+Constants
+---------
+PIN_DKML_RUNTIME_DISTRIBUTION=${PIN_DKML_RUNTIME_DISTRIBUTION}
+TAG_DKML_RUNTIME_DISTRIBUTION=${TAG_DKML_RUNTIME_DISTRIBUTION}
+DKML_RUNTIME_DISTRIBUTION=${DKML_RUNTIME_DISTRIBUTION}
 .
 "
 
@@ -926,18 +1121,17 @@ section_end checkout-info
 
 install -d .ci/sd4/g
 
-# dkml-component-ocamlcompiler
+# dkml-runtime-distribution
 
-#   For 'Diagnose Visual Studio environment variables (Windows)' we need dkml-component-ocamlcompiler
+#   For 'Diagnose Visual Studio environment variables (Windows)' we need dkml-runtime-distribution
 #   so that 'Import-Module Machine' and 'Get-VSSetupInstance' can be run.
-#   The version doesn't matter too much, as long as it has a functioning Get-VSSetupInstance
-#   that supports the Visual Studio versions of the latest GitLab CI and GitHub Actions machines.
-#   commit 4d6f1bfc3510c55ba4273cb240e43727854b5718 = WinSDK 19041 and VS 14.29
+#   More importantly, for 'Locate Visual Studio (Windows)' we need dkml-runtime-distribution's
+#   'Get-CompatibleVisualStudios' and 'Get-VisualStudioProperties'.
 case "$dkml_host_abi" in
 windows_*)
-    section_begin checkout-dkml-component-ocamlcompiler 'Checkout dkml-component-ocamlcompiler'
-    git_checkout dkml-component-ocamlcompiler https://github.com/diskuv/dkml-component-ocamlcompiler.git "b9142380b0b8771a0d02f8b88ea786152a6e3d09"
-    section_end checkout-dkml-component-ocamlcompiler
+    section_begin checkout-dkml-runtime-distribution 'Checkout dkml-runtime-distribution'
+    git_checkout dkml-runtime-distribution https://github.com/diskuv/dkml-runtime-distribution.git "$DKML_RUNTIME_DISTRIBUTION"
+    section_end checkout-dkml-runtime-distribution
     ;;
 esac
 
@@ -946,9 +1140,6 @@ end_of_script
 cat > .ci/sd4/run-setup-dkml.sh <<'end_of_script'
 #!/bin/sh
 set -euf
-
-# Constants
-SHA512_DEVNULL='cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
 
 setup_WORKSPACE_VARNAME=$1
 shift
@@ -996,27 +1187,50 @@ fi
 
 # -------------------------------------------------------------------
 
+docker_image_id=
 docker_fqin_preusername= # fully qualified image name (hostname[:port]/username/reponame[:tag]), the parts before the username (hostname[:port]/)
 if [ -n "${docker_registry:-}" ]; then
     docker_fqin_preusername="$docker_registry/"
 fi
 
 # Extend dockcross. https://github.com/dockcross/dockcross#how-to-extend-dockcross-images
-dockcross_image_id=
 dockcross_cli_image_args=
 if [ "${in_docker:-}" = "true" ] && [ -n "${dockcross_image:-}" ]; then
     echo "Doing docker build"
-    section_begin docker-build "Summary: docker build -t ${docker_fqin_preusername}dkml-workflows/dockcross"
+    section_begin dockcross-build "Summary: docker build --quiet --tag ${docker_fqin_preusername}dkml-workflows/dockcross"
 
     install -d .ci/sd4/docker-image
-    printf "FROM %s\nENV DEFAULT_DOCKCROSS_IMAGE %sdkml-workflows/dockcross:latest\nRUN if command -v apt-get; then apt-get install -y rsync %s && rm -rf /var/lib/apt/lists/*; fi\nRUN if command -v yum; then yum install -y rsync %s && yum clean all && rm -rf /var/cache/yum; fi" \
-        "${dockcross_image:-}" "${docker_fqin_preusername}" "${dockcross_packages_apt:-}" "${dockcross_packages_yum:-}" >.ci/sd4/docker-image/Dockerfile
-    docker build -t "${docker_fqin_preusername}dkml-workflows/dockcross:latest" .ci/sd4/docker-image
+    #   Since GitLab CI limits environment variables to 255 characters, if you need to exceed that there are five (5)
+    #   variations of `dockcross_packages_apt` and `dockcross_packages_yum` to spread the packages over.
+    printf "FROM %s\nENV DEFAULT_DOCKCROSS_IMAGE %sdkml-workflows/dockcross:latest\nRUN if command -v apt-get; then apt-get update -y && apt-get install -y rsync %s %s %s %s %s && rm -rf /var/lib/apt/lists/*; fi\nRUN if command -v yum; then yum update -y && yum install -y rsync %s %s %s %s %s && yum clean all && rm -rf /var/cache/yum; fi; %s\n" \
+        "${dockcross_image:-}" "${docker_fqin_preusername}" \
+        "${dockcross_packages_apt:-}" "${dockcross_packages_apt2:-}" "${dockcross_packages_apt3:-}" "${dockcross_packages_apt4:-}" "${dockcross_packages_apt5:-}" \
+        "${dockcross_packages_yum:-}" "${dockcross_packages_yum2:-}" "${dockcross_packages_yum3:-}" "${dockcross_packages_yum4:-}" "${dockcross_packages_yum5:-}" \
+        "${docker_assemble_command:-true}" \
+        |tee .ci/sd4/docker-image/Dockerfile
+    docker build --quiet --tag "${docker_fqin_preusername}dkml-workflows/dockcross:latest" .ci/sd4/docker-image
 
-    # Save image id to re-use for all remaining dockcross invocations
+    # Save image id to re-use for all remaining invocations
     docker images --format "{{.ID}} {{.CreatedAt}}" | sort -rk 2 | awk 'NR==1{print $1}' | tee .ci/sd4/docker-image-id
-    dockcross_image_id=$(cat .ci/sd4/docker-image-id)
-    dockcross_cli_image_args="--image $dockcross_image_id"
+    docker_image_id=$(cat .ci/sd4/docker-image-id)
+    dockcross_cli_image_args="--image $docker_image_id"
+
+    section_end dockcross-build
+fi
+
+# Extend docker_image.
+if [ "${in_docker:-}" = "true" ] && [ -n "${docker_image:-}" ]; then
+    echo "Doing docker build"
+    section_begin docker-build "Summary: docker build --quiet --tag ${docker_fqin_preusername}dkml-workflows/docker"
+
+    install -d .ci/sd4/docker-image
+    printf "FROM %s\nRUN %s\n" "$docker_image" "${docker_assemble_command:-true}" \
+        |tee .ci/sd4/docker-image/Dockerfile
+    docker build --quiet --tag "${docker_fqin_preusername}dkml-workflows/docker:latest" .ci/sd4/docker-image
+
+    # Save image id to re-use for all remaining invocations
+    docker images --format "{{.ID}} {{.CreatedAt}}" | sort -rk 2 | awk 'NR==1{print $1}' | tee .ci/sd4/docker-image-id
+    docker_image_id=$(cat .ci/sd4/docker-image-id)
 
     section_end docker-build
 fi
@@ -1026,6 +1240,13 @@ fi
 section_begin setup-info "Summary: setup-dkml"
 
 SKIP_OPAM_MODIFICATIONS=${SKIP_OPAM_MODIFICATIONS:-false} # default is false
+
+if [ "$SKIP_OPAM_MODIFICATIONS" = "false" ]; then
+    if [ -z "${dkml_target_abi:-}" ]; then
+        echo "dkml_target_abi environment variable is required unless SKIP_OPAM_MODIFICATIONS=true" >&2
+        exit 2
+    fi
+fi
 
 # shellcheck disable=SC2154
 echo "
@@ -1042,8 +1263,8 @@ WORKSPACE=$setup_WORKSPACE
 ------
 Inputs
 ------
-FDOPEN_OPAMEXE_BOOTSTRAP=${FDOPEN_OPAMEXE_BOOTSTRAP:-}
 DISKUV_OPAM_REPOSITORY=${DISKUV_OPAM_REPOSITORY:-}
+OCAML_OPAM_REPOSITORY=${OCAML_OPAM_REPOSITORY:-}
 DKML_COMPILER=${DKML_COMPILER:-}
 OCAML_COMPILER=${OCAML_COMPILER:-}
 CONF_DKML_CROSS_TOOLCHAIN=${CONF_DKML_CROSS_TOOLCHAIN:-}
@@ -1054,18 +1275,26 @@ MANYLINUX=${MANYLINUX:-}
 DKML_HOME=${DKML_HOME:-}
 VERBOSE=${VERBOSE:-}
 .
--------------------
-Generated Constants
--------------------
+----------------------
+DkML Release Constants
+----------------------
 DKML_VERSION=$DKML_VERSION
 DEFAULT_DISKUV_OPAM_REPOSITORY_TAG=$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG
+DEFAULT_OCAML_OPAM_REPOSITORY_TAG=$DEFAULT_OCAML_OPAM_REPOSITORY_TAG
 DEFAULT_DKML_COMPILER=$DEFAULT_DKML_COMPILER
+BOOTSTRAP_OPAM_VERSION=$BOOTSTRAP_OPAM_VERSION
+.
+-------
+Context
+-------
+PC_PROJECT_DIR=${PC_PROJECT_DIR:-}
+GIT_LOCATION=${GIT_LOCATION:-}
 .
 ------
 Matrix
 ------
 dkml_host_abi=$dkml_host_abi
-bootstrap_opam_version=$bootstrap_opam_version
+dkml_target_abi=${dkml_target_abi:-}
 abi_pattern=$abi_pattern
 opam_root=${opam_root}
 opam_root_cacheable=${opam_root_cacheable}
@@ -1074,10 +1303,11 @@ original_opam_root_cacheable=${original_opam_root_cacheable}
 unix_opam_root=${unix_opam_root}
 unix_opam_root_cacheable=${unix_opam_root_cacheable}
 docker_registry=${docker_registry:-}
+in_docker=${in_docker:-}
 dockcross_image=${dockcross_image:-}
 dockcross_run_extra_args=${dockcross_run_extra_args:-}
+docker_image=${docker_image:-}
 docker_runner=${docker_runner:-}
-in_docker=${in_docker:-}
 ocaml_options=${ocaml_options:-}
 .
 ----
@@ -1106,122 +1336,26 @@ esac
 section_end setup-info
 
 do_bootstrap() {
-    # Bootstrap from historical release
-    runit_BOOTSTRAPPED=0
+    install -d .ci/sd4/bs
+    cd .ci/sd4/bs
 
-    #   Bootstrap opam from fdopen (Windows)
-    if [ "$runit_BOOTSTRAPPED" = 0 ] && [ "${FDOPEN_OPAMEXE_BOOTSTRAP:-}" = "true" ]; then
-        if [ -e .ci/sd4/opam64/bin/opam.exe ] && [ -e .ci/sd4/opam64/bin/opam-installer.exe ]; then
-            runit_BOOTSTRAPPED=1
+    if [ ! -e stamp ] || [ "$(cat stamp)" != "${BOOTSTRAP_OPAM_VERSION}${dkml_host_abi}" ]; then
+        echo 'Bootstrap opam from dkml-component-opam release ...'
+        if command -v curl > /dev/null 2> /dev/null; then
+            curl -s -L -o opam.tar.gz "https://github.com/diskuv/dkml-component-opam/releases/download/${BOOTSTRAP_OPAM_VERSION}/dkml-component-staging-opam.tar.gz"
         else
-            case "$dkml_host_abi" in
-            windows_*)
-                echo 'Bootstrap opam from fdopen (Windows) ...'
-                install -d .ci/sd4/bs/bin
-                wget -O "$setup_WORKSPACE"/.ci/sd4/opam64.tar.xz https://github.com/fdopen/opam-repository-mingw/releases/download/0.0.0.2/opam64.tar.xz
-
-                # this stalls: tar xvCfJ "$setup_WORKSPACE"/.ci/sd4 "$setup_WORKSPACE"/.ci/sd4/opam64.tar.xz
-                xz -v -d "$setup_WORKSPACE"/.ci/sd4/opam64.tar.xz
-                tar xvCf .ci/sd4 .ci/sd4/opam64.tar
-
-                rm -rf "$setup_WORKSPACE"/.ci/sd4/bs/bin/Opam.Runtime.amd64
-                mv -v "$setup_WORKSPACE"/.ci/sd4/opam64/bin/Opam.Runtime.amd64/ "$setup_WORKSPACE"/.ci/sd4/bs/bin/
-                mv -v "$setup_WORKSPACE"/.ci/sd4/opam64/bin/opam.exe "$setup_WORKSPACE"/.ci/sd4/bs/bin/
-                mv -v "$setup_WORKSPACE"/.ci/sd4/opam64/bin/opam-installer.exe "$setup_WORKSPACE"/.ci/sd4/bs/bin/
-
-                # diagnostics
-                ldd "$setup_WORKSPACE"/.ci/sd4/bs/bin/opam.exe
-                ldd "$setup_WORKSPACE"/.ci/sd4/bs/bin/opam-installer.exe
-
-                runit_BOOTSTRAPPED=1
-                ;;
-            esac
+            wget -q -O opam.tar.gz "https://github.com/diskuv/dkml-component-opam/releases/download/${BOOTSTRAP_OPAM_VERSION}/dkml-component-staging-opam.tar.gz"
         fi
+        tar tfz opam.tar.gz
+        tar xfz opam.tar.gz "./staging-files/${dkml_host_abi}/"
+        rm -rf bin/
+        mv "staging-files/${dkml_host_abi}/bin" .
+        rm -rf "${abi_pattern}"
+        printf "%s" "${BOOTSTRAP_OPAM_VERSION}${dkml_host_abi}" >stamp
     fi
 
-    #   Bootstrap from historical release
-    if [ "$runit_BOOTSTRAPPED" = 0 ] && [ "$bootstrap_opam_version" != "os" ]; then
-        install -d .ci/sd4/bs
-        cd .ci/sd4/bs
-
-        if [ ! -e version ] || [ "$(cat version)" != "$bootstrap_opam_version" ]; then
-            echo 'Bootstrap opam from historical release (non-Windows; Windows non-fdopen) ...'
-            if command -v curl > /dev/null 2> /dev/null; then
-                curl -L -o opam.tar.gz "https://github.com/diskuv/dkml-component-opam/releases/download/v${bootstrap_opam_version}/dkml-component-staging-opam.tar.gz"
-            else
-                wget -O opam.tar.gz "https://github.com/diskuv/dkml-component-opam/releases/download/v${bootstrap_opam_version}/dkml-component-staging-opam.tar.gz"
-            fi
-            tar tvfz opam.tar.gz
-            tar xfz opam.tar.gz "./staging-files/${dkml_host_abi}/"
-            rm -rf bin/
-            mv "staging-files/${dkml_host_abi}/bin" .
-            rm -rf "${abi_pattern}"
-            printf "%s" "${bootstrap_opam_version}" >version
-        fi
-
-        rm -f opam.tar.gz
-        cd ../../..
-
-        runit_BOOTSTRAPPED=1
-    fi
-
-    #   Bootstrap from package manager or GitHub ocaml/opam release
-    case "$runit_BOOTSTRAPPED,$bootstrap_opam_version,$dkml_host_abi" in
-    0,os,darwin_*)
-        if ! command -v opam; then
-            echo 'Bootstrap opam from package manager (macOS) ...'
-            brew install gpatch
-            brew install opam
-        fi
-        runit_BOOTSTRAPPED=1
-        ;;
-    0,os,linux_x86)
-        if [ ! -x .ci/sd4/bs/bin/opam ]; then
-            echo 'Bootstrap opam from GitHub ocaml/opam release (Linux x86) ...'
-            install -d .ci/sd4/bs/bin
-            if command -v curl > /dev/null 2> /dev/null; then
-                curl -L -o .ci/sd4/bs/bin/opam.tmp https://github.com/ocaml/opam/releases/download/2.1.2/opam-2.1.2-i686-linux
-            else
-                wget -O .ci/sd4/bs/bin/opam.tmp https://github.com/ocaml/opam/releases/download/2.1.2/opam-2.1.2-i686-linux
-            fi
-            sha512_check=$(openssl sha512 2>&1 </dev/null | cut -f 2 -d ' ')
-            if [ "$SHA512_DEVNULL" = "$sha512_check" ]; then
-                sha512=$(openssl sha512 ".ci/sd4/bs/bin/opam.tmp" 2>/dev/null | cut -f 2 -d ' ')
-                check="85a480d60e09a7d37fa0d0434ed97a3187434772ceb4e7e8faa5b06bc18423d004af3ad5849c7d35e72dca155103257fd6b1178872df8291583929eb8f884b6a"
-                test "$sha512" = "$check"
-                chmod +x .ci/sd4/bs/bin/opam.tmp
-                mv .ci/sd4/bs/bin/opam.tmp .ci/sd4/bs/bin/opam
-            else
-                echo "openssl 512 option unsupported."
-                exit 61
-            fi
-        fi
-        runit_BOOTSTRAPPED=1
-        ;;
-    0,os,linux_x86_64)
-        if [ ! -x .ci/sd4/bs/bin/opam ]; then
-            echo 'Bootstrap opam from GitHub ocaml/opam release (Linux x86_64) ...'
-            install -d .ci/sd4/bs/bin
-            if command -v curl > /dev/null 2> /dev/null; then
-                curl -L -o .ci/sd4/bs/bin/opam.tmp https://github.com/ocaml/opam/releases/download/2.1.2/opam-2.1.2-x86_64-linux
-            else
-                wget -O .ci/sd4/bs/bin/opam.tmp https://github.com/ocaml/opam/releases/download/2.1.2/opam-2.1.2-x86_64-linux
-            fi
-            sha512_check=$(openssl sha512 2>&1 </dev/null | cut -f 2 -d ' ')
-            if [ "$SHA512_DEVNULL" = "$sha512_check" ]; then
-                sha512=$(openssl sha512 ".ci/sd4/bs/bin/opam.tmp" 2>/dev/null | cut -f 2 -d ' ')
-                check="c0657ecbd4dc212587a4da70c5ff0402df95d148867be0e1eb1be8863a2851015f191437c3c99b7c2b153fcaa56cac99169c76ec94c5787750d7a59cd1fbb68b"
-                test "$sha512" = "$check"
-                chmod +x .ci/sd4/bs/bin/opam.tmp
-                mv .ci/sd4/bs/bin/opam.tmp .ci/sd4/bs/bin/opam
-            else
-                echo "openssl 512 option unsupported."
-                exit 61
-            fi
-        fi
-        runit_BOOTSTRAPPED=1
-        ;;
-    esac
+    rm -f opam.tar.gz
+    cd ../../..
 }
 section_begin bootstrap-opam 'Bootstrap opam'
 do_bootstrap
@@ -1239,7 +1373,7 @@ do_get_dockcross() {
         section_begin get-dockcross 'Get dockcross binary (ManyLinux)'
         install -d .ci/sd4
         #   shellcheck disable=SC2086
-        docker run ${dockcross_run_extra_args:-} --rm "${dockcross_image_id}" >.ci/sd4/dockcross.gen
+        docker run ${dockcross_run_extra_args:-} --rm "${docker_image_id}" >.ci/sd4/dockcross.gen
 
         # PROBLEM 1
         # ---------
@@ -1332,12 +1466,40 @@ if [ "\$BUILDER_UID" = 0 ] && [ "\$BUILDER_GID" = 0 ]; then
         shift
     fi
 
+    # Handle: dockcross --args "-v X:Y --platform P" --image "..." --
+    # Confer: https://github.com/dockcross/dockcross/blob/96d87416f639af0204bdd42553e4b99315ca8476/imagefiles/dockcross#L97C1-L134
+    ARG_ARGS=
+    ARG_IMAGE="${docker_image_id}"
+    while [[ \$# != 0 ]]; do
+        case \$1 in
+            --)
+                shift
+                break
+                ;;
+            --args|-a)
+                ARG_ARGS="\$2"
+                shift 2
+                ;;
+            --image|-i)
+                ARG_IMAGE="\$2"
+                shift 2
+                ;;
+            -*)
+                echo Unknown option \"\$1\" >&2
+                exit 67
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
     # Directly invoke entrypoint
     exec docker run --entrypoint /bin/bash \
         --rm \
-        \${ARGS:-} \
+        \${ARG_ARGS} \
          -v "\$HOST_PWD":/work \
-        "${dockcross_image_id}" ${dockcross_entrypoint} "\$@"
+        "\${ARG_IMAGE}" ${dockcross_entrypoint} "\$@"
 else
     HERE=\$(dirname "\$0")
     HERE=\$(cd "\$HERE" && pwd)
@@ -1370,23 +1532,6 @@ do_get_opam_cache
 # Setup Opam
 
 do_write_opam_scripts() {
-    case "${FDOPEN_OPAMEXE_BOOTSTRAP:-},$dkml_host_abi" in
-    true,windows_*)
-        # With fdopen's opam.exe, 'os-distribution = "cygwinports"'. But native Windows opam.exe has 'os-distribution = "win32"'.
-        # But on Windows we always want MSYS2 or native Windows libraries, not Cygwin. If cygwinports then
-        # code like https://github.com/ocaml/opam-repository/blob/08cbb8258bd4bf30cd6f307c958911a29d537b54/packages/conf-pkg-config/conf-pkg-config.2/opam#L36
-        # will fail. So always set 'os-distribution = "win32"' on Windows.
-        PATCH_OS_DISTRIBUTION_WIN32=true
-        # With fdopen's opam.exe, no 'exe = ".exe"' is set because Cygwin does not need file extensions.
-        # Native Windows requires a .exe extension.
-        PATCH_EXE_WIN32=true
-        ;;
-    *)
-        PATCH_OS_DISTRIBUTION_WIN32=false
-        PATCH_EXE_WIN32=false
-        ;;
-    esac
-
     # ---------------------
     # Empty opam repository
     # ---------------------
@@ -1427,8 +1572,7 @@ EOF
 
     # ---------------
     # Create Opam support scripts (not needed for all platforms)
-    #   The PATH to find opam must work internally in setup-dkml.yml (sd4/bs/bin) and
-    #   by consumers of setup-dkml.yml (sd4/opamexe)
+    #   The PATH to find opam must work internally in setup-dkml.yml (sd4/bs/bin)
     # ---------------
 
     USER_ID=$(id -u)
@@ -1439,7 +1583,7 @@ EOF
     case "${opam_root}" in
     /* | ?:*) # /a/b/c or C:\Windows
         validate_supports_docker() {
-            echo "Docker only supported with relative paths for the opam root, not: ${opam_root}" >&2
+            echo "Docker only supported with relative paths for the opam root, not: ${opam_root}"
             exit 3
         }
         ;;
@@ -1450,11 +1594,9 @@ EOF
         cat >.ci/sd4/run-in-docker <<EOF
 #!/bin/sh
 set -euf
-export PATH="/work/.ci/local/bin:/work/.ci/sd4/bs/bin:/work/.ci/sd4/opamexe:\$PATH"
+export PATH="/work/.ci/local/bin:/work/.ci/sd4/bs/bin:\$PATH"
 export OPAMROOT=/work/${opam_root}
 export OPAMROOTISOK=1
-if [ "${PATCH_OS_DISTRIBUTION_WIN32}" = true ]; then export OPAMVAR_os_distribution=win32; fi
-if [ "${PATCH_EXE_WIN32}" = true ]; then export OPAMVAR_exe=.exe; fi
 
 # Reset environment so no conflicts with a parent Opam or OCaml system
 unset OPAM_SWITCH_PREFIX
@@ -1536,29 +1678,29 @@ EOF
         validate_supports_docker
 
         # Bundle for consumers of setup-dkml.yml
-        echo '__ run-in-docker __' >&2
-        cat .ci/sd4/run-in-docker >&2
-        echo '___________________' >&2
+        echo '__ run-in-docker __'
+        cat .ci/sd4/run-in-docker
+        echo '___________________'
         do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/run-with-env .ci/sd4/run-in-docker .ci/sd4/edr
 
-    elif [ "${in_docker:-}" = "true" ] && [ -n "${docker_runner:-}" ]; then
+    elif [ "${in_docker:-}" = "true" ] && [ -n "${docker_image:-}" ]; then
 
         cat >.ci/sd4/run-with-env <<EOF
 #!/bin/sh
 set -euf
-exec ${docker_runner:-} /work/.ci/sd4/deescalate /work/.ci/sd4/run-in-docker "\$@"
+exec ${docker_runner:-docker run --rm --workdir /work} -v "\$PWD:/work" '$docker_image_id' /work/.ci/sd4/run-in-docker "\$@"
 EOF
         chmod +x .ci/sd4/run-with-env
 
         validate_supports_docker
 
         # Bundle for consumers of setup-dkml.yml
-        echo '__ run-in-docker __' >&2
-        cat .ci/sd4/run-in-docker >&2
-        echo '________________________' >&2
-        echo '__ deescalate __' >&2
-        cat .ci/sd4/deescalate >&2
-        echo '________________' >&2
+        echo '__ run-in-docker __'
+        cat .ci/sd4/run-in-docker
+        echo '________________________'
+        echo '__ deescalate __'
+        cat .ci/sd4/deescalate
+        echo '________________'
         do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/run-with-env .ci/sd4/run-in-docker .ci/sd4/deescalate
 
     else
@@ -1571,11 +1713,9 @@ HERE=\$(dirname "\$0")
 HERE=\$(cd "\$HERE" && pwd)
 PROJECT_DIR=\$(cd "\$HERE"/../.. && pwd)
 
-export PATH="\${PROJECT_DIR}/.ci/local/bin:\${PROJECT_DIR}/.ci/sd4/bs/bin:\${PROJECT_DIR}/.ci/sd4/opamexe:\$PATH"
+export PATH="\${PROJECT_DIR}/.ci/local/bin:\${PROJECT_DIR}/.ci/sd4/bs/bin:\$PATH"
 export OPAMROOT='${opam_root}'
 export OPAMROOTISOK=1
-if [ "${PATCH_OS_DISTRIBUTION_WIN32}" = true ]; then export OPAMVAR_os_distribution=win32; fi
-if [ "${PATCH_EXE_WIN32}" = true ]; then export OPAMVAR_exe=.exe; fi
 
 # Reset environment so no conflicts with a parent Opam or OCaml system
 unset OPAM_SWITCH_PREFIX
@@ -1609,9 +1749,9 @@ EOF
         do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/run-with-env
 
     fi
-    echo '__ run-with-env __' >&2
-    cat .ci/sd4/run-with-env >&2
-    echo '__________________' >&2
+    echo '__ run-with-env __'
+    cat .ci/sd4/run-with-env
+    echo '__________________'
 
     # ------
     # cmdrun
@@ -1652,9 +1792,15 @@ if [ -n "\${COMSPEC:-}" ]; then
     PATH="/usr/bin:\$PATH"
 fi
 
+# Propagate important CI environment variables
+export CI='${CI:-}'
+
 exec "\${PROJECT_DIR}/.ci/sd4/run-with-env" "\$@"
 EOF
     chmod +x .ci/sd4/opamrun/cmdrun
+    echo '__ cmdrun __'
+    cat .ci/sd4/opamrun/cmdrun
+    echo '____________'
 
     # -------
     # opamrun
@@ -1672,6 +1818,9 @@ PROJECT_DIR=\$(cd "\$HERE"/../../.. && pwd)
 exec "\${PROJECT_DIR}/.ci/sd4/opamrun/cmdrun" opam "\$@"
 EOF
     chmod +x .ci/sd4/opamrun/opamrun
+    echo '__ opamrun __'
+    cat .ci/sd4/opamrun/opamrun
+    echo '_____________'
 
     # Bundle for consumers of setup-dkml.yml
     do_tar_rf .ci/sd4/dist/run-with-env.tar .ci/sd4/opamrun
@@ -1706,21 +1855,47 @@ if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ] && [ ! -s "$opam_root/.ci.root-i
 
     # Clear any partial previous attempt
     rm -rf "$opam_root"
+    
+    # Set --git-location variant
+    if [ -n "${GIT_LOCATION:-}" ]; then
+        if [ -x /usr/bin/cygpath ]; then
+            GIT_LOCATION_MIXED=$(/usr/bin/cygpath -am "$GIT_LOCATION")
+            opamrun_gitloc() {
+                opamrun "$@" "--git-location=$GIT_LOCATION_MIXED"
+            }
+        else
+            opamrun_gitloc() {
+                opamrun "$@" "--git-location=$GIT_LOCATION"
+            }
+        fi
+    else
+        opamrun_gitloc() {
+            opamrun "$@"
+        }
+    fi
 
     case "$dkml_host_abi,${in_docker:-}" in
     windows_*,*)
-        eor=$(cygpath -am "$setup_WORKSPACE"/.ci/sd4/eor)
-        opamrun init --disable-sandboxing --no-setup --kind local --bare "$eor"
+        eor=$(/usr/bin/cygpath -am "$setup_WORKSPACE"/.ci/sd4/eor)
+        cygloc=$(/usr/bin/cygpath -am /)
         case "$(opamrun --version)" in
-        2.0.*) echo 'download-command: wget' >>"$opam_root/config" ;;
-        *) opamrun option --yes --global download-command=wget ;;
+         2.1.*|2.0.*|1.*) opamrun init --disable-sandboxing --no-setup --kind local --bare "$eor" ;;
+         *) opamrun_gitloc init --disable-sandboxing --no-setup --kind local "--cygwin-location=$cygloc" --bare "$eor" ;;
+        esac
+        case "$(opamrun --version)" in
+         2.0.*) echo 'download-command: wget' >>"$opam_root/config" ;;
+         *) opamrun option --yes --global download-command=wget ;;
         esac
         ;;
     *,true)
+        #  no --git-location needed inside Docker container
         opamrun init --disable-sandboxing --no-setup --kind local --bare "/work/.ci/sd4/eor"
         ;;
     *)
-        opamrun init --disable-sandboxing --no-setup --kind local --bare "$setup_WORKSPACE/.ci/sd4/eor"
+        case "$(opamrun --version)" in
+         2.1.*|2.0.*|1.*) opamrun init --disable-sandboxing --no-setup --kind local --bare "$setup_WORKSPACE/.ci/sd4/eor" ;;
+         *) opamrun_gitloc init --disable-sandboxing --no-setup --kind local --bare "$setup_WORKSPACE/.ci/sd4/eor" ;;
+        esac
         ;;
     esac
     echo yes > "$opam_root/.ci.root-init"
@@ -1788,10 +1963,17 @@ if [ "${SKIP_OPAM_MODIFICATIONS:-}" = "false" ]; then
     do_switch_active
 fi
 
+case "${DISKUV_OPAM_REPOSITORY:-}" in
+  file://*) 
+    DISKUV_OPAM_REPOSITORY_URI="${DISKUV_OPAM_REPOSITORY}" ;;
+  *)
+    DISKUV_OPAM_REPOSITORY_URI="git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" ;;
+esac
+
 do_opam_repositories_add() {
     section_begin "opam-repo-add" "Add 'diskuv' opam repository"
     if ! opamrun --no-troubleshooting repository list -s | grep '^diskuv'; then
-        opamrun repository add diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
+        opamrun repository add diskuv "${DISKUV_OPAM_REPOSITORY_URI}" --yes --dont-select
     fi
     section_end "opam-repo-add"
 }
@@ -1825,9 +2007,9 @@ fi
 do_opam_repositories_update() {
     section_begin "opam-repo-update" "Update opam repositories"
     # The default repository may be the initial 'eor' (empty) repository
-    opamrun repository set-url default https://opam.ocaml.org --yes
+    opamrun repository set-url default "git+https://github.com/ocaml/opam-repository.git#${OCAML_OPAM_REPOSITORY:-$DEFAULT_OCAML_OPAM_REPOSITORY_TAG}" --yes
     # Always set the `diskuv` repository url since it can change
-    opamrun repository set-url diskuv "git+https://github.com/diskuv/diskuv-opam-repository.git#${DISKUV_OPAM_REPOSITORY:-$DEFAULT_DISKUV_OPAM_REPOSITORY_TAG}" --yes --dont-select
+    opamrun repository set-url diskuv "${DISKUV_OPAM_REPOSITORY_URI}" --yes --dont-select
     # Update both `default` and `diskuv` Opam repositories
     opamrun update default diskuv
     section_end "opam-repo-update"
@@ -1841,152 +2023,208 @@ do_pins() {
     shift
 
     section_begin "opam-pins-$do_pins_NAME" "Opam pins for $do_pins_NAME switch"
+    #   adapted from dkml-runtime-common's _common_tool.sh:get_opam_switch_state_toplevelsection
+    if [ -e "$opam_root/$do_pins_NAME/.opam-switch/switch-state" ]; then
+        #       shellcheck disable=SC2016
+        awk -v section="pinned" \
+            '$1 ~ ":" {state=0} $1==(section ":") {state=1} state==1{print}' \
+            "$opam_root/$do_pins_NAME/.opam-switch/switch-state" \
+            > "$opam_root/.ci.$do_pins_NAME.pinned"
+    else
+        touch "$opam_root/.ci.$do_pins_NAME.pinned"
+    fi
+    printf "#!/bin/sh\nset -eufx\n" > "$opam_root/.ci.$do_pins_NAME.do.sh"
+    do_pin_add() {
+        do_pin_add_NAME=$1; shift
+        do_pin_add_VER=$1; shift
+        # ex. "astring.1.0.2" - The double-quotes are necessary.
+        if ! grep -q "\"$do_pin_add_NAME.$do_pin_add_VER\"" "$opam_root/.ci.$do_pins_NAME.pinned"; then
+            printf "opam pin add --switch '%s' --yes --no-action -k version '%s' '%s'\n" "$do_pins_NAME" "$do_pin_add_NAME" "$do_pin_add_VER" >> "$opam_root/.ci.$do_pins_NAME.do.sh"
+        fi
+    }
     ### BEGIN pin-adds. DO NOT EDIT THE LINES IN THIS SECTION
     # Managed by bump-packages.cmake
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version astring "${PIN_ASTRING}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version base "${PIN_BASE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version bigarray-compat "${PIN_BIGARRAY_COMPAT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version bos "${PIN_BOS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version camlp-streams "${PIN_CAMLP_STREAMS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version chrome-trace "${PIN_CHROME_TRACE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version cmdliner "${PIN_CMDLINER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version conf-dkml-sys-opam "${PIN_CONF_DKML_SYS_OPAM}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version conf-pkg-config "${PIN_CONF_PKG_CONFIG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version conf-sqlite3 "${PIN_CONF_SQLITE3}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version cppo "${PIN_CPPO}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version crunch "${PIN_CRUNCH}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version csexp "${PIN_CSEXP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes "${PIN_CTYPES}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ctypes-foreign "${PIN_CTYPES_FOREIGN}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version cudf "${PIN_CUDF}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version diskuvbox "${PIN_DISKUVBOX}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-apps "${PIN_DKML_APPS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-base-compiler "${PIN_DKML_BASE_COMPILER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-build-desktop "${PIN_DKML_BUILD_DESKTOP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-c-probe "${PIN_DKML_C_PROBE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-compiler-src "${PIN_DKML_COMPILER_SRC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-component-xx-console "${PIN_DKML_COMPONENT_XX_CONSOLE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe "${PIN_DKML_EXE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-exe-lib "${PIN_DKML_EXE_LIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-install "${PIN_DKML_INSTALL}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-install-installer "${PIN_DKML_INSTALL_INSTALLER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-install-runner "${PIN_DKML_INSTALL_RUNNER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-installer-ocaml-common "${PIN_DKML_INSTALLER_OCAML_COMMON}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-package-console "${PIN_DKML_PACKAGE_CONSOLE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-runtime-common "${PIN_DKML_RUNTIME_COMMON}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-runtime-common-native "${PIN_DKML_RUNTIME_COMMON_NATIVE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-runtime-distribution "${PIN_DKML_RUNTIME_DISTRIBUTION}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-runtimelib "${PIN_DKML_RUNTIMELIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-runtimescripts "${PIN_DKML_RUNTIMESCRIPTS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dkml-workflows "${PIN_DKML_WORKFLOWS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune "${PIN_DUNE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-action-plugin "${PIN_DUNE_ACTION_PLUGIN}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-build-info "${PIN_DUNE_BUILD_INFO}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-configurator "${PIN_DUNE_CONFIGURATOR}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-glob "${PIN_DUNE_GLOB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-private-libs "${PIN_DUNE_PRIVATE_LIBS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-rpc "${PIN_DUNE_RPC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-rpc-lwt "${PIN_DUNE_RPC_LWT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dune-site "${PIN_DUNE_SITE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version dyn "${PIN_DYN}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version either "${PIN_EITHER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version extlib "${PIN_EXTLIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version feather "${PIN_FEATHER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version fiber "${PIN_FIBER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version fix "${PIN_FIX}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version fmt "${PIN_FMT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version fpath "${PIN_FPATH}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version graphics "${PIN_GRAPHICS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version integers "${PIN_INTEGERS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version jane-street-headers "${PIN_JANE_STREET_HEADERS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version jingoo "${PIN_JINGOO}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version jsonrpc "${PIN_JSONRPC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version jst-config "${PIN_JST_CONFIG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version lambda-term "${PIN_LAMBDA_TERM}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version logs "${PIN_LOGS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version lsp "${PIN_LSP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version lwt "${PIN_LWT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version lwt_react "${PIN_LWT_REACT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version mccs "${PIN_MCCS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version mdx "${PIN_MDX}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version menhir "${PIN_MENHIR}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version menhirLib "${PIN_MENHIRLIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version menhirSdk "${PIN_MENHIRSDK}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version merlin-lib "${PIN_MERLIN_LIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version metapp "${PIN_METAPP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version metaquot "${PIN_METAQUOT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version mew "${PIN_MEW}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version mew_vi "${PIN_MEW_VI}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version num "${PIN_NUM}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocaml "${PIN_OCAML}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocaml-compiler-libs "${PIN_OCAML_COMPILER_LIBS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocaml-lsp-server "${PIN_OCAML_LSP_SERVER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocaml-version "${PIN_OCAML_VERSION}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlbuild "${PIN_OCAMLBUILD}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlc-loc "${PIN_OCAMLC_LOC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlfind "${PIN_OCAMLFIND}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlformat "${PIN_OCAMLFORMAT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlformat-lib "${PIN_OCAMLFORMAT_LIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocamlformat-rpc-lib "${PIN_OCAMLFORMAT_RPC_LIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocp-indent "${PIN_OCP_INDENT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ocplib-endian "${PIN_OCPLIB_ENDIAN}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version odoc "${PIN_ODOC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version odoc-parser "${PIN_ODOC_PARSER}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ordering "${PIN_ORDERING}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version parsexp "${PIN_PARSEXP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version pp "${PIN_PP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_assert "${PIN_PPX_ASSERT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_base "${PIN_PPX_BASE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_cold "${PIN_PPX_COLD}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_compare "${PIN_PPX_COMPARE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_derivers "${PIN_PPX_DERIVERS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_deriving "${PIN_PPX_DERIVING}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_enumerate "${PIN_PPX_ENUMERATE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_expect "${PIN_PPX_EXPECT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_globalize "${PIN_PPX_GLOBALIZE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_hash "${PIN_PPX_HASH}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_here "${PIN_PPX_HERE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_ignore_instrumentation "${PIN_PPX_IGNORE_INSTRUMENTATION}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_inline_test "${PIN_PPX_INLINE_TEST}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_optcomp "${PIN_PPX_OPTCOMP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_pipebang "${PIN_PPX_PIPEBANG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_sexp_conv "${PIN_PPX_SEXP_CONV}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppx_yojson_conv_lib "${PIN_PPX_YOJSON_CONV_LIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ppxlib "${PIN_PPXLIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version ptime "${PIN_PTIME}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version qrc "${PIN_QRC}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version re "${PIN_RE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version react "${PIN_REACT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version refl "${PIN_REFL}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version result "${PIN_RESULT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version rresult "${PIN_RRESULT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version seq "${PIN_SEQ}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version sexplib "${PIN_SEXPLIB}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version sexplib0 "${PIN_SEXPLIB0}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version sha "${PIN_SHA}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version spawn "${PIN_SPAWN}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version sqlite3 "${PIN_SQLITE3}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version stdcompat "${PIN_STDCOMPAT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version stdio "${PIN_STDIO}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version stdlib-shims "${PIN_STDLIB_SHIMS}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version stdune "${PIN_STDUNE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version time_now "${PIN_TIME_NOW}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version topkg "${PIN_TOPKG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version traverse "${PIN_TRAVERSE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version trie "${PIN_TRIE}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version tsort "${PIN_TSORT}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version tyxml "${PIN_TYXML}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version uchar "${PIN_UCHAR}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version utop "${PIN_UTOP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version uucp "${PIN_UUCP}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version uuidm "${PIN_UUIDM}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version uuseg "${PIN_UUSEG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version uutf "${PIN_UUTF}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version with-dkml "${PIN_WITH_DKML}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version xdg "${PIN_XDG}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version yojson "${PIN_YOJSON}"
-    opamrun pin add --switch "$do_pins_NAME"  --yes --no-action -k version zed "${PIN_ZED}"
+    do_pin_add MlFront_Unpack "${PIN_MLFRONT_UNPACK}"
+    do_pin_add angstrom "${PIN_ANGSTROM}"
+    do_pin_add angstrom-lwt-unix "${PIN_ANGSTROM_LWT_UNIX}"
+    do_pin_add astring "${PIN_ASTRING}"
+    do_pin_add base "${PIN_BASE}"
+    do_pin_add base64 "${PIN_BASE64}"
+    do_pin_add bigarray-compat "${PIN_BIGARRAY_COMPAT}"
+    do_pin_add bigstringaf "${PIN_BIGSTRINGAF}"
+    do_pin_add bos "${PIN_BOS}"
+    do_pin_add camlp-streams "${PIN_CAMLP_STREAMS}"
+    do_pin_add chrome-trace "${PIN_CHROME_TRACE}"
+    do_pin_add cmdliner "${PIN_CMDLINER}"
+    do_pin_add conf-bash "${PIN_CONF_BASH}"
+    do_pin_add conf-dkml-sys-opam "${PIN_CONF_DKML_SYS_OPAM}"
+    do_pin_add conf-dksdk "${PIN_CONF_DKSDK}"
+    do_pin_add conf-pkg-config "${PIN_CONF_PKG_CONFIG}"
+    do_pin_add conf-sdl2 "${PIN_CONF_SDL2}"
+    do_pin_add conf-sqlite3 "${PIN_CONF_SQLITE3}"
+    do_pin_add cppo "${PIN_CPPO}"
+    do_pin_add crunch "${PIN_CRUNCH}"
+    do_pin_add csexp "${PIN_CSEXP}"
+    do_pin_add cstruct "${PIN_CSTRUCT}"
+    do_pin_add ctypes "${PIN_CTYPES}"
+    do_pin_add ctypes-foreign "${PIN_CTYPES_FOREIGN}"
+    do_pin_add cudf "${PIN_CUDF}"
+    do_pin_add dap "${PIN_DAP}"
+    do_pin_add digestif "${PIN_DIGESTIF}"
+    do_pin_add diskuvbox "${PIN_DISKUVBOX}"
+    do_pin_add dkml-apps "${PIN_DKML_APPS}"
+    do_pin_add dkml-base-compiler "${PIN_DKML_BASE_COMPILER}"
+    do_pin_add dkml-build-desktop "${PIN_DKML_BUILD_DESKTOP}"
+    do_pin_add dkml-c-probe "${PIN_DKML_C_PROBE}"
+    do_pin_add dkml-compiler-src "${PIN_DKML_COMPILER_SRC}"
+    do_pin_add dkml-component-xx-console "${PIN_DKML_COMPONENT_XX_CONSOLE}"
+    do_pin_add dkml-exe "${PIN_DKML_EXE}"
+    do_pin_add dkml-exe-lib "${PIN_DKML_EXE_LIB}"
+    do_pin_add dkml-host-abi "${PIN_DKML_HOST_ABI}"
+    do_pin_add dkml-host-abi-windows_x86_64 "${PIN_DKML_HOST_ABI_WINDOWS_X86_64}"
+    do_pin_add dkml-install "${PIN_DKML_INSTALL}"
+    do_pin_add dkml-install-installer "${PIN_DKML_INSTALL_INSTALLER}"
+    do_pin_add dkml-install-runner "${PIN_DKML_INSTALL_RUNNER}"
+    do_pin_add dkml-installer-ocaml-common "${PIN_DKML_INSTALLER_OCAML_COMMON}"
+    do_pin_add dkml-option-bx32 "${PIN_DKML_OPTION_BX32}"
+    do_pin_add dkml-package-console "${PIN_DKML_PACKAGE_CONSOLE}"
+    do_pin_add dkml-runtime-common "${PIN_DKML_RUNTIME_COMMON}"
+    do_pin_add dkml-runtime-common-native "${PIN_DKML_RUNTIME_COMMON_NATIVE}"
+    do_pin_add dkml-runtime-distribution "${PIN_DKML_RUNTIME_DISTRIBUTION}"
+    do_pin_add dkml-runtimelib "${PIN_DKML_RUNTIMELIB}"
+    do_pin_add dkml-runtimescripts "${PIN_DKML_RUNTIMESCRIPTS}"
+    do_pin_add dkml-target-abi-any "${PIN_DKML_TARGET_ABI_ANY}"
+    do_pin_add dkml-target-abi-windows_x86_64 "${PIN_DKML_TARGET_ABI_WINDOWS_X86_64}"
+    do_pin_add dkml-workflows "${PIN_DKML_WORKFLOWS}"
+    do_pin_add dune "${PIN_DUNE}"
+    do_pin_add dune-action-plugin "${PIN_DUNE_ACTION_PLUGIN}"
+    do_pin_add dune-build-info "${PIN_DUNE_BUILD_INFO}"
+    do_pin_add dune-configurator "${PIN_DUNE_CONFIGURATOR}"
+    do_pin_add dune-glob "${PIN_DUNE_GLOB}"
+    do_pin_add dune-private-libs "${PIN_DUNE_PRIVATE_LIBS}"
+    do_pin_add dune-rpc "${PIN_DUNE_RPC}"
+    do_pin_add dune-rpc-lwt "${PIN_DUNE_RPC_LWT}"
+    do_pin_add dune-site "${PIN_DUNE_SITE}"
+    do_pin_add dyn "${PIN_DYN}"
+    do_pin_add earlybird "${PIN_EARLYBIRD}"
+    do_pin_add either "${PIN_EITHER}"
+    do_pin_add eqaf "${PIN_EQAF}"
+    do_pin_add extlib "${PIN_EXTLIB}"
+    do_pin_add feather "${PIN_FEATHER}"
+    do_pin_add fiber "${PIN_FIBER}"
+    do_pin_add fix "${PIN_FIX}"
+    do_pin_add fmt "${PIN_FMT}"
+    do_pin_add fpath "${PIN_FPATH}"
+    do_pin_add graphics "${PIN_GRAPHICS}"
+    do_pin_add hmap "${PIN_HMAP}"
+    do_pin_add host-arch-x86_64 "${PIN_HOST_ARCH_X86_64}"
+    do_pin_add integers "${PIN_INTEGERS}"
+    do_pin_add iostream "${PIN_IOSTREAM}"
+    do_pin_add iter "${PIN_ITER}"
+    do_pin_add jane-street-headers "${PIN_JANE_STREET_HEADERS}"
+    do_pin_add jingoo "${PIN_JINGOO}"
+    do_pin_add jsonrpc "${PIN_JSONRPC}"
+    do_pin_add jst-config "${PIN_JST_CONFIG}"
+    do_pin_add lambda-term "${PIN_LAMBDA_TERM}"
+    do_pin_add logs "${PIN_LOGS}"
+    do_pin_add lru "${PIN_LRU}"
+    do_pin_add lsp "${PIN_LSP}"
+    do_pin_add lwt "${PIN_LWT}"
+    do_pin_add lwt_ppx "${PIN_LWT_PPX}"
+    do_pin_add lwt_react "${PIN_LWT_REACT}"
+    do_pin_add mccs "${PIN_MCCS}"
+    do_pin_add mdx "${PIN_MDX}"
+    do_pin_add menhir "${PIN_MENHIR}"
+    do_pin_add menhirCST "${PIN_MENHIRCST}"
+    do_pin_add menhirLib "${PIN_MENHIRLIB}"
+    do_pin_add menhirSdk "${PIN_MENHIRSDK}"
+    do_pin_add merlin-lib "${PIN_MERLIN_LIB}"
+    do_pin_add metapp "${PIN_METAPP}"
+    do_pin_add metaquot "${PIN_METAQUOT}"
+    do_pin_add mew "${PIN_MEW}"
+    do_pin_add mew_vi "${PIN_MEW_VI}"
+    do_pin_add msys2 "${PIN_MSYS2}"
+    do_pin_add msys2-clang64 "${PIN_MSYS2_CLANG64}"
+    do_pin_add num "${PIN_NUM}"
+    do_pin_add ocaml "${PIN_OCAML}"
+    do_pin_add ocaml-compiler-libs "${PIN_OCAML_COMPILER_LIBS}"
+    do_pin_add ocaml-lsp-server "${PIN_OCAML_LSP_SERVER}"
+    do_pin_add ocaml-syntax-shims "${PIN_OCAML_SYNTAX_SHIMS}"
+    do_pin_add ocaml-version "${PIN_OCAML_VERSION}"
+    do_pin_add ocamlbuild "${PIN_OCAMLBUILD}"
+    do_pin_add ocamlc-loc "${PIN_OCAMLC_LOC}"
+    do_pin_add ocamlfind "${PIN_OCAMLFIND}"
+    do_pin_add ocamlformat "${PIN_OCAMLFORMAT}"
+    do_pin_add ocamlformat-lib "${PIN_OCAMLFORMAT_LIB}"
+    do_pin_add ocamlformat-rpc-lib "${PIN_OCAMLFORMAT_RPC_LIB}"
+    do_pin_add ocp-indent "${PIN_OCP_INDENT}"
+    do_pin_add ocplib-endian "${PIN_OCPLIB_ENDIAN}"
+    do_pin_add odoc "${PIN_ODOC}"
+    do_pin_add odoc-parser "${PIN_ODOC_PARSER}"
+    do_pin_add ordering "${PIN_ORDERING}"
+    do_pin_add parsexp "${PIN_PARSEXP}"
+    do_pin_add path_glob "${PIN_PATH_GLOB}"
+    do_pin_add posixat "${PIN_POSIXAT}"
+    do_pin_add pp "${PIN_PP}"
+    do_pin_add ppx_assert "${PIN_PPX_ASSERT}"
+    do_pin_add ppx_base "${PIN_PPX_BASE}"
+    do_pin_add ppx_cold "${PIN_PPX_COLD}"
+    do_pin_add ppx_compare "${PIN_PPX_COMPARE}"
+    do_pin_add ppx_derivers "${PIN_PPX_DERIVERS}"
+    do_pin_add ppx_deriving "${PIN_PPX_DERIVING}"
+    do_pin_add ppx_deriving_yojson "${PIN_PPX_DERIVING_YOJSON}"
+    do_pin_add ppx_enumerate "${PIN_PPX_ENUMERATE}"
+    do_pin_add ppx_expect "${PIN_PPX_EXPECT}"
+    do_pin_add ppx_globalize "${PIN_PPX_GLOBALIZE}"
+    do_pin_add ppx_hash "${PIN_PPX_HASH}"
+    do_pin_add ppx_here "${PIN_PPX_HERE}"
+    do_pin_add ppx_ignore_instrumentation "${PIN_PPX_IGNORE_INSTRUMENTATION}"
+    do_pin_add ppx_inline_test "${PIN_PPX_INLINE_TEST}"
+    do_pin_add ppx_optcomp "${PIN_PPX_OPTCOMP}"
+    do_pin_add ppx_pipebang "${PIN_PPX_PIPEBANG}"
+    do_pin_add ppx_sexp_conv "${PIN_PPX_SEXP_CONV}"
+    do_pin_add ppx_yojson_conv_lib "${PIN_PPX_YOJSON_CONV_LIB}"
+    do_pin_add ppxlib "${PIN_PPXLIB}"
+    do_pin_add psq "${PIN_PSQ}"
+    do_pin_add ptime "${PIN_PTIME}"
+    do_pin_add qrc "${PIN_QRC}"
+    do_pin_add re "${PIN_RE}"
+    do_pin_add react "${PIN_REACT}"
+    do_pin_add refl "${PIN_REFL}"
+    do_pin_add result "${PIN_RESULT}"
+    do_pin_add rresult "${PIN_RRESULT}"
+    do_pin_add seq "${PIN_SEQ}"
+    do_pin_add sexplib "${PIN_SEXPLIB}"
+    do_pin_add sexplib0 "${PIN_SEXPLIB0}"
+    do_pin_add sha "${PIN_SHA}"
+    do_pin_add shexp "${PIN_SHEXP}"
+    do_pin_add spawn "${PIN_SPAWN}"
+    do_pin_add sqlite3 "${PIN_SQLITE3}"
+    do_pin_add stdcompat "${PIN_STDCOMPAT}"
+    do_pin_add stdio "${PIN_STDIO}"
+    do_pin_add stdlib-shims "${PIN_STDLIB_SHIMS}"
+    do_pin_add stdune "${PIN_STDUNE}"
+    do_pin_add stringext "${PIN_STRINGEXT}"
+    do_pin_add time_now "${PIN_TIME_NOW}"
+    do_pin_add tiny_httpd "${PIN_TINY_HTTPD}"
+    do_pin_add topkg "${PIN_TOPKG}"
+    do_pin_add traverse "${PIN_TRAVERSE}"
+    do_pin_add trie "${PIN_TRIE}"
+    do_pin_add tsort "${PIN_TSORT}"
+    do_pin_add tyxml "${PIN_TYXML}"
+    do_pin_add uchar "${PIN_UCHAR}"
+    do_pin_add uri "${PIN_URI}"
+    do_pin_add utop "${PIN_UTOP}"
+    do_pin_add uucp "${PIN_UUCP}"
+    do_pin_add uuidm "${PIN_UUIDM}"
+    do_pin_add uuseg "${PIN_UUSEG}"
+    do_pin_add uutf "${PIN_UUTF}"
+    do_pin_add with-dkml "${PIN_WITH_DKML}"
+    do_pin_add xdg "${PIN_XDG}"
+    do_pin_add yojson "${PIN_YOJSON}"
+    do_pin_add zed "${PIN_ZED}"
     ### END pin-adds. DO NOT EDIT THE LINES ABOVE
+    cmdrun sh "$opam_root/.ci.$do_pins_NAME.do.sh"
     section_end "opam-pins-$do_pins_NAME"
 
     # --------------
@@ -2004,15 +2242,19 @@ do_pins() {
         section_end checkout-dkml-base-compiler
     elif [ "${DKML_COMPILER:-}" != '@repository@' ] && [ -n "${DKML_COMPILER:-}" ] && [ -z "${OCAML_COMPILER:-}" ]; then
         section_begin checkout-dkml-base-compiler "Pin dkml-base-compiler to $DKML_COMPILER (dkml-base-compiler specified; no OCAML_COMPILER specified) for $do_pins_NAME switch"
-        opamrun pin add --switch "$do_pins_NAME" --yes --no-action dkml-base-compiler "https://github.com/diskuv/dkml-compiler.git#${DKML_COMPILER}"
+        case "$DKML_COMPILER" in
+         file://*) opamrun pin add --switch "$do_pins_NAME" --yes --no-action dkml-base-compiler "${DKML_COMPILER}" ;;
+         *) opamrun pin add --switch "$do_pins_NAME" --yes --no-action dkml-base-compiler "https://github.com/diskuv/dkml-compiler.git#${DKML_COMPILER}" ;;
+        esac
         section_end checkout-dkml-base-compiler
     elif [ -n "${OCAML_COMPILER:-}" ]; then
         # Validate OCAML_COMPILER (OCAML_COMPILER specified)
         case "${OCAML_COMPILER:-}" in
         4.12.1) true ;;
         4.14.0) true ;;
+        4.14.2) true ;;
         *)
-            echo "OCAML_COMPILER version ${OCAML_COMPILER:-} is not supported" >&2
+            echo "OCAML_COMPILER version ${OCAML_COMPILER:-} is not supported"
             exit 109
             ;;
         esac
@@ -2080,8 +2322,9 @@ do_use_vsstudio() {
             echo "  [DKML_COMPILE_VS_MSVSPREFERENCE = \"$E_VS_MSVSPREFERENCE\"]" >>"$OPSC"
             echo "  [DKML_COMPILE_VS_CMAKEGENERATOR = \"$E_VS_CMAKEGENERATOR\"]" >>"$OPSC"
             echo "  [DKML_HOST_ABI = \"${dkml_host_abi}\"]" >>"$OPSC"
+            echo "  [DKML_TARGET_ABI = \"${dkml_target_abi}\"]" >>"$OPSC"
             echo ']' >>"$OPSC"
-            cat "$OPSC" >&2 # print
+            cat "$OPSC" # print
             ;;
         *)
             opamrun option --switch "$do_use_vsstudio_NAME" setenv= # reset
@@ -2093,6 +2336,7 @@ do_use_vsstudio() {
             opamrun option --switch "$do_use_vsstudio_NAME" setenv+="DKML_COMPILE_VS_MSVSPREFERENCE = \"$E_VS_MSVSPREFERENCE\""
             opamrun option --switch "$do_use_vsstudio_NAME" setenv+="DKML_COMPILE_VS_CMAKEGENERATOR = \"$E_VS_CMAKEGENERATOR\""
             opamrun option --switch "$do_use_vsstudio_NAME" setenv+="DKML_HOST_ABI = \"${dkml_host_abi}\""
+            opamrun option --switch "$do_use_vsstudio_NAME" setenv+="DKML_TARGET_ABI = \"${dkml_target_abi}\""
             opamrun option --switch "$do_use_vsstudio_NAME" setenv # print
             ;;
         esac
@@ -2155,7 +2399,7 @@ do_setenv() {
                 MSYS2_DIR_NATIVE=$(/usr/bin/cygpath -aw /)
             else
                 # If we are already inside MSYS2 then MSYSTEM_PREFIX should be set. But cygpath should be there as well!!
-                echo "FATAL: Could not locate MSYS2: there was no cygpath" >&2
+                echo "FATAL: Could not locate MSYS2: there was no cygpath"
                 exit 3
             fi
             MSYS2_DIR_NATIVE_ESCAPED=$(printf "%s" "$MSYS2_DIR_NATIVE" | sed 's/\\/\\\\/g')
@@ -2176,8 +2420,9 @@ do_install_compiler() {
     shift
     section_begin "install-compiler-$do_install_compiler_NAME" "Install OCaml compiler for $do_install_compiler_NAME switch"
     opamrun pin list --switch "$do_install_compiler_NAME"
-    # shellcheck disable=SC2086
-    opamrun upgrade --switch "$do_install_compiler_NAME" --yes dkml-base-compiler conf-dkml-cross-toolchain ${ocaml_options:-}
+    # --assume-depexts: CI needs system packages? For reproducibility do it explicitly elsewhere. Example: g++-multilib gcc-multilib for linux_x86.
+    #   shellcheck disable=SC2086
+    opamrun upgrade --switch "$do_install_compiler_NAME" --assume-depexts --yes dkml-base-compiler conf-dkml-cross-toolchain "dkml-host-abi-${dkml_host_abi}" "dkml-target-abi-${dkml_target_abi}" ${ocaml_options:-}
     section_end "install-compiler-$do_install_compiler_NAME"
 }
 do_summary() {
@@ -2214,6 +2459,7 @@ Finished setup.
 
 To continue your testing, run:
   export dkml_host_abi='${dkml_host_abi}'
+  export dkml_target_abi='${dkml_target_abi}'
   export abi_pattern='${abi_pattern}'
   export opam_root='${opam_root}'
   export exe_ext='${exe_ext:-}'
