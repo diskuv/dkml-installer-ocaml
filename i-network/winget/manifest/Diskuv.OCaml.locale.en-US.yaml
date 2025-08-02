@@ -44,7 +44,7 @@ Description: |-
   * Visual Studio Enterprise/Professional/Community/Build Tools 2019 or 2022 in a directory
     without spaces or parentheses. For example, "C:\Program Files (x86)\VisualStudio" won't
     work. If you don't have Visual Studio, install it with:
-      winget install Microsoft.VisualStudio.2022.BuildTools --override "--wait --passive --installPath C:\VS17 --addProductLang En-us --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.14.38.17.8.x86.x64 --includeRecommended"
+      winget install Microsoft.VisualStudio.2022.BuildTools --source winget --override "--wait --passive --installPath C:\VS17 --addProductLang En-us --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.14.38.17.8.x86.x64 --includeRecommended"
 
   The DkML package will experience problems if you have a space in your username
   (ex. C:\Users\Jane Smith).
